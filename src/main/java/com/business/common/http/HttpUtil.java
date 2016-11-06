@@ -1,12 +1,10 @@
 package com.business.common.http;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -29,13 +27,11 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -55,147 +51,18 @@ import java.util.Map;
  */
 @Slf4j
 public class HttpUtil {
-
+    public static final String CHARSET_UTF_8 = "UTF-8";
     private static final String APPLICATION_JSON = "application/json";
-
     private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
-
     private static final String CONTENT_TYPE_APPLICATION = "application/x-www-form-urlencoded;charset=utf-8";
-
-    /**
-     * 发起请求并获取json结果
-     * @param requestUrl    请求地址
-     * @param requestMethod 请求方式（GET、POST）
-     * @param outputStr     提交的数据
-     * @return JSONObject(通过JSONObject.get(key)的方式获取JSON对象的属性值)
-     */
-    public static JSONObject requestJSON(String requestUrl, String requestMethod, String outputStr) {
-
-        JSONObject jsonObject = null;
-        StringBuffer buffer = new StringBuffer();
-
-        try {
-            // 创建SSLContext对象，并使用我们指定的信任管理器初始化
-            TrustManager[] tm = {new MyX509TrustManager()};
-            SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
-            sslContext.init(null, tm, new java.security.SecureRandom());
-            // 从上述SSLContext对象中得到SSLSocketFactory对象
-            SSLSocketFactory ssf = sslContext.getSocketFactory();
-
-            URL url = new URL(requestUrl);
-            HttpsURLConnection httpUrlConn = (HttpsURLConnection) url.openConnection();
-            httpUrlConn.setSSLSocketFactory(ssf);
-
-            httpUrlConn.setDoOutput(true);
-            httpUrlConn.setDoInput(true);
-            httpUrlConn.setUseCaches(false);
-            // 设置请求方式（GET/POST）
-            httpUrlConn.setRequestMethod(requestMethod);
-
-            if ("GET".equalsIgnoreCase(requestMethod))
-                httpUrlConn.connect();
-
-            // 当有数据需要提交时
-            if (null != outputStr) {
-                OutputStream outputStream = httpUrlConn.getOutputStream();
-                // 注意编码格式，防止中文乱码
-                outputStream.write(outputStr.getBytes("UTF-8"));
-                outputStream.close();
-            }
-
-            // 将返回的输入流转换成字符串
-            InputStream inputStream = httpUrlConn.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            String str ;
-            while ((str = bufferedReader.readLine()) != null) {
-                buffer.append(str);
-            }
-            bufferedReader.close();
-            inputStreamReader.close();
-            // 释放资源
-            inputStream.close();
-            httpUrlConn.disconnect();
-            jsonObject = JSONObject.parseObject(buffer.toString());
-        } catch (Exception e) {
-            log.error("https request error:{}" + e.getMessage());
-        }
-        return jsonObject;
-    }
-
-    /**
-     * post请求附带Map参数
-     * @param requestUrl
-     * @param params
-     * @return
-     */
-    public static String postJSON(String requestUrl, Map<String, String> params) {
-
-        String requestMethod = "POST";
-        String jsonObject = null;
-        StringBuffer buffer = new StringBuffer();
-        try {
-            String outputStr = "";
-            if (params != null && params.size() > 0) {
-
-                for (String key : params.keySet()) {
-                    String keyValue = params.get(key);
-                    if (keyValue != null && !keyValue.equals("")) {
-                        outputStr = outputStr + key + "=" + keyValue + "&";
-                    }
-                }
-            }
-            // 创建SSLContext对象，并使用我们指定的信任管理器初始化
-            TrustManager[] tm = {new MyX509TrustManager()};
-            SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
-            sslContext.init(null, tm, new java.security.SecureRandom());
-            // 从上述SSLContext对象中得到SSLSocketFactory对象
-            SSLSocketFactory ssf = sslContext.getSocketFactory();
-            log.error("requestUrl:" + requestUrl);
-            log.error("outputStr:" + outputStr);
-
-            URL url = new URL(requestUrl);
-            HttpsURLConnection httpUrlConn = (HttpsURLConnection) url.openConnection();
-            httpUrlConn.setSSLSocketFactory(ssf);
-
-            httpUrlConn.setDoOutput(true);
-            httpUrlConn.setDoInput(true);
-            httpUrlConn.setUseCaches(false);
-            // 设置请求方式（GET/POST）
-            httpUrlConn.setRequestMethod(requestMethod);
-
-            // 当有数据需要提交时
-            if (null != outputStr) {
-                OutputStream outputStream = httpUrlConn.getOutputStream();
-                // 注意编码格式，防止中文乱码
-                outputStream.write(outputStr.getBytes("UTF-8"));
-                outputStream.close();
-            }
-
-            // 将返回的输入流转换成字符串
-            InputStream inputStream = httpUrlConn.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            String str ;
-            while ((str = bufferedReader.readLine()) != null) {
-                buffer.append(str);
-            }
-            bufferedReader.close();
-            inputStreamReader.close();
-            // 释放资源
-            inputStream.close();
-            httpUrlConn.disconnect();
-            jsonObject = buffer.toString();
-            log.error("jsonObject:" + jsonObject);
-        } catch (ConnectException ce) {
-            log.error("Weixin server connection timed out." + ce.getMessage());
-        } catch (Exception e) {
-            log.error("https request error:{}" + e.getMessage());
-        }
-        return jsonObject;
-    }
+    private static final String CONTENT_TYPE_JSON = "application/json;charset=utf-8";
+    private static final String ACCEPT = "Accept";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String ACCEPT_LANGUAGE = "Accept-Language";
+    private static final String ACCEPT_CHARSET = "Accept-Charset";
+    private static final String USER_AGENT_MSG = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.2)";
+    private static final String ACCEPT_LANGUAGE_MSG = "zh-cn,zh;q=0.5";
+    private static final String ACCEPT_CHARSET_MSG = "GB2312,utf-8;q=0.7,*;q=0.7";
 
     /**
      * JSON参数的Post请求
@@ -204,19 +71,19 @@ public class HttpUtil {
      * @param json
      * @author yuTong
      */
-    public static String postJSON(String url, String json) {
+    public static String postJSON(String url, String json) throws IOException {
 
         String encoderJson ;
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = null;
         String result = null;
         try {
-            encoderJson = URLEncoder.encode(json, "UTF-8");// 将JSON进行UTF-8编码,以便传输中文
+            encoderJson = URLEncoder.encode(json, CHARSET_UTF_8);// 将JSON进行UTF-8编码,以便传输中文
 
             httpClient = HttpUtil.createSSLClientDefault();
             HttpPost httpPost = new HttpPost(url);
             httpPost.addHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
-
+            httpPost.addHeader(ACCEPT, APPLICATION_JSON);
             StringEntity se = new StringEntity(encoderJson, Consts.UTF_8);
             se.setContentType(CONTENT_TYPE_TEXT_JSON);
             se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON));
@@ -231,18 +98,66 @@ public class HttpUtil {
 
         } catch (UnsupportedEncodingException e) {
             log.error(e.getMessage());
-        } catch (ClientProtocolException e) {
-            log.error(e.getMessage());
-        } catch (IOException e) {
-            log.error(e.getMessage());
         } finally {
 
             try {
+                assert response != null;
                 response.close();
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
 
+            try {
+                assert httpClient != null;
+                httpClient.close();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 云之讯短信请求
+     *
+     * @param url
+     * @param json
+     * @author yuTong
+     */
+    public static String httpPostWithJSONToSMS(String url, String json, String authorization) {
+
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = null;
+        String result = null;
+        try {
+            httpClient = HttpUtil.createSSLClientDefault();
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.addHeader(HTTP.CONTENT_TYPE, CONTENT_TYPE_JSON);
+            httpPost.addHeader(ACCEPT, APPLICATION_JSON);
+            httpPost.addHeader(AUTHORIZATION, authorization);
+            httpPost.setHeader(HTTP.USER_AGENT, USER_AGENT_MSG);
+            httpPost.setHeader(ACCEPT_LANGUAGE, ACCEPT_LANGUAGE_MSG);
+            httpPost.setHeader(ACCEPT_CHARSET, ACCEPT_CHARSET_MSG);
+            StringEntity se = new StringEntity(json, Charset.forName(CHARSET_UTF_8));
+            se.setContentType(CONTENT_TYPE_JSON);
+            se.setContentEncoding(CHARSET_UTF_8);
+            httpPost.setEntity(se);
+            response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+
+            if (null != entity) {
+                result = EntityUtils.toString(entity, CHARSET_UTF_8);
+            }
+
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            try {
+                assert null != response;
+                response.close();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
             try {
                 httpClient.close();
             } catch (IOException e) {
@@ -258,7 +173,7 @@ public class HttpUtil {
         String result = null;
         httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
-        headers.forEach(header -> httpPost.addHeader(header));
+        headers.forEach(httpPost::addHeader);
         StringEntity se = new StringEntity(json, Consts.UTF_8);
         httpPost.setEntity(se);
         try {
@@ -312,22 +227,19 @@ public class HttpUtil {
 
         try {
 
-            httpPost.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
+            httpPost.setEntity(new UrlEncodedFormEntity(pairs, CHARSET_UTF_8));
             response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
 
             if (null != entity) {
-                result = EntityUtils.toString(entity, "UTF-8");
+                result = EntityUtils.toString(entity, CHARSET_UTF_8);
             }
 
-        } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-        } catch (ClientProtocolException e) {
-            log.error(e.getMessage());
         } catch (IOException e) {
             log.error(e.getMessage());
         } finally {
             try {
+                assert response != null;
                 response.close();
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -363,15 +275,14 @@ public class HttpUtil {
             HttpEntity entity = response.getEntity();
 
             if (null != entity) {
-                result = EntityUtils.toString(entity, "UTF-8");
+                result = EntityUtils.toString(entity, CHARSET_UTF_8);
             }
-        } catch (ClientProtocolException e) {
-            log.error(e.getMessage());
         } catch (IOException e) {
             log.error(e.getMessage());
         } finally {
 
             try {
+                assert response != null;
                 response.close();
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -398,11 +309,7 @@ public class HttpUtil {
                     (chain, authType) -> true).build();
             SSLConnectionSocketFactory sslsF = new SSLConnectionSocketFactory(sslContext);
             return HttpClients.custom().setSSLSocketFactory(sslsF).build();
-        } catch (KeyManagementException e) {
-            log.error(e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            log.error(e.getMessage());
-        } catch (KeyStoreException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
             log.error(e.getMessage());
         }
 
