@@ -3,7 +3,7 @@ package com.business.common.message;
 /**
  * @author yutong
  * @Description:常量接口
- * @date 2016-3-8 下午06:36:58
+ * @since  2016-3-8 下午06:36:58
  */
 public interface Constants {
 

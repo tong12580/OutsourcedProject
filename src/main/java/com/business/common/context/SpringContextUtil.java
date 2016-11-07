@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @ClassName: SpringContextUtil
- * @Description:获取spring容器，以访问容器中定义的其他bean
+ * @Description: 获取spring容器，以访问容器中定义的其他bean
  * @author yuton
  * @date May 6, 2011 2:35:22 PM
  */
@@ -23,7 +23,7 @@ public class SpringContextUtil implements ApplicationContextAware {
 	 * @Title: getBean
 	 * @Description: 获取对象
 	 * @param beanId
-	 * @param @throws BeansException
+	 * @throws BeansException
 	 * @return Object
 	 */
 	public static Object getBean(String beanId) throws BeansException {
@@ -43,9 +43,5 @@ public class SpringContextUtil implements ApplicationContextAware {
 		return applicationContext;
 	}
 
-	// 方法仅提供做单元测试用
-	public static void setActForTest(ApplicationContext act) {
-		applicationContext = act;
-	}
 }
 

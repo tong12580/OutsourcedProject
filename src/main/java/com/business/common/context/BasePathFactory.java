@@ -5,16 +5,14 @@ import com.business.listener.ContextParamDictionary;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author guosheng.zhu
  * @ClassName: BasePathFactory
  * @Description: 路径工厂类
- * @date 2011-6-2 下午04:39:46
+ * @since 2011-6-2 下午04:39:46
  */
 public class BasePathFactory {
 
-    /**
+    /***
      * 获取根路径
-     *
      * @return
      */
     public static String getBasePath(HttpServletRequest request) {
@@ -30,11 +28,9 @@ public class BasePathFactory {
     }
 
     /**
-     * @param @return
      * @return String
      * @Title: getBaseFilePath
-     * @Description: TODO
-     * @author xiao.he
+     * @author yuTong
      * @date 2015-8-17 下午02:27:46
      */
     public static String getBaseFilePath() {
@@ -49,7 +45,6 @@ public class BasePathFactory {
     }
 
     /**
-     * @param @return
      * @return String
      * @Title: getClassPath
      * @Description: 获得classpath(........../WebRoot/WEB-INF/classes/)
@@ -59,8 +54,7 @@ public class BasePathFactory {
     }
 
     /**
-     * @param @param  request
-     * @param @return
+     * @param request
      * @return String
      * @Title: getWebRootPath
      * @Description: 获取URL请求路径
@@ -71,8 +65,7 @@ public class BasePathFactory {
     }
 
     /**
-     * @param @param  resourceName
-     * @param @return
+     * @param resourceName
      * @return String
      * @Title: getResourcePath
      * @Description: 获取资源文件路径

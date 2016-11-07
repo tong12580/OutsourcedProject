@@ -4,23 +4,23 @@
  * Copyright:   Copyright (c)2011
  * Company:    easy
  *
- * @author: guosheng.zhu
+ * @author: yuTong
  * @version: 1.0
- * Create at:   2011-6-10 下午08:08:37
+ * Create at:   2011-6-10 &#x4e0b;&#x5348;08:08:37
  * <p>
  * Modification History:
  * Date           Author       Version      Description
  * ------------------------------------------------------------------
- * 2011-6-10    guosheng.zhu       1.0        1.0 Version
+ * 2011-6-10    yuTong           1.0        1.0 Version
  */
 package com.business.common.context;
 
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -45,7 +45,7 @@ public class PropertyFactory {
      */
     public static String getProperty(String filePath, String name) {
         if (propMap == null) {
-            propMap = new HashMap<>();
+            propMap = Maps.newHashMap();
         }
         String key = getFileNameFromPath(filePath);
         if (!propMap.containsKey(key)) {

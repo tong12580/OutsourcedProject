@@ -1,9 +1,18 @@
 package com.business.common.json;
 
-import com.google.gson.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
+import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,17 +21,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * json 简单操作的工具类
+ * json tools;
  *
- * @author lee.li
+ * @author yuTong
+ * @since 2015/11/07 15:28:47
  */
 public class JsonUtil {
 
     private static Gson gson = null;
+    private static ObjectMapper objectMapper = null; //jackson
 
     static {
         if (gson == null) {
             gson = new Gson();
+        }
+    }
+
+    static {
+        if (objectMapper == null) {
+            objectMapper = new ObjectMapper();
         }
     }
 
@@ -119,11 +136,7 @@ public class JsonUtil {
      * @return
      */
     public static <T> T jsonToBean(String jsonStr, Class<T> cl) {
-        T bean = null;
-        if (gson != null) {
-            bean = gson.fromJson(jsonStr, cl);
-        }
-        return bean;
+        return gson != null ? gson.fromJson(jsonStr, cl) : null;
     }
 
     /**
@@ -145,25 +158,50 @@ public class JsonUtil {
             }
             return null;
         }).setDateFormat(pattern).create();
-        if (gson != null) {
-            bean = gson.fromJson(jsonStr, cl);
-        }
+        bean = gson.fromJson(jsonStr, cl);
         return bean;
     }
 
     /***
      * 获取json键的值
      * @param jsonStr
-     * @param key
+     * @param k
      * @return
      */
-    public static <K, V> Object getJsonValue(String jsonStr, String key) {
+    public static <K, V> V getJsonValue(String jsonStr, K k) {
         V bean = null;
         Map<K, V> resultMap = jsonToMap(jsonStr);
-        if (resultMap != null && resultMap.size() > 0) {
-            bean = resultMap.get(key);
+        if (CollectionUtils.isEmpty(resultMap)) {
+            bean = resultMap.get(k);
         }
         return bean;
     }
 
+    /***
+     * json 转化为Bean jackson2 框架
+     * @param json
+     * @param tClass {@link Class}
+     * @param pattern {@link DateFormat}
+     * @param <T>
+     * @return T
+     * @throws IOException
+     */
+    public static <T> T jsonToBean(String json, Class<T> tClass, String pattern) throws IOException {
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
+        objectMapper.setDateFormat(dateFormat);
+        return objectMapper.readValue(json, tClass);
+    }
+
+    /***
+     * object 转化为json jackson2 框架
+     * @param object {@link Object}
+     * @param pattern {@link DateFormat}
+     * @return
+     * @throws JsonProcessingException
+     */
+    public static String objectToJson(Object object, String pattern) throws JsonProcessingException {
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
+        objectMapper.setDateFormat(dateFormat);
+        return objectMapper.writeValueAsString(object);
+    }
 }

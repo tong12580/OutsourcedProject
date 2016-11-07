@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,6 +41,9 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class CommonTools {
+    private static final String PATTERN_HAVE_TIME = "yyyy-MM-dd HH:mm:ss";
+    private static final String PATTERN_DAY = "yyyy-MM-dd";
+    private static final String PATTERN_NOT_HAVE_TIME = "yyyy-MM-dd 00:00:00";
     /**
      * 判断对象是否为空
      *
@@ -221,7 +225,7 @@ public class CommonTools {
     public static boolean isDate(String str) {
 
         try {
-            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat f = new SimpleDateFormat(PATTERN_HAVE_TIME);
             Date d = f.parse(str);
             String s = f.format(d);
             return s.equals(str);
@@ -567,7 +571,7 @@ public class CommonTools {
      * @return
      */
     public static String getCurDatetime() {
-        return format(new Date(), "yyyy-MM-dd HH:mm:ss");
+        return format(new Date(), PATTERN_HAVE_TIME);
     }
 
     /***
@@ -1012,6 +1016,19 @@ public class CommonTools {
         IResult result = new Result();
         result.setCode(code);
         result.setMsg(msg);
+        return result;
+    }
+
+    /***
+     * 错误提示
+     * @param code
+     * @param msg
+     * @return
+     */
+    public static IResult errorResult(int code, String msg, String specificMsg) {
+        IResult result = new Result();
+        result.setCode(code);
+        result.setMsg(msg.concat(specificMsg));
         return result;
     }
 }
