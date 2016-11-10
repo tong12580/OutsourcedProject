@@ -1,5 +1,6 @@
 package com.business.common;
 
+import com.business.common.json.JsonUtil;
 import com.business.common.message.ExceptionMessage;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
@@ -13,25 +14,14 @@ import org.springframework.util.CollectionUtils;
 import sun.net.www.protocol.http.HttpURLConnection;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +34,7 @@ public class CommonTools {
     private static final String PATTERN_HAVE_TIME = "yyyy-MM-dd HH:mm:ss";
     private static final String PATTERN_DAY = "yyyy-MM-dd";
     private static final String PATTERN_NOT_HAVE_TIME = "yyyy-MM-dd 00:00:00";
+
     /**
      * 判断对象是否为空
      *
@@ -427,7 +418,7 @@ public class CommonTools {
     /***
      * 对时间格式进行格式化
      * @param date 时间类型
-     * @return yyyy-MM-dd
+     * @return yyyy-MM-dd {@link String}
      */
     public static String format(Date date) {
         return DateFormatUtils.format(date, DateFormatUtils.ISO_DATE_FORMAT
@@ -437,7 +428,7 @@ public class CommonTools {
     /***
      * 对时间格式进行格式化
      * @param date 时间类型
-     * @return yyyy-MM-dd'T'HH:mm:ss
+     * @return yyyy-MM-dd'T'HH:mm:ss {@link String}
      */
     public static String formatDate(Date date) {
         return DateFormatUtils.format(date, DateFormatUtils.ISO_DATETIME_FORMAT
@@ -448,7 +439,7 @@ public class CommonTools {
      * 格式化时间
      * @param date    时间参数
      * @param pattern 格式化参数类型
-     * @return
+     * @return {@link String}
      */
     public static String format(Date date, String pattern) {
         return DateFormatUtils.format(date, pattern);
@@ -457,11 +448,42 @@ public class CommonTools {
     /***
      * 格式化时间参数
      * @param date 时间参数
-     * @return HH:mm:ss
+     * @return HH:mm:ss {@link String}
      */
     public static String formatTime(Date date) {
         return DateFormatUtils.format(date,
                 DateFormatUtils.ISO_TIME_NO_T_FORMAT.getPattern());
+    }
+
+    /***
+     * 当前时间
+     * @return {@link String}
+     */
+    public static String getCurDatetime() {
+        return format(new Date(), PATTERN_HAVE_TIME);
+    }
+
+    /***
+     * 当前时间
+     * @return {@link String}
+     */
+    public static String getCurDatetime(String pattern) {
+        return format(new Date(), pattern);
+    }
+
+    /***
+     * 格式化时间
+     * @param date yyyy-MM-dd
+     * @return {@link Date}
+     */
+    public static Date getCurDate(String date, String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        try {
+            return simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            log.error(e.getMessage());
+            return null;
+        }
     }
 
     /***
@@ -567,37 +589,6 @@ public class CommonTools {
     }
 
     /***
-     * 当前时间
-     * @return
-     */
-    public static String getCurDatetime() {
-        return format(new Date(), PATTERN_HAVE_TIME);
-    }
-
-    /***
-     * 当前时间
-     * @return
-     */
-    public static String getCurDatetime(String pattern) {
-        return format(new Date(), pattern);
-    }
-
-    /***
-     * 格式化时间
-     * @param date yyyy-MM-dd
-     * @return
-     */
-    public static Date getCurDate(String date, String pattern) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        try {
-            return simpleDateFormat.parse(date);
-        } catch (ParseException e) {
-            log.error(e.getMessage());
-            return null;
-        }
-    }
-
-    /***
      * 计算两个时间相差的天数
      * @param date1
      * @param date2
@@ -612,15 +603,15 @@ public class CommonTools {
         long time1 = cal.getTimeInMillis();
         cal.setTime(date2);
         long time2 = cal.getTimeInMillis();
-        long between_days = (time2 - time1) / (1000 * 3600 * 24);
-        return Integer.parseInt(String.valueOf(between_days));
+        Long between_days = (time2 - time1) / (1000 * 3600 * 24);
+        return between_days.intValue();
     }
 
     /***
      * 计算两个时间相差的天数 先格式化时间
      * @param date1
      * @param date2
-     * @return
+     * @return {@link Integer}
      */
     public static int daysBetween(Date date1, Date date2, String pattern) {
         if (date1 == null || date2 == null) {
@@ -861,20 +852,21 @@ public class CommonTools {
      * @param imgFile
      * @throws Exception
      */
-    public static void bytesToImgSave(byte[] bytes, String imgFile) throws Exception {
+    public static void bytesToImgSave(byte[] bytes, String imgFile) throws IOException {
         //UUID序列号作为保存图片的名称
 
         File f = new File(imgFile);
-
+        DataOutputStream out = null;
         try {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
+            out = new DataOutputStream(new FileOutputStream(f));
             for (int i = 0; i < bytes.length; i++) {
                 out.write(bytes[i]);
             }
             out.flush();
-            out.close();
         } catch (IOException e) {
             log.error(e.getMessage());
+        }finally {
+            out.close();
         }
     }
 
@@ -894,7 +886,7 @@ public class CommonTools {
      * @param urlStr
      * @return
      */
-    public String putUrlPNG(String urlStr) {
+    public String putUrlPNG(String urlStr) throws IOException {
 
         String imgUrl = null;
         String name = format(new Date(), "yyyyMMddHHmmssSSS");
@@ -917,11 +909,11 @@ public class CommonTools {
             bos.flush();
             bos.close();
         } catch (MalformedURLException e) {
-            log.error(ExceptionMessage.MALFORMED_URL_EXCEPTION.getExceptionMsg());
-            return ExceptionMessage.MALFORMED_URL_EXCEPTION.getExceptionCode().toString();
+            log.error(e.getMessage());
+            throw new MalformedURLException(ExceptionMessage.MALFORMED_URL_EXCEPTION.getExceptionMsg());
         } catch (IOException e) {
-            log.error(ExceptionMessage.IO_EXCEPTION.getExceptionMsg());
-            return ExceptionMessage.IO_EXCEPTION.getExceptionCode().toString();
+            log.error(e.getMessage());
+            throw new IOException(ExceptionMessage.IO_EXCEPTION.getExceptionMsg());
         }
 
         return imgUrl;
@@ -967,9 +959,21 @@ public class CommonTools {
     }
 
     /***
+     * json to bean
+     * @param json
+     * @param tClass
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public static <T> T getBean(String json, Class<T> tClass) throws IOException {
+        return JsonUtil.jsonToBean(json, tClass, PATTERN_HAVE_TIME);
+    }
+
+    /***
      * 成功提示 无返回参数
      * @param resultMessage
-     * @return
+     * @return {@link IResult}
      */
     public static IResult successResult(ResultMessage resultMessage) {
         return new Result(resultMessage);
@@ -980,7 +984,7 @@ public class CommonTools {
      * @param resultMessage
      * @param result
      * @param <T>
-     * @return
+     * @return {@link IResult}
      */
     public static <T> IResult<T> successResult(ResultMessage resultMessage, T result) {
         return new Result<>(resultMessage, result);
@@ -991,7 +995,7 @@ public class CommonTools {
      * @param resultMessage
      * @param result
      * @param <T>
-     * @return
+     * @return {@link IResult}
      */
     public static <T> IResult<T> errrorResult(ResultMessage resultMessage, T result) {
         return new Result<>(resultMessage, result);
@@ -1000,7 +1004,7 @@ public class CommonTools {
     /***
      * 错误提示 无返回
      * @param resultMessage
-     * @return
+     * @return {@link IResult}
      */
     public static IResult errorResult(ResultMessage resultMessage) {
         return new Result<>(resultMessage);
@@ -1010,7 +1014,7 @@ public class CommonTools {
      * 错误提示
      * @param code
      * @param msg
-     * @return
+     * @return {@link IResult}
      */
     public static IResult errorResult(int code, String msg) {
         IResult result = new Result();
@@ -1023,7 +1027,7 @@ public class CommonTools {
      * 错误提示
      * @param code
      * @param msg
-     * @return
+     * @return {@link IResult}
      */
     public static IResult errorResult(int code, String msg, String specificMsg) {
         IResult result = new Result();

@@ -67,15 +67,11 @@ public class JsonUtil {
      * @return
      */
     public static String objectToJsonDateSerializer(Object ts, final String dateformat) {
-        String jsonStr = null;
         gson = new GsonBuilder().registerTypeHierarchyAdapter(Date.class, (JsonSerializer<Date>) (src, typeOfSrc, context) -> {
             SimpleDateFormat format = new SimpleDateFormat(dateformat);
             return new JsonPrimitive(format.format(src));
         }).setDateFormat(dateformat).create();
-        if (gson != null) {
-            jsonStr = gson.toJson(ts);
-        }
-        return jsonStr;
+        return gson.toJson(ts);
     }
 
     /**
