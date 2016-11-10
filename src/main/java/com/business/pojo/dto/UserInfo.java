@@ -26,16 +26,16 @@ public class UserInfo implements Serializable{
     @Column(name = "login_info_id", nullable = false)
     private Integer loginInfoId;
 
-    @Column(name = "user_name", nullable = false, length = 6)
+    @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age", nullable = true)
     private Integer age;
 
     @Column(name = "sex", nullable = false)
     private Byte sex;
 
-    @Column(name = "id_number", nullable = true, length = 18)
+    @Column(name = "id_number")
     private String idNumber;
 
     @Column(name = "type", nullable = false)
