@@ -6,11 +6,8 @@ import com.business.pojo.dto.UserInfo;
 import com.business.service.interfaces.users.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * Created by yuton on 2016/9/13.

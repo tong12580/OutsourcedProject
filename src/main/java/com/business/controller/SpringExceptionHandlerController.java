@@ -2,6 +2,7 @@ package com.business.controller;
 
 import com.business.common.CommonTools;
 import com.business.common.message.ResultMessage;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class SpringExceptionHandlerController {
     @ExceptionHandler(Exception.class)
-    public String exceptionHandler(Exception e) {
-        return CommonTools.errorResult(ResultMessage.STATUS_FAILURE.getCode(),e.getMessage()).toJson();
+    public String exceptionHandler(Exception e) throws JsonProcessingException {
+        return CommonTools.errorResult(ResultMessage.STATUS_FAILURE,e.getMessage()).toJson();
     }
 }

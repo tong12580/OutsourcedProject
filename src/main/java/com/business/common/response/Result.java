@@ -2,6 +2,7 @@ package com.business.common.response;
 
 import com.business.common.json.JsonUtil;
 import com.business.common.message.ResultMessage;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Result<T> implements IResult<T>{
 	private static final String pattern = "yyyy-MM-dd HH:mm:ss";
@@ -29,8 +30,8 @@ public class Result<T> implements IResult<T>{
 	}
 
 	@Override
-	public String toJson() {
-		return JsonUtil.objectToJsonDateSerializer(this, pattern);
+	public String toJson() throws JsonProcessingException {
+		return JsonUtil.objectToJson(this, pattern);
 	}
 
 	@Override

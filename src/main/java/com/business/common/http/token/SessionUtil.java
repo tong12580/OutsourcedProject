@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 
 /**
@@ -41,7 +42,7 @@ public class SessionUtil extends CommonTools {
                                            HttpServletResponse response, String name, Object value) {
 
         String sessionKey = getSessionKey(request, response);
-        String timeout = (String) redisUtil.get(sessionKey + SESSION_TIMEOUT);
+        String timeout = redisUtil.get(sessionKey + SESSION_TIMEOUT);
         Long iTimeout = TIMEOUT;
         try {
             iTimeout = Long.parseLong(timeout);
@@ -78,7 +79,7 @@ public class SessionUtil extends CommonTools {
     public static String getSessionAttributeString(HttpServletRequest request, String name) {
 
         String sessionKey = getSessionKey(request);
-        return (!isEmpty(sessionKey) ? (String) redisUtil.get(sessionKey + name) : null);
+        return (!isEmpty(sessionKey) ? redisUtil.get(sessionKey + name) : null);
     }
 
 
@@ -93,7 +94,7 @@ public class SessionUtil extends CommonTools {
      */
     public static <T> T getSessionAttribute(HttpServletRequest request, String name) throws Exception {
         String sessionKey = getSessionKey(request);
-        return (!isEmpty(sessionKey) ? (T) redisUtil.get(sessionKey + name) : null);
+        return (!isEmpty(sessionKey) ? redisUtil.get(sessionKey + name) : null);
     }
 
     /**
@@ -145,7 +146,7 @@ public class SessionUtil extends CommonTools {
     }
 
     /**
-     * @return String
+     * @return {@link String}
      * @Title: getSessionKey
      * @Description: 获取会话Key, 不存在返回null
      */
@@ -154,28 +155,37 @@ public class SessionUtil extends CommonTools {
     }
 
     /**
-     * @return String
+     * @return {@link String}
      * @Title: getSessionKey
      * @Description: 获取会话Key, 不存在返回新Key
      */
     public static String getSessionKey(HttpServletRequest request, HttpServletResponse response) {
         String sessionKey = getSessionKey(request);
         if (sessionKey == null) {
-            sessionKey = java.util.UUID.randomUUID().toString();
+            sessionKey = UUID.randomUUID().toString();
             CookieUtil.setCookie(request, response, COOKIE_USER_KEY, sessionKey);
         }
         return sessionKey;
     }
 
     /**
-     * @return String
+     * @return {@link String}
      * @Title: getNewSessionKey
      * @Description: 添加并获取新会话Key
      */
     public static String getNewSessionKey(HttpServletRequest request, HttpServletResponse response) {
-        String sessionKey = java.util.UUID.randomUUID().toString();
+        String sessionKey = UUID.randomUUID().toString();
         CookieUtil.setCookie(request, response, COOKIE_USER_KEY, sessionKey);
         return sessionKey;
+    }
+
+    /**
+     * @Description: 获取会话的sessionId
+     * @param request
+     * @return {@link String}
+     */
+    public static String getSessionId(HttpServletRequest request){
+        return request.getSession().getId();
     }
 
 }
