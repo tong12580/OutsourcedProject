@@ -1,28 +1,32 @@
 package com.business.common;
 
 import com.business.common.json.JsonUtil;
-import com.business.common.message.ExceptionMessage;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
 import com.business.common.response.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.util.CollectionUtils;
-import sun.net.www.protocol.http.HttpURLConnection;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 
@@ -648,30 +652,6 @@ public class CommonTools {
         return Integer.parseInt(String.valueOf(between_sec));
     }
 
-    /**
-     * 解析输入流成byte数组
-     *
-     * @param inputstream
-     * @param length
-     * @return
-     * @throws Exception
-     */
-    public static byte[] recvMsg(InputStream inputstream, int length)
-            throws Exception {
-        try {
-            byte content[] = new byte[length];
-            int readCount = 0; // 已经成功读取的字节的个数
-            while (readCount < length) {
-                int size = (length - readCount) > 1024 ? 1024
-                        : (length - readCount);
-                readCount += inputstream.read(content, readCount, size);
-            }
-            return content;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * @return boolean
@@ -692,13 +672,10 @@ public class CommonTools {
      * @return
      */
     public static boolean isPhone(String phone) {
-        if (null == phone || "".equals(phone)) {
+        if (isBlank(phone)) {
             return false;
         }
-        String regExp = "^[1][3,5,8][0-9]{9}$";
-        Pattern p = Pattern.compile(regExp);
-        Matcher m = p.matcher(phone);
-        return m.find();
+        return regExpCheck(phone, "^[1][3,4,5,7,8][0-9]{9}$");
     }
 
     /**
@@ -708,13 +685,10 @@ public class CommonTools {
      * @return
      */
     public static boolean isEmail(String email) {
-        if (null == email || "".equals(email)) {
+        if (isBlank(email)) {
             return false;
         }
-        String regExp = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
-        Pattern p = Pattern.compile(regExp);
-        Matcher m = p.matcher(email);
-        return m.find();
+        return regExpCheck(email, "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
     }
 
     /**
@@ -729,15 +703,6 @@ public class CommonTools {
             return name.substring(loc);
         }
         return null;
-    }
-
-    /**
-     * @return String
-     * @Title: getTimeFileName
-     * @Description: 获取默认的以是时间命名的文件名
-     */
-    public static String getTimeFileName(String suffix) {
-        return format(new Date(), "yyyyMMddHHmmssSSS") + suffix;
     }
 
     /**
@@ -763,41 +728,6 @@ public class CommonTools {
     }
 
     /**
-     * @param realPath
-     * @return void
-     * @Title: deleteFile
-     * @Description: 删除文件或文件夹
-     */
-    public static void deleteFile(String realPath) {
-        File file = new File(realPath);
-        if (file.isFile() && file.exists()) {
-            file.delete();
-        } else {
-            if (file.isDirectory()) {
-                File[] files = file.listFiles();
-                for (int i = 0; i < files.length; i++) {
-                    files[i].delete();
-                }
-            }
-            file.delete();
-        }
-    }
-
-    /**
-     * @param path
-     * @return long
-     * @Title: getFileSize
-     * @Description: 根据路径获取文件大小
-     */
-    public static long getFileSize(String path) {
-        File file = new File(path);
-        if (file.isFile() && file.exists()) {
-            return file.length();
-        }
-        return 0;
-    }
-
-    /**
      * @param path
      * @return void
      * @Title: makeDir
@@ -807,117 +737,6 @@ public class CommonTools {
         return new File(path).mkdirs();
     }
 
-    /**
-     * 读取图片
-     *
-     * @param imgPath
-     * @return
-     */
-    public static byte[] getImageToBytes(String imgPath) {
-        byte[] bytes = null;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        try {
-            //创建URL
-            URL url = new URL(imgPath);
-            //得到连接
-            HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-            //得到连接地址的输入流
-            InputStream in = urlConn.getInputStream();
-
-            int size;
-            //缓冲值
-            bytes = new byte[1024];
-            if (in != null) {
-                //循环读输入流至read返回-1为止，并写到缓存中
-                while ((size = in.read(bytes)) != -1) {
-                    out.write(bytes, 0, size);
-                }
-            }
-            out.close();//关闭输出流
-            in.close();//关闭输入流
-            urlConn.disconnect();//断开连接
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return out.toByteArray();
-    }
-
-    /**
-     * 保存图片
-     *
-     * @param bytes
-     * @param imgFile
-     * @throws Exception
-     */
-    public static void bytesToImgSave(byte[] bytes, String imgFile) throws IOException {
-        //UUID序列号作为保存图片的名称
-
-        File f = new File(imgFile);
-        DataOutputStream out = null;
-        try {
-            out = new DataOutputStream(new FileOutputStream(f));
-            for (int i = 0; i < bytes.length; i++) {
-                out.write(bytes[i]);
-            }
-            out.flush();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }finally {
-            out.close();
-        }
-    }
-
-    /**
-     * basePath路径
-     *
-     * @param request
-     * @return
-     */
-    public static String getServerPath(HttpServletRequest request) {
-        return request.getSession().getServletContext().getRealPath("/");
-    }
-
-    /**
-     * 保存远程图片
-     *
-     * @param urlStr
-     * @return
-     */
-    public String putUrlPNG(String urlStr) throws IOException {
-
-        String imgUrl = null;
-        String name = format(new Date(), "yyyyMMddHHmmssSSS");
-        String path =/**Constants.getFileBasePath()+*/"opt/appleprofession/";
-
-        @SuppressWarnings("unused")
-        String path2 = "C://test//";    //本机测试路径
-        try {
-            URL url = new URL(urlStr);
-            BufferedInputStream bis = new BufferedInputStream(url.openStream());
-            byte[] bytes = new byte[100];
-            imgUrl = path + name + ".png";
-            OutputStream bos = new FileOutputStream(new File(imgUrl));
-
-            int len;
-            while ((len = bis.read(bytes)) > 0) {
-                bos.write(bytes, 0, len);
-            }
-            bis.close();
-            bos.flush();
-            bos.close();
-        } catch (MalformedURLException e) {
-            log.error(e.getMessage());
-            throw new MalformedURLException(ExceptionMessage.MALFORMED_URL_EXCEPTION.getExceptionMsg());
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            throw new IOException(ExceptionMessage.IO_EXCEPTION.getExceptionMsg());
-        }
-
-        return imgUrl;
-    }
 
     /***
      * 隐藏号码
@@ -929,6 +748,33 @@ public class CommonTools {
         String str = param;
         str = str.substring(0, 3) + "****" + str.substring(str.length() - 4, str.length());
         return str;
+    }
+
+    /***
+     * Map转Bean
+     * @param tClass
+     * @param map
+     * @param <T>
+     * @return
+     */
+    public static <T> T mapToBean(Class<T> tClass, Map<String, Object> map) throws IntrospectionException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        BeanInfo beanInfo = Introspector.getBeanInfo(tClass);
+        T bean = tClass.newInstance();
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        if (propertyDescriptors != null && propertyDescriptors.length > 0) {
+            String propertyName; // javaBean属性名
+            Object propertyValue; // javaBean属性值
+            for (PropertyDescriptor pd : propertyDescriptors) {
+                propertyName = pd.getName();
+                if (map.containsKey(propertyName)) {
+                    propertyValue = map.get(propertyName);
+                    pd.getWriteMethod().invoke(bean, propertyValue);
+                }
+            }
+            return bean;
+        }
+
+        return null;
     }
 
     /***
@@ -972,7 +818,7 @@ public class CommonTools {
 
     /***
      * 成功提示 无返回参数
-     * @param resultMessage
+     * @param resultMessage {@link ResultMessage}
      * @return {@link IResult}
      */
     public static IResult successResult(ResultMessage resultMessage) {
@@ -981,8 +827,8 @@ public class CommonTools {
 
     /***
      * 成功提示 有返回
-     * @param resultMessage
-     * @param result
+     * @param resultMessage {@link ResultMessage}
+     * @param result {@link T}
      * @param <T>
      * @return {@link IResult}
      */
@@ -990,20 +836,10 @@ public class CommonTools {
         return new Result<>(resultMessage, result);
     }
 
-    /***
-     * 错误提示 有返回
-     * @param resultMessage
-     * @param result
-     * @param <T>
-     * @return {@link IResult}
-     */
-    public static <T> IResult<T> errrorResult(ResultMessage resultMessage, T result) {
-        return new Result<>(resultMessage, result);
-    }
 
     /***
      * 错误提示 无返回
-     * @param resultMessage
+     * @param resultMessage {@link ResultMessage}
      * @return {@link IResult}
      */
     public static IResult errorResult(ResultMessage resultMessage) {
@@ -1025,14 +861,13 @@ public class CommonTools {
 
     /***
      * 错误提示
-     * @param code
-     * @param msg
+     * @param resultMessage {@link ResultMessage}
      * @return {@link IResult}
      */
-    public static IResult errorResult(int code, String msg, String specificMsg) {
+    public static IResult errorResult(ResultMessage resultMessage, String specificMsg) {
         IResult result = new Result();
-        result.setCode(code);
-        result.setMsg(msg.concat(specificMsg));
+        result.setCode(resultMessage.getCode());
+        result.setMsg(resultMessage.getMsg().replace("{}", specificMsg));
         return result;
     }
 }

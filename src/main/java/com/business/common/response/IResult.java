@@ -1,11 +1,14 @@
 package com.business.common.response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.io.Serializable;
 
 public interface IResult<T> extends Serializable {
+
     void setResult(T result);
 
-    String toJson();
+    String toJson() throws JsonProcessingException;
 
     boolean isSuccessful();
 

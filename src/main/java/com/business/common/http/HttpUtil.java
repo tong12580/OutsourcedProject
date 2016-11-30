@@ -52,6 +52,9 @@ import java.util.Map;
 @Slf4j
 public class HttpUtil {
     public static final String CHARSET_UTF_8 = "UTF-8";
+    public static final String CONTENT_TYPE_APPLICATION_OCTET_STREAM = "application/octet-stream";
+    public static final String LOCATION = "Location";
+    public static final String CONTENT_DISPOSITION = "Content-Disposition";
     private static final String APPLICATION_JSON = "application/json";
     private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
     private static final String CONTENT_TYPE_APPLICATION = "application/x-www-form-urlencoded;charset=utf-8";

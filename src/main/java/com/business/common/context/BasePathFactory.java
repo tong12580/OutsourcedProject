@@ -65,6 +65,16 @@ public class BasePathFactory {
     }
 
     /**
+     * basePath路径
+     *
+     * @param request
+     * @return
+     */
+    public static String getServerPath(HttpServletRequest request) {
+        return request.getSession().getServletContext().getRealPath("/");
+    }
+
+    /**
      * @param resourceName
      * @return String
      * @Title: getResourcePath
