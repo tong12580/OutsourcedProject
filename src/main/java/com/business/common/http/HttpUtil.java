@@ -8,6 +8,7 @@ import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -68,6 +69,7 @@ import java.util.Map;
  */
 @Slf4j
 public class HttpUtil {
+    public static final String SELECT_PUBLIC_IP_ADDRESS = "http://www.ip138.com/ip2city.asp";
     public static final String CHARSET_UTF_8 = "UTF-8";
     public static final String CONTENT_TYPE_APPLICATION_OCTET_STREAM = "application/octet-stream";
     public static final String LOCATION = "Location";
@@ -92,13 +94,14 @@ public class HttpUtil {
     /**
      * JSON参数的Post请求
      * 支持SSL
+     *
      * @param url
      * @param json
      * @author yuTong
      */
     public static String postJSON(String url, String json) throws IOException {
 
-        String encoderJson ;
+        String encoderJson;
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient;
         String result = null;
@@ -180,13 +183,12 @@ public class HttpUtil {
     }
 
     /**
-     *
      * @param url
      * @param json
      * @param headers
      * @return
      */
-    public static String httpJSON(String url, String json,List<Header> headers){
+    public static String httpJSON(String url, String json, List<Header> headers) {
         CloseableHttpClient httpClient;
         CloseableHttpResponse response = null;
         String result = null;
@@ -203,7 +205,7 @@ public class HttpUtil {
             }
         } catch (IOException e) {
             log.error(e.getMessage());
-        }finally {
+        } finally {
             try {
                 response.close();
             } catch (IOException e) {
@@ -269,33 +271,20 @@ public class HttpUtil {
      * @return String
      * @author yuTong
      */
-    public static String httpGET(String url) {
-
-        CloseableHttpClient httpClient = null;
-        CloseableHttpResponse response = null;
-
-        httpClient = createSSLClientDefault();
+    public static String httpGet(String url) {
+        CloseableHttpClient httpClient = createSSLClientDefault();
         HttpGet httpGet = new HttpGet(url);
         String result = null;
-        try {
-            response = httpClient.execute(httpGet);
+        try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
             HttpEntity entity = response.getEntity();
-
             if (null != entity) {
                 result = EntityUtils.toString(entity, CHARSET_UTF_8);
             }
+        } catch (ClientProtocolException e) {
+            log.error(e.getMessage());
         } catch (IOException e) {
             log.error(e.getMessage());
-        } finally {
-
-            try {
-                assert response != null;
-                response.close();
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
         }
-
         return result;
     }
 
@@ -453,7 +442,7 @@ public class HttpUtil {
 
             InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "utf-8");
             BufferedReader br = new BufferedReader(isr);
-            String s = "";
+            String s;
             while (null != (s = br.readLine())) {
                 repString.append(s);
             }

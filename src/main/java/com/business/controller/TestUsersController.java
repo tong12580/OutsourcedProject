@@ -42,8 +42,8 @@ public class TestUsersController {
 //        map.put("2",2);
 //        redisUtil.setMap("map",map);
 //        System.out.println("map:"+redisUtil.getMap("map"));
-//        System.out.println("mapAllValue:"+redisUtil.getMapAllValue("map"));
-//        System.out.println("mapAllKey:"+redisUtil.getMapAllKey("map"));
+//        System.out.println("mapAllValue:"+redisUtil.getMapAllValues("map"));
+//        System.out.println("mapAllKey:"+redisUtil.getMapAllKeys("map"));
 //        System.out.println("mapValue:"+redisUtil.getMapValue("map","1"));
 //        redisUtil.set("mappxx",map);
 //        System.out.println("mappxx:"+redisUtil.get("mappxx"));

@@ -93,9 +93,7 @@ public class JsonUtil {
     /**
      * @param jsonStr
      * @param type
-     * @param
      * @return List<T>
-     * @throws
      * @Title: jsonToList
      * @Description: 将Json转为对应的List
      */

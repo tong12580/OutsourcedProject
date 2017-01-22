@@ -42,7 +42,7 @@ public class SessionUtil extends CommonTools {
                                            HttpServletResponse response, String name, Object value) {
 
         String sessionKey = getSessionKey(request, response);
-        String timeout = redisUtil.get(sessionKey + SESSION_TIMEOUT);
+        String timeout = (String) redisUtil.get(sessionKey + SESSION_TIMEOUT);
         Long iTimeout = TIMEOUT;
         try {
             iTimeout = Long.parseLong(timeout);
@@ -79,7 +79,7 @@ public class SessionUtil extends CommonTools {
     public static String getSessionAttributeString(HttpServletRequest request, String name) {
 
         String sessionKey = getSessionKey(request);
-        return (!isEmpty(sessionKey) ? redisUtil.get(sessionKey + name) : null);
+        return (!isEmpty(sessionKey) ? (String) redisUtil.get(sessionKey + name) : null);
     }
 
 
@@ -94,7 +94,7 @@ public class SessionUtil extends CommonTools {
      */
     public static <T> T getSessionAttribute(HttpServletRequest request, String name) throws Exception {
         String sessionKey = getSessionKey(request);
-        return (!isEmpty(sessionKey) ? redisUtil.get(sessionKey + name) : null);
+        return (!isEmpty(sessionKey) ? (T) redisUtil.get(sessionKey + name) : null);
     }
 
     /**

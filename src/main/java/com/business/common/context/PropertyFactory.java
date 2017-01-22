@@ -82,22 +82,5 @@ public class PropertyFactory {
         String name = path.substring(location + 1);
         return name;
     }
-
-//    /**
-//     *
-//     * @Title: getPdf2swfLanguagePath
-//     * @Description: 获取pdf2swf_language安装路径
-//     * @param @return
-//     * @return String
-//     */
-//    public static String getPdf2swfLanguagePath() {
-//        return getProperty(BasePathFactory.getResourcePath("other.properties"), "pdf2swf_language");
-//    }
-//
-//    public static String getImageBasePath() {
-//        return getProperty(BasePathFactory.getResourcePath("other.properties"),
-//                "picpath");
-//    }
-
 }
 
