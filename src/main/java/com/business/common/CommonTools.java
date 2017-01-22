@@ -1,5 +1,6 @@
 package com.business.common;
 
+import com.business.common.http.HttpUtil;
 import com.business.common.json.JsonUtil;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
@@ -38,6 +39,8 @@ public class CommonTools {
     private static final String PATTERN_HAVE_TIME = "yyyy-MM-dd HH:mm:ss";
     private static final String PATTERN_DAY = "yyyy-MM-dd";
     private static final String PATTERN_NOT_HAVE_TIME = "yyyy-MM-dd 00:00:00";
+    private static final String LINUX = "Linux";
+    private static final String WINDOWS = "Windows";
 
     /**
      * 判断对象是否为空
@@ -46,8 +49,7 @@ public class CommonTools {
      * @return boolean
      */
     public static boolean isEmpty(Object obj) {
-        if (obj == null) return true;
-        return false;
+        return obj == null;
     }
 
     /**
@@ -71,11 +73,7 @@ public class CommonTools {
      * @return
      */
     public static boolean isEmpty(Integer integer) {
-        if (null == integer) return true;
-        if (integer instanceof Integer) {
-            if (0 == integer) return true;
-        }
-        return false;
+        return null == integer || 0 == integer;
     }
 
     /**
@@ -105,8 +103,7 @@ public class CommonTools {
      * @return boolean
      */
     public static <T> boolean isEmpty(List<T> list) {
-        if (CollectionUtils.isEmpty(list)) return true;
-        return false;
+        return CollectionUtils.isEmpty(list);
     }
 
     /**
@@ -116,8 +113,7 @@ public class CommonTools {
      * @return boolean
      */
     public static <K, V> boolean isEmpty(Map<K, V> map) {
-        if (CollectionUtils.isEmpty(map)) return true;
-        return false;
+        return CollectionUtils.isEmpty(map);
     }
 
     /**
@@ -199,7 +195,7 @@ public class CommonTools {
 
     /***
      * 判断是否为浮点数
-     * @param str {@Link String}
+     * @param str {@link String}
      * @return
      */
     public static boolean isDouble(String str) {
@@ -214,7 +210,7 @@ public class CommonTools {
     /**
      * 判断是否为正确日期
      *
-     * @param str，格式为：yyyy-MM-dd HH:mm:ss {@Link String}
+     * @param str，格式为：yyyy-MM-dd HH:mm:ss {@link String}
      * @return
      */
     public static boolean isDate(String str) {
@@ -224,7 +220,7 @@ public class CommonTools {
             Date d = f.parse(str);
             String s = f.format(d);
             return s.equals(str);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return false;
     }
@@ -267,11 +263,9 @@ public class CommonTools {
     }
 
     /**
-     * @param @return
      * @return int
      * @Title: getCode6
      * @Description: 获取6位随机数
-     * @author xiao.he
      * @date 2014-9-2 下午07:15:07
      */
     public static int getRandomCode6() {
@@ -299,11 +293,11 @@ public class CommonTools {
     /***
      * 字符转数值 int
      * 判断是否为0
-     * @param intstr
+     * @param str
      * @return int
      */
-    public static int parseInt(String intstr) {
-        return isEmpty(intstr) ? 0 : Integer.parseInt(intstr.trim());
+    public static int parseInt(String str) {
+        return isEmpty(str) ? 0 : Integer.parseInt(str.trim());
     }
 
     /***
@@ -347,11 +341,11 @@ public class CommonTools {
 
     /***
      * 字符转数值double
-     * @param intstr
+     * @param str
      * @return double
      */
-    public static double parseDouble(String intstr) {
-        return isEmpty(intstr) ? 0.0D : Double.parseDouble(intstr.trim());
+    public static double parseDouble(String str) {
+        return isEmpty(str) ? 0.0D : Double.parseDouble(str.trim());
     }
 
     /***
@@ -706,7 +700,6 @@ public class CommonTools {
     }
 
     /**
-     * @param @param birthday
      * @return String
      * @Title: getAgeByBirthday
      * @Description: 计算年龄
@@ -866,8 +859,43 @@ public class CommonTools {
      */
     public static IResult errorResult(ResultMessage resultMessage, String specificMsg) {
         IResult result = new Result();
+        specificMsg = isBlank(specificMsg) ? "" : specificMsg;
         result.setCode(resultMessage.getCode());
         result.setMsg(resultMessage.getMsg().replace("{}", specificMsg));
         return result;
+    }
+
+    /**
+     * @return
+     * @description 获取本机公网ip
+     */
+    public static String getLocalPublicIp() {
+        String html = HttpUtil.httpGet(HttpUtil.SELECT_PUBLIC_IP_ADDRESS);
+        return html.substring(html.indexOf("[") + 1, html.indexOf("]"));
+    }
+
+
+    /**
+     * @return
+     * @description 获取本机操作系统名称
+     */
+    public static String getLocalOS() {
+        String osName = System.getProperty("os.name");
+        if (osName.startsWith(WINDOWS)) {
+            return WINDOWS;
+        } else {
+            return LINUX;
+        }
+    }
+
+    /**
+     * @return
+     * @description 获取当前系统中 JVM最大可用堆空间
+     */
+    public static Long getJVMUsableMemory() {
+        long max = Runtime.getRuntime().maxMemory();
+        long total = Runtime.getRuntime().totalMemory();
+        long free = Runtime.getRuntime().freeMemory();
+        return max - total + free;
     }
 }

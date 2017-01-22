@@ -1,9 +1,5 @@
 package com.business.common.redis;
 
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Repository;
-
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,49 +8,102 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by yuton on 2016/9/13.
  */
-@Repository
-public class RedisUtil<K,V> {
+public interface RedisUtil<K,V> {
 
-    @Resource
-    private RedisTemplate redisTemplate;
+    /**
+     * @description 更新数据 长时间有效
+     * @param key
+     * @param value
+     */
+    void set(K key, V value);
 
-    public void set(String key,Object value) {
-        redisTemplate.opsForValue().set(key,value);
-    }
+    /**
+     * @description 更新数据 默认时间秒
+     * @param key
+     * @param value
+     * @param timeOut {@link TimeUnit TimeUnit.SECONDS}
+     */
+    void set(K key, V value, Long timeOut);
 
-    public void set(String key,Object value, Long timeOut) {
-        redisTemplate.opsForValue().set(key,value,timeOut,TimeUnit.SECONDS);
-    }
+    /**
+     * @description 更新数据 自定义时间单位
+     * @param key
+     * @param value
+     * @param timeOut
+     * @param timeUnit
+     */
+    void set(K key, V value, Long timeOut, TimeUnit timeUnit);
 
-    public <V> V get(String key) {
-        return (V) redisTemplate.opsForValue().get(key);
-    }
+    /**
+     * @description 查询数据
+     * @param key
+     * @return
+     */
+    V get(K key);
 
-    public void setMap(String key , Map<K,V> value) {
-        redisTemplate.opsForHash().putAll(key,value);
-    }
+    /**
+     * @description 插入Map对象数据
+     * @param key
+     * @param value
+     */
+    void setMap(K key, Map<K, V> value);
 
-    public Set<V> getMapAllKey(String key){
-        return redisTemplate.opsForHash().keys(key);
-    }
+    /**
+     * @description 获取Map对象的所以键
+     * @param key
+     * @return
+     */
+    Set<K> getMapAllKeys(K key);
 
-    public List<V> getMapAllValue(String key){
-        return redisTemplate.opsForHash().values(key);
-    }
+    /**
+     * @description 获取Map对象的所有值
+     * @param key
+     * @return
+     */
+    List<V> getMapAllValues(K key);
 
-    public Object getMapValue(String key, Object MapKey) {
-        return redisTemplate.opsForHash().get(key,MapKey);
-    }
+    /**
+     * @description 获取Map键对应的值
+     * @param key
+     * @param MapKey
+     * @return
+     */
+    V getMapValue(K key, K MapKey);
 
-    public Map<K,V> getMap (String key){
-        return redisTemplate.opsForHash().entries(key);
-    }
+    /**
+     * @description 获取整个Map对象
+     * @param key
+     * @return
+     */
+    Map<K, V> getMap(K key);
 
-    public void delete(String key) {
-        redisTemplate.delete(key);
-    }
+    /**
+     * @description 删除数据
+     * @param key
+     */
+    void delete(K key);
 
-    public void delete(List<String> key) {
-        redisTemplate.delete(key);
-    }
+    /**
+     * @description 批量删除数据
+     * @param keys
+     */
+    void delete(List<K> keys);
+
+    /**
+     * @description Redis连接校验
+     * @return
+     */
+    Boolean ping();
+
+    /**
+     * @description 数据量
+     * @return
+     */
+    Long dbSize();
+
+    /**
+     * @description 清空配置对应数据库
+     * @return
+     */
+    Boolean flushDB();
 }

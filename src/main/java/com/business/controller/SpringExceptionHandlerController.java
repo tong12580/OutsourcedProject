@@ -13,6 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class SpringExceptionHandlerController {
     @ExceptionHandler(Exception.class)
     public String exceptionHandler(Exception e) throws JsonProcessingException {
-        return CommonTools.errorResult(ResultMessage.STATUS_FAILURE,e.getMessage()).toJson();
+        return CommonTools.errorResult(ResultMessage.STATUS_FAILURE, e.getMessage()).toJson();
     }
 }
