@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class BasePathFactory {
 
-    /***
-     * 获取根路径
+    /**
+     * @description 获取根路径
      * @return
      */
     public static String getBasePath(HttpServletRequest request) {
@@ -24,7 +24,7 @@ public class BasePathFactory {
      * @return
      */
     public static String getProjectRootPath() {
-        return System.getProperty(ContextParamDictionary.PROJECTPATH.getParamValue());
+        return System.getProperty(ContextParamDictionary.PROJECT_PATH.getParamValue());
     }
 
     /**

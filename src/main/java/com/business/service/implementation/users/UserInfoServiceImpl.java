@@ -1,7 +1,7 @@
 package com.business.service.implementation.users;
 
 import com.business.dao.users.UserInfoRepository;
-import com.business.pojo.dto.UserInfo;
+import com.business.pojo.dto.user.UserInfo;
 import com.business.service.interfaces.users.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;

@@ -6,7 +6,7 @@ import lombok.Getter;
  * Created by yuton on 2016/9/3.
  */
 public enum ContextParamDictionary {
-    PROJECTPATH("webAppRootKey", "projectRootPath");
+    PROJECT_PATH("webAppRootKey", "projectRootPath");
     @Getter
     private String paramName;
     @Getter

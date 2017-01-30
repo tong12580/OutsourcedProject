@@ -19,7 +19,6 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
-import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -328,9 +327,6 @@ public class HttpUtil {
                 if (e instanceof UnknownHostException) {
                     return false;
                 }
-                if (e instanceof ConnectTimeoutException) {
-                    return false;
-                }
                 if (e instanceof SSLException) {
                     return false;
                 }
@@ -353,11 +349,7 @@ public class HttpUtil {
                     .setDefaultRequestConfig(requestConfig)
                     .setRetryHandler(httpRequestRetryHandler)
                     .build();
-        } catch (KeyManagementException e) {
-            log.error(e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            log.error(e.getMessage());
-        } catch (KeyStoreException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
             log.error(e.getMessage());
         }
 
@@ -421,7 +413,7 @@ public class HttpUtil {
      */
     public static String doGet(String pathUrl, String queryString) {
 
-        StringBuffer repString = new StringBuffer();
+        StringBuilder repString = new StringBuilder();
 
         try {
             String path = pathUrl;
@@ -434,8 +426,7 @@ public class HttpUtil {
             TrustManager[] tm = {ignoreCertificationTrustManger};
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, tm, new java.security.SecureRandom());
-
-
+            
             // 从上述SSLContext对象中得到SSLSocketFactory对象 
             SSLSocketFactory ssf = sslContext.getSocketFactory();
             connection.setSSLSocketFactory(ssf);
@@ -468,11 +459,11 @@ public class HttpUtil {
     public static String doGet(String pathUrl, Map<String, String> params) {
 
         String queryString = "";
-        StringBuffer repString = new StringBuffer();
+        StringBuilder repString = new StringBuilder();
 
         try {
             String path = pathUrl;
-            String keyValue = "";
+            String keyValue;
             if (params != null && params.size() > 0) {
 
                 for (String key : params.keySet()) {
@@ -482,7 +473,7 @@ public class HttpUtil {
                     }
                 }
             }
-            if (queryString != null && !queryString.equals("")) {
+            if (!queryString.equals("")) {
                 path = path + "?" + queryString;
             }
             HttpsURLConnection.setDefaultHostnameVerifier(ignoreHostnameVerifier);
@@ -501,7 +492,7 @@ public class HttpUtil {
 
             InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "utf-8");
             BufferedReader br = new BufferedReader(isr);
-            String s = "";
+            String s;
             while (null != (s = br.readLine())) {
                 repString.append(s);
             }
@@ -528,11 +519,11 @@ public class HttpUtil {
 
         String queryString = "";
 
-        StringBuffer repString = new StringBuffer();
+        StringBuilder repString = new StringBuilder();
 
         try {
             String path = pathUrl;
-            String keyValue = "";
+            String keyValue;
             if (params != null && params.size() > 0) {
 
                 for (NameValuePair nvp : params) {
@@ -543,7 +534,7 @@ public class HttpUtil {
                     }
                 }
             }
-            if (queryString != null && !queryString.equals("")) {
+            if (!queryString.equals("")) {
                 path = path + "?" + queryString;
             }
             HttpsURLConnection.setDefaultHostnameVerifier(ignoreHostnameVerifier);
@@ -562,7 +553,7 @@ public class HttpUtil {
 
             InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "utf-8");
             BufferedReader br = new BufferedReader(isr);
-            String s = "";
+            String s;
             while (null != (s = br.readLine())) {
                 repString.append(s);
             }

@@ -1,13 +1,21 @@
 package com.business.controller;
 
+import com.business.common.CommonTools;
+import com.business.common.json.JsonUtil;
+import com.business.common.message.ResultMessage;
 import com.business.common.redis.RedisUtil;
+import com.business.common.response.IResult;
 import com.business.dao.users.UserInfoRepository;
-import com.business.pojo.dto.UserInfo;
+import com.business.dao.users.UserRepository;
+import com.business.pojo.dto.user.UserInfo;
+import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.users.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * Created by yuton on 2016/9/13.
@@ -23,7 +31,23 @@ public class TestUsersController {
     private UserInfoService userInfoService;
 
     @Autowired
-    RedisUtil<String,Object> redisUtil;
+    RedisUtil<String, Object> redisUtil;
+
+    @Resource
+    private UserRepository userRepository;
+
+    @RequestMapping(value = "/api/getUser")
+    public UserDTO getUser() {
+        System.out.print(JsonUtil.objectToJson(userRepository.findOne(1)));
+        return userRepository.findOne(1);
+    }
+
+    @RequestMapping(value = "/api/insetUser")
+    public IResult insetUser(UserDTO user) {
+        System.out.print(JsonUtil.objectToJson(user));
+        userRepository.save(user);
+        return CommonTools.successResult(ResultMessage.STATUS_SUCCESS, userRepository.findOne(1));
+    }
 
     @RequestMapping(value = "/api/getUserInfo")
     public UserInfo getUserInfo() {
