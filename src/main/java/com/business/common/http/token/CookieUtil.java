@@ -1,19 +1,3 @@
-/**
- * Filename:    CookieUtil.java
- * Description:
- * Copyright:   Copyright (c)2011
- * Company:    easy
- *
- * @author: guosheng.zhu
- * @version: 1.0
- * Create at:   2011-12-23 下午07:30:48
- * <p>
- * Modification History:
- * Date           Author       Version      Description
- * ------------------------------------------------------------------
- * 2011-12-23    guosheng.zhu       1.0        1.0 Version
- * 2013-10-14    guosheng.zhu    1.1        1.1 Version
- */
 package com.business.common.http.token;
 
 import com.business.common.CommonTools;

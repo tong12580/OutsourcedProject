@@ -14,7 +14,7 @@ import java.util.concurrent.Executor;
  */
 @Configuration
 @EnableAsync
-@ComponentScan("com.business.thread.task")
+@ComponentScan
 public class TaskExecutorConfig implements AsyncConfigurer{
     @Override
     public Executor getAsyncExecutor() {

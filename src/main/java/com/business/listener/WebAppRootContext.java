@@ -19,7 +19,7 @@ public class WebAppRootContext implements ServletContextInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         servletContext.addListener(WebAppRootListener.class);
-        servletContext.setInitParameter(ContextParamDictionary.PROJECTPATH.getParamName(),
-                ContextParamDictionary.PROJECTPATH.getParamValue());
+        servletContext.setInitParameter(ContextParamDictionary.PROJECT_PATH.getParamName(),
+                ContextParamDictionary.PROJECT_PATH.getParamValue());
     }
 }

@@ -33,7 +33,7 @@ public class SessionUtil extends CommonTools {
      * @param response
      * @param name
      * @param value
-     * @param @throws  Exception
+     * @throws Exception
      * @return void
      * @Title: setSessionAttribute
      * @Description: 保存会话变量

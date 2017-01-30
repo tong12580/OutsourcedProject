@@ -19,3 +19,6 @@ OutsourcedProject.iml
 hs_err_pid*
 /outsourcedproject.ipr
 /outsourcedproject.iws
+.ideaDataSources/
+dataSources/
+outsourcedproject.ids

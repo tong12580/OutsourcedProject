@@ -28,18 +28,23 @@ import java.util.Map;
  */
 public class JsonUtil {
 
-    private static Gson gson = null;
-    private static ObjectMapper objectMapper = null; //jackson
+    private volatile static Gson gson;
+    private volatile static ObjectMapper objectMapper; //jackson
 
     static {
-        if (gson == null) {
-            gson = new Gson();
+        if (null == gson) {
+            synchronized (JsonUtil.class) {
+                if (null == gson) {
+                    gson = new Gson();
+                }
+            }
         }
-    }
-
-    static {
-        if (objectMapper == null) {
-            objectMapper = new ObjectMapper();
+        if (null == objectMapper) {
+            synchronized (JsonUtil.class) {
+                if (null == objectMapper) {
+                    objectMapper = new ObjectMapper();
+                }
+            }
         }
     }
 
@@ -66,11 +71,11 @@ public class JsonUtil {
      * @param ts
      * @return
      */
-    public static String objectToJsonDateSerializer(Object ts, final String dateformat) {
+    public static String objectToJsonDateSerializer(Object ts, final String dateFormat) {
         gson = new GsonBuilder().registerTypeHierarchyAdapter(Date.class, (JsonSerializer<Date>) (src, typeOfSrc, context) -> {
-            SimpleDateFormat format = new SimpleDateFormat(dateformat);
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat);
             return new JsonPrimitive(format.format(src));
-        }).setDateFormat(dateformat).create();
+        }).setDateFormat(dateFormat).create();
         return gson.toJson(ts);
     }
 

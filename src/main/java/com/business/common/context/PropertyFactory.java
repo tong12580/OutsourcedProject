@@ -38,9 +38,8 @@ public class PropertyFactory {
     /**
      * @Title: getProperty
      * @Description: 获取属性数据
-     * @param @param filePath
-     * @param @param name
-     * @param @return
+     * @param filePath {@link String}
+     * @param name {@link String}
      * @return String
      */
     public static String getProperty(String filePath, String name) {
@@ -54,9 +53,7 @@ public class PropertyFactory {
                 InputStream is = new BufferedInputStream(new FileInputStream(
                         filePath));
                 prop.load(is);
-                if (is != null) {
-                    is.close();
-                }
+                is.close();
             } catch (Exception e) {
                 log.error(e.getMessage());
                 return null;
@@ -70,8 +67,7 @@ public class PropertyFactory {
     /**
      * @Title: getFileNameFromPath
      * @Description: 根据路径解析文件名
-     * @param @param path
-     * @param @return
+     * @param path {@link String}
      * @return String
      */
     private static String getFileNameFromPath(String path) {
@@ -79,8 +75,7 @@ public class PropertyFactory {
         if (location == -1) {
             return null;
         }
-        String name = path.substring(location + 1);
-        return name;
+        return path.substring(location + 1);
     }
 }
 

@@ -1,4 +1,4 @@
-package com.business.pojo.dto;
+package com.business.pojo.dto.user;
 
 import lombok.Data;
 
@@ -11,7 +11,10 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * Created by yuton on 2016/9/13.
+ * @author yuton
+ * @version 1.0
+ * @description
+ * @since 2016/9/13 19:31
  */
 @Data
 @Entity
@@ -29,7 +32,7 @@ public class UserInfo implements Serializable{
     @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "age", nullable = true)
+    @Column(name = "age")
     private Integer age;
 
     @Column(name = "sex", nullable = false)

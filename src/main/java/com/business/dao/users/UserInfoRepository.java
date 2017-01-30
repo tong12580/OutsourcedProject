@@ -1,6 +1,6 @@
 package com.business.dao.users;
 
-import com.business.pojo.dto.UserInfo;
+import com.business.pojo.dto.user.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
