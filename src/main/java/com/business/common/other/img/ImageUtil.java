@@ -328,21 +328,21 @@ public class ImageUtil {
         ImageIO.write(subImage, formatName, subImageFile);
     }
 
-    public static void main(String[] args) {
-        try {
-            int size = saveCompress(new FileInputStream(
-                    new File("d:\\test.jpg")), "d:\\test1.jpg", 200, 150);
-            System.out.println(size);
-            // size = saveCompress(new FileInputStream(new
-            // File("d:\\test.gif")), "d:\\test2.gif", 30, 30);
-            // System.out.println(size);
-            // size = saveCompress(new FileInputStream(new
-            // File("d:\\test.png")), "d:\\test3.png", 30, 30);
-            // System.out.println(size);
-        } catch (Exception e) {
-
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            int size = saveCompress(new FileInputStream(
+//                    new File("d:\\test.jpg")), "d:\\test1.jpg", 200, 150);
+//            System.out.println(size);
+//            // size = saveCompress(new FileInputStream(new
+//            // File("d:\\test.gif")), "d:\\test2.gif", 30, 30);
+//            // System.out.println(size);
+//            // size = saveCompress(new FileInputStream(new
+//            // File("d:\\test.png")), "d:\\test3.png", 30, 30);
+//            // System.out.println(size);
+//        } catch (Exception e) {
+//
+//        }
+//    }
 
     private static int getCompressBaseWidthOrHight(BufferedImage srcImage, String destPath, int newWidth) throws IOException {
         int srcW = srcImage.getWidth();

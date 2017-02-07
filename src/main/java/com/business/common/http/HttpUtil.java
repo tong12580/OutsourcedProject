@@ -1,6 +1,7 @@
 package com.business.common.http;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -69,7 +70,6 @@ import java.util.Map;
 @Slf4j
 public class HttpUtil {
     public static final String SELECT_PUBLIC_IP_ADDRESS = "http://www.ip138.com/ip2city.asp";
-    public static final String CHARSET_UTF_8 = "UTF-8";
     public static final String CONTENT_TYPE_APPLICATION_OCTET_STREAM = "application/octet-stream";
     public static final String LOCATION = "Location";
     public static final String CONTENT_DISPOSITION = "Content-Disposition";
@@ -105,7 +105,7 @@ public class HttpUtil {
         CloseableHttpClient httpClient;
         String result = null;
         try {
-            encoderJson = URLEncoder.encode(json, CHARSET_UTF_8);// 将JSON进行UTF-8编码,以便传输中文
+            encoderJson = URLEncoder.encode(json, CharEncoding.UTF_8);// 将JSON进行UTF-8编码,以便传输中文
 
             httpClient = createSSLClientDefault();
             HttpPost httpPost = new HttpPost(url);
@@ -157,15 +157,15 @@ public class HttpUtil {
             httpPost.setHeader(HTTP.USER_AGENT, USER_AGENT_MSG);
             httpPost.setHeader(ACCEPT_LANGUAGE, ACCEPT_LANGUAGE_MSG);
             httpPost.setHeader(ACCEPT_CHARSET, ACCEPT_CHARSET_MSG);
-            StringEntity se = new StringEntity(json, Charset.forName(CHARSET_UTF_8));
+            StringEntity se = new StringEntity(json, Charset.forName(CharEncoding.UTF_8));
             se.setContentType(CONTENT_TYPE_JSON);
-            se.setContentEncoding(CHARSET_UTF_8);
+            se.setContentEncoding(CharEncoding.UTF_8);
             httpPost.setEntity(se);
             response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
 
             if (null != entity) {
-                result = EntityUtils.toString(entity, CHARSET_UTF_8);
+                result = EntityUtils.toString(entity, CharEncoding.UTF_8);
             }
 
         } catch (IOException e) {
@@ -241,12 +241,12 @@ public class HttpUtil {
 
         try {
 
-            httpPost.setEntity(new UrlEncodedFormEntity(pairs, CHARSET_UTF_8));
+            httpPost.setEntity(new UrlEncodedFormEntity(pairs, CharEncoding.UTF_8));
             response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
 
             if (null != entity) {
-                result = EntityUtils.toString(entity, CHARSET_UTF_8);
+                result = EntityUtils.toString(entity, CharEncoding.UTF_8);
             }
 
         } catch (IOException e) {
@@ -277,7 +277,7 @@ public class HttpUtil {
         try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
             HttpEntity entity = response.getEntity();
             if (null != entity) {
-                result = EntityUtils.toString(entity, CHARSET_UTF_8);
+                result = EntityUtils.toString(entity, CharEncoding.UTF_8);
             }
         } catch (ClientProtocolException e) {
             log.error(e.getMessage());
@@ -412,21 +412,19 @@ public class HttpUtil {
      * @return
      */
     public static String doGet(String pathUrl, String queryString) {
-
         StringBuilder repString = new StringBuilder();
-
+        String path = pathUrl;
+        if (null != queryString && !"".equals(queryString)) {
+            path = path + "?" + queryString;
+        }
+        HttpsURLConnection.setDefaultHostnameVerifier(ignoreHostnameVerifier);
         try {
-            String path = pathUrl;
-            if (queryString != null && !queryString.equals("")) {
-                path = path + "?" + queryString;
-            }
-            HttpsURLConnection.setDefaultHostnameVerifier(ignoreHostnameVerifier);
             HttpsURLConnection connection = (HttpsURLConnection) (new URL(path)).openConnection();
 
             TrustManager[] tm = {ignoreCertificationTrustManger};
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, tm, new java.security.SecureRandom());
-            
+
             // 从上述SSLContext对象中得到SSLSocketFactory对象 
             SSLSocketFactory ssf = sslContext.getSocketFactory();
             connection.setSSLSocketFactory(ssf);
@@ -439,7 +437,6 @@ public class HttpUtil {
             }
             isr.close();
             connection.disconnect();
-
         } catch (Exception ex) {
             log.error("调用链接失败：pathUrl:" + pathUrl + "queryString:" + queryString);
             log.error(ex.getMessage());
@@ -464,16 +461,16 @@ public class HttpUtil {
         try {
             String path = pathUrl;
             String keyValue;
-            if (params != null && params.size() > 0) {
+            if (null != params && params.size() > 0) {
 
                 for (String key : params.keySet()) {
                     keyValue = params.get(key);
-                    if (keyValue != null && !keyValue.equals("")) {
+                    if (null != keyValue && !"".equals(keyValue)) {
                         queryString = queryString + key + "=" + keyValue + "&";
                     }
                 }
             }
-            if (!queryString.equals("")) {
+            if (!"".equals(queryString)) {
                 path = path + "?" + queryString;
             }
             HttpsURLConnection.setDefaultHostnameVerifier(ignoreHostnameVerifier);
@@ -524,17 +521,17 @@ public class HttpUtil {
         try {
             String path = pathUrl;
             String keyValue;
-            if (params != null && params.size() > 0) {
+            if (null != params && params.size() > 0) {
 
                 for (NameValuePair nvp : params) {
                     String key = nvp.getName();
                     keyValue = nvp.getValue();
-                    if (keyValue != null && !keyValue.equals("")) {
+                    if (null != keyValue && !"".equals(keyValue)) {
                         queryString = queryString + key + "=" + keyValue + "&";
                     }
                 }
             }
-            if (!queryString.equals("")) {
+            if (!"".equals(queryString)) {
                 path = path + "?" + queryString;
             }
             HttpsURLConnection.setDefaultHostnameVerifier(ignoreHostnameVerifier);
