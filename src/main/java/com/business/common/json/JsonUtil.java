@@ -85,8 +85,8 @@ public class JsonUtil {
      * @param jsonStr
      * @return
      */
-    public static List<?> jsonToList(String jsonStr) {
-        List<?> objList = null;
+    public static List jsonToList(String jsonStr) {
+        List objList = null;
         if (gson != null) {
             Type type = new TypeToken<List<?>>() {
             }.getType();

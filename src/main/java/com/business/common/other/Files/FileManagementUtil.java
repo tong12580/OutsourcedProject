@@ -1,6 +1,7 @@
 package com.business.common.other.Files;
 
 import com.business.common.http.HttpUtil;
+import org.apache.commons.lang3.CharEncoding;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.servlet.ServletOutputStream;
@@ -30,7 +31,7 @@ public class FileManagementUtil {
      * @throws IOException
      */
     public static void exportFile(HttpServletResponse response, File file) throws IOException {
-        String filename = URLEncoder.encode(file.getName(), HttpUtil.CHARSET_UTF_8);
+        String filename = URLEncoder.encode(file.getName(), CharEncoding.UTF_8);
         response.setContentType(HttpUtil.CONTENT_TYPE_APPLICATION_OCTET_STREAM);
         response.setContentLength((int) file.length());
         response.setHeader(HttpUtil.CONTENT_DISPOSITION, "attachment;filename=" + filename);
@@ -54,7 +55,7 @@ public class FileManagementUtil {
      * @throws IOException
      */
     public static void exportFileByNIO(HttpServletResponse response, File file) throws IOException {
-        String filename = URLEncoder.encode(file.getName(), HttpUtil.CHARSET_UTF_8);
+        String filename = URLEncoder.encode(file.getName(), CharEncoding.UTF_8);
         response.setContentType(HttpUtil.CONTENT_TYPE_APPLICATION_OCTET_STREAM);
         response.setContentLength((int) file.length());
         response.setHeader(HttpUtil.CONTENT_DISPOSITION, "attachment;filename=" + filename);
