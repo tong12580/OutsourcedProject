@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CookieUtil extends CommonTools {
 
     private final static String domain = "Bang.vc";//网站域名
-    private final static int cookieMaxAge = 60 * 60 * 12;// 设置cookie有效期
+    private final static int cookieMaxAge = 60 * 60 * 6;// 设置cookie有效期6小时
 
     private final static String HISTORY_PATH = "/";// Cookie中，历史浏览的Cookie的路径
 
@@ -55,13 +55,13 @@ public class CookieUtil extends CommonTools {
     }
 
     /**
-     * @param @param request
-     * @param @param response
-     * @param @param cookieName
-     * @param @param cookieValue
+     * @param  request
+     * @param  response
+     * @param  cookieName
+     * @param  cookieValue
      * @return void
      * @Title: saveCookie
-     * @Description: 添加cookie, 默认过期时间是1周
+     * @Description: 添加cookie, 默认过期时间是6小时
      */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue) {
@@ -75,10 +75,10 @@ public class CookieUtil extends CommonTools {
     }
 
     /**
-     * @param @param request
-     * @param @param response
-     * @param @param cookieName
-     * @param @param cookieValue
+     * @param  request
+     * @param  response
+     * @param  cookieName
+     * @param  cookieValue
      * @return void
      * @Title: setCookie
      * @Description: 添加cookie, 没有设置过期时间
@@ -95,9 +95,8 @@ public class CookieUtil extends CommonTools {
 
 
     /**
-     * @param @param  request
-     * @param @param  cookieName
-     * @param @return
+     * @param   request
+     * @param   cookieName
      * @return String
      * @Title: getCookieByName
      * @Description: 根据cookieName来获取cookieValue

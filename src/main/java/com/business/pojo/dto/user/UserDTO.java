@@ -58,4 +58,7 @@ public class UserDTO extends BaseEntity {
 
     @Column(name = "status", nullable = false)
     private Boolean status;
+
+    @Column(name = "openid")
+    private Boolean openid;
 }

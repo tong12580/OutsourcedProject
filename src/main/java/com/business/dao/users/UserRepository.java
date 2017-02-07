@@ -10,4 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 2017/1/23 17:21
  */
 public interface UserRepository extends JpaRepository<UserDTO, Integer> {
+    UserDTO findByPhoneAndStatusTrue(String phone);
+
+    UserDTO findByOpenidAndStatusTrue(String openid);
 }

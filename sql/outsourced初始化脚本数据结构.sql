@@ -170,7 +170,7 @@ CREATE TABLE `user` (
   `nick_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '用昵称',
   `phone` varchar(11) COLLATE utf8_unicode_ci NOT NULL COMMENT '手机号',
   `email` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '邮箱',
-  `password` varchar(12) COLLATE utf8_unicode_ci NOT NULL COMMENT '密码',
+  `passwrod` varchar(33) COLLATE utf8_unicode_ci NOT NULL COMMENT '密码',
   `salt` varchar(8) COLLATE utf8_unicode_ci NOT NULL COMMENT '密钥',
   `type` smallint(1) NOT NULL DEFAULT '1' COMMENT '用户权限',
   `ip` varchar(20) COLLATE utf8_unicode_ci DEFAULT '0.0.0.1' COMMENT 'ip',
@@ -181,6 +181,9 @@ CREATE TABLE `user` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '账户有效性',
+  `openid` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '微信openId',
+  `image` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户头像',
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

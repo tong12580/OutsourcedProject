@@ -1,7 +1,6 @@
 package com.business.common.http.token;
 
 import com.business.common.CommonTools;
-import com.business.common.message.ExceptionMessage;
 import com.business.common.redis.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,9 +20,7 @@ import java.util.UUID;
 public class SessionUtil extends CommonTools {
 
     public static final String COOKIE_USER_KEY = "UserKey";
-    public static final String USERNAME = "userName";
-    public static final Long TIMEOUT = 30 * 24 * 3600L; //保存30天
-    public static final String SESSION_TIMEOUT = "SESSION_TIMEOUT";
+    public static final Long TIMEOUT = 60 * 60 * 6L; //保存2小时
 
     @Resource
     private static RedisUtil<String, Object> redisUtil;
@@ -40,17 +37,9 @@ public class SessionUtil extends CommonTools {
      */
     public static void setSessionAttribute(HttpServletRequest request,
                                            HttpServletResponse response, String name, Object value) {
-
         String sessionKey = getSessionKey(request, response);
-        String timeout = (String) redisUtil.get(sessionKey + SESSION_TIMEOUT);
-        Long iTimeout = TIMEOUT;
-        try {
-            iTimeout = Long.parseLong(timeout);
-        } catch (Exception e) {
-            log.error(ExceptionMessage.NUMBER_FORMAT_EXCEPTION.getExceptionMsg());
-        }
         if (!isEmpty(sessionKey)) {
-            redisUtil.set(sessionKey + name, value, iTimeout);
+            redisUtil.set(sessionKey + name, value, TIMEOUT);
         }
     }
 
@@ -74,7 +63,7 @@ public class SessionUtil extends CommonTools {
      * @param name
      * @return String
      * @Title: getSessionAttributeString
-     * @Description: 保存会话变量
+     * @Description: 获取会话变量
      */
     public static String getSessionAttributeString(HttpServletRequest request, String name) {
 
@@ -92,6 +81,7 @@ public class SessionUtil extends CommonTools {
      * @Title: getSessionAttribute
      * @Description: 获取会话变量值
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getSessionAttribute(HttpServletRequest request, String name) throws Exception {
         String sessionKey = getSessionKey(request);
         return (!isEmpty(sessionKey) ? (T) redisUtil.get(sessionKey + name) : null);
