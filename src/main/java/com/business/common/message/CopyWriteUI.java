@@ -3,6 +3,7 @@ package com.business.common.message;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * @author yuton
@@ -10,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @description 页面显示错误信息
  * @since 2017/2/7 16:54
  */
+@Component
 @ConfigurationProperties(prefix = "ui", locations = "classpath:copyWriteUI.properties")
 public class CopyWriteUI {
 

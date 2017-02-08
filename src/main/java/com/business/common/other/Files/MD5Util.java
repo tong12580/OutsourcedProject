@@ -15,7 +15,7 @@ public class MD5Util {
     /**
      * @param fields {@link String []}
      * @return md5
-     * @description MD5 45位加密
+     * @description MD5 33位加密
      */
     public static String getMD5Encode(String... fields) {
         if (ArrayUtils.isEmpty(fields)) {

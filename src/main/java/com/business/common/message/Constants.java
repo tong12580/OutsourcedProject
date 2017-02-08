@@ -15,6 +15,11 @@ public enum Constants {
     BASE_PATH("https://xxx.xx.com/"),
 
     /**
+     * @description 网站域名
+     */
+    DOMAIN("127.0.0.1"),
+
+    /**
      * @description session key 常量定义
      */
     SESSION_KEY_USER("sessionUser"), // 用户session

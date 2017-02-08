@@ -19,6 +19,11 @@ public class BasePathFactory {
         return getWebRootPath(request);
     }
 
+    public static String getDomainPath(HttpServletRequest request){
+        return request.getScheme() + "://" + request.getServerName() + ":"
+                + request.getServerPort() + request.getContextPath() + "/";
+    }
+
     /**
      * @Description: ProjectRootPath
      * @return

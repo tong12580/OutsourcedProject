@@ -1,10 +1,11 @@
 package com.business.common.http.token;
 
 import com.business.common.CommonTools;
+import com.business.common.context.SpringContextUtil;
+import com.business.common.other.Files.MD5Util;
 import com.business.common.redis.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
@@ -19,28 +20,27 @@ import java.util.UUID;
 @Slf4j
 public class SessionUtil extends CommonTools {
 
-    public static final String COOKIE_USER_KEY = "UserKey";
-    public static final Long TIMEOUT = 60 * 60 * 6L; //保存2小时
-
-    @Resource
-    private static RedisUtil<String, Object> redisUtil;
+    private static final String COOKIE_USER_KEY = "OUTSOURCED_USER_TOKEN";
+    private static final Long TIMEOUT = 60 * 60 * 6L; //保存2小时
+    @SuppressWarnings("unchecked")
+    private static RedisUtil<String, Object> redisUtil = SpringContextUtil.getBean(RedisUtil.class);
 
     /**
      * @param request
      * @param response
      * @param name
      * @param value
-     * @throws Exception
      * @return void
+     * @throws Exception
      * @Title: setSessionAttribute
      * @Description: 保存会话变量
      */
-    public static void setSessionAttribute(HttpServletRequest request,
-                                           HttpServletResponse response, String name, Object value) {
+    public static String setSessionAttribute(HttpServletRequest request,
+                                             HttpServletResponse response, String name, Object value) {
         String sessionKey = getSessionKey(request, response);
-        if (!isEmpty(sessionKey)) {
-            redisUtil.set(sessionKey + name, value, TIMEOUT);
-        }
+        String key = MD5Util.getMD5Encode(sessionKey, name);
+        redisUtil.set(key, value, TIMEOUT);
+        return key;
     }
 
     /**
@@ -66,9 +66,8 @@ public class SessionUtil extends CommonTools {
      * @Description: 获取会话变量
      */
     public static String getSessionAttributeString(HttpServletRequest request, String name) {
-
         String sessionKey = getSessionKey(request);
-        return (!isEmpty(sessionKey) ? (String) redisUtil.get(sessionKey + name) : null);
+        return (!isEmpty(sessionKey) ? (String) redisUtil.get(MD5Util.getMD5Encode(sessionKey, name)) : null);
     }
 
 
@@ -84,7 +83,7 @@ public class SessionUtil extends CommonTools {
     @SuppressWarnings("unchecked")
     public static <T> T getSessionAttribute(HttpServletRequest request, String name) throws Exception {
         String sessionKey = getSessionKey(request);
-        return (!isEmpty(sessionKey) ? (T) redisUtil.get(sessionKey + name) : null);
+        return (!isEmpty(sessionKey) ? (T) redisUtil.get(MD5Util.getMD5Encode(sessionKey, name)) : null);
     }
 
     /**
@@ -98,7 +97,7 @@ public class SessionUtil extends CommonTools {
                                               String name) {
         String sessionKey = getSessionKey(request);
         if (sessionKey != null) {
-            redisUtil.delete(sessionKey + name);
+            redisUtil.delete(MD5Util.getMD5Encode(sessionKey,name) + name);
         }
     }
 
@@ -119,13 +118,13 @@ public class SessionUtil extends CommonTools {
     }
 
     /**
-     * @Description: 移出Session
      * @param request
      * @param response
      * @param name
      * @return
+     * @Description: 移出Session
      */
-    public static boolean removeSession(HttpServletRequest request, HttpServletResponse response,String name) {
+    public static boolean removeSession(HttpServletRequest request, HttpServletResponse response, String name) {
         String sessionKey = getSessionKey(request);
         if (!isEmpty(sessionKey)) {
             CookieUtil.removeCookieByName(request, response, COOKIE_USER_KEY);
@@ -170,11 +169,11 @@ public class SessionUtil extends CommonTools {
     }
 
     /**
-     * @Description: 获取会话的sessionId
      * @param request
      * @return {@link String}
+     * @Description: 获取会话的sessionId
      */
-    public static String getSessionId(HttpServletRequest request){
+    public static String getSessionId(HttpServletRequest request) {
         return request.getSession().getId();
     }
 
