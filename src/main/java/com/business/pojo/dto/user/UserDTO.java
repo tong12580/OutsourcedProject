@@ -44,7 +44,7 @@ public class UserDTO extends BaseEntity {
     @Column(name = "ip")
     private String ip;
 
-    @Column(name = "sex", nullable = false)
+    @Column(name = "sex")
     private String sex;
 
     @Column(name = "id_number")
@@ -60,5 +60,9 @@ public class UserDTO extends BaseEntity {
     private Boolean status;
 
     @Column(name = "openid")
-    private Boolean openid;
+    private String openid;
+
+    @Column(name = "image")
+    private String image;
+
 }

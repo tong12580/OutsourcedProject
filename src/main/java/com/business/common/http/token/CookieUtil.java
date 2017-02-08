@@ -2,16 +2,16 @@ package com.business.common.http.token;
 
 import com.business.common.CommonTools;
 import com.business.common.context.BasePathFactory;
+import com.business.common.message.Constants;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 public class CookieUtil extends CommonTools {
 
-    private final static String domain = "Bang.vc";//网站域名
-    private final static int cookieMaxAge = 60 * 60 * 6;// 设置cookie有效期6小时
-
+    private final static int COOKIE_MAX_AGE = 60 * 60 * 6;// 设置cookie有效期6小时
     private final static String HISTORY_PATH = "/";// Cookie中，历史浏览的Cookie的路径
 
     // 清除所有历史浏览记录
@@ -26,7 +26,7 @@ public class CookieUtil extends CommonTools {
                 thisCookie.setMaxAge(0); // 删除这个cookie
                 thisCookie.setPath(HISTORY_PATH);
                 if (checkDomain(request)) {
-                    thisCookie.setDomain(domain);
+                    thisCookie.setDomain(Constants.DOMAIN.getConstants());
                 }
                 response.addCookie(thisCookie);
             }
@@ -47,7 +47,7 @@ public class CookieUtil extends CommonTools {
                 thisCookie.setMaxAge(0); // 删除这个cookie
                 thisCookie.setPath(HISTORY_PATH);
                 if (checkDomain(request)) {
-                    thisCookie.setDomain(domain);
+                    thisCookie.setDomain(Constants.DOMAIN.getConstants());
                 }
                 response.addCookie(thisCookie);
             }
@@ -67,9 +67,9 @@ public class CookieUtil extends CommonTools {
                                  String cookieValue) {
         Cookie cookie = new Cookie(cookieName, cookieValue);
         if (checkDomain(request)) {
-            cookie.setDomain(domain);
+            cookie.setDomain(Constants.DOMAIN.getConstants());
         }
-        cookie.setMaxAge(cookieMaxAge);
+        cookie.setMaxAge(COOKIE_MAX_AGE);
         cookie.setPath(HISTORY_PATH);
         response.addCookie(cookie);
     }
@@ -87,7 +87,7 @@ public class CookieUtil extends CommonTools {
                                       String cookieValue) {
         Cookie cookie = new Cookie(cookieName, cookieValue);
         if (checkDomain(request)) {
-            cookie.setDomain(domain);
+            cookie.setDomain(Constants.DOMAIN.getConstants());
         }
         cookie.setPath(HISTORY_PATH);
         response.addCookie(cookie);
@@ -114,12 +114,8 @@ public class CookieUtil extends CommonTools {
     }
 
     private static boolean checkDomain(HttpServletRequest request) {
-        boolean flag = false;
-        String basePath = BasePathFactory.getBasePath(request);
-        if (!isEmpty(basePath) && basePath.contains(domain)) {
-            flag = true;
-        }
-        return flag;
+        String basePath = BasePathFactory.getDomainPath(request);
+        return !isEmpty(basePath) && basePath.contains(Constants.DOMAIN.getConstants());
     }
 
 }

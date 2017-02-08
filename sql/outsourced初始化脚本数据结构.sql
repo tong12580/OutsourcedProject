@@ -40,6 +40,7 @@ CREATE TABLE `commodity` (
   `coupon_type_id` int(11) DEFAULT NULL COMMENT '可使用优惠券类型id',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `picture_tree` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -119,6 +120,7 @@ CREATE TABLE `coupon_config` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '类型创建时间',
   `status_time` datetime DEFAULT NULL COMMENT '有效期开始时间',
   `end_time` datetime DEFAULT NULL COMMENT '有效期截至时间',
+  `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -170,11 +172,10 @@ CREATE TABLE `user` (
   `nick_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '用昵称',
   `phone` varchar(11) COLLATE utf8_unicode_ci NOT NULL COMMENT '手机号',
   `email` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '邮箱',
-  `passwrod` varchar(33) COLLATE utf8_unicode_ci NOT NULL COMMENT '密码',
+  `password` varchar(33) COLLATE utf8_unicode_ci NOT NULL COMMENT '密码',
   `salt` varchar(8) COLLATE utf8_unicode_ci NOT NULL COMMENT '密钥',
-  `type` smallint(1) NOT NULL DEFAULT '1' COMMENT '用户权限',
   `ip` varchar(20) COLLATE utf8_unicode_ci DEFAULT '0.0.0.1' COMMENT 'ip',
-  `sex` varchar(1) COLLATE utf8_unicode_ci NOT NULL DEFAULT '男' COMMENT '性别',
+  `sex` varchar(1) COLLATE utf8_unicode_ci DEFAULT '男' COMMENT '性别',
   `id_number` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '身份号',
   `address` varchar(115) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '居住地址',
   `invite_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '邀请码',
@@ -183,9 +184,9 @@ CREATE TABLE `user` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '账户有效性',
   `openid` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '微信openId',
   `image` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户头像',
-  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `type` int(11) NOT NULL COMMENT '用户权限',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `user_address` */
 
@@ -199,10 +200,11 @@ CREATE TABLE `user_address` (
   `province` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '省',
   `city` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '市',
   `county` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '区县',
-  `specific_address` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '具体地址',
+  `specific_addrss` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '具体地址',
   `status` tinyint(1) DEFAULT NULL COMMENT '状态 是否默认',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `specific_address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -222,6 +224,22 @@ CREATE TABLE `user_info` (
   `user_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Table structure for table `user_oauth` */
+
+DROP TABLE IF EXISTS `user_oauth`;
+
+CREATE TABLE `user_oauth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户访问权限控制表',
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `token` varchar(33) COLLATE utf8_unicode_ci NOT NULL COMMENT 'token',
+  `type` int(11) NOT NULL DEFAULT '1' COMMENT '用户权限',
+  `valid_time` int(3) NOT NULL DEFAULT '6' COMMENT '有效时间(小时)',
+  `status` tinyint(1) NOT NULL COMMENT '状态',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -51,15 +51,15 @@ public class TestUsersController {
 
     @RequestMapping(value = "/api/getUserInfo")
     public UserInfo getUserInfo() {
-//        redisUtil.setString("11", "112");
+        redisUtil.set("11", "112");
 //        log.info("11:"+redisUtil.getString("11"));
 //        redisUtil.set("12", "111", 6L);
 //        redisUtil.set("13", userInfoRepository.findFirstByUserName("樱桃"), 5L);
 //        log.info("12:"+redisUtil.get("12"));
 //        System.out.print("13:"+redisUtil.get("13"));
-//        UserInfo userInfo = new UserInfo();
-//        userInfo.setUserName("萝");
-//        redisUtil.set("14", userInfo, 1L);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName("萝");
+        redisUtil.set("14", userInfo);
 //        System.out.println("14:"+redisUtil.get("14"));
 //        Map<String,Object> map = new HashMap<>();
 //        map.put("1",1);

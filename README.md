@@ -12,6 +12,7 @@
 | 2016/12/12  | joker      | 20161212 |
 | 2017/01/07  | joker      | 20170106 |
 | 2017/01/17  | joker      | 20170116 |
+| 2017/02/08  | joker      | 20170208 |
 
 1. OutsourcedProject是什么?
 * > OutsourcedProject项目是一个基于springBoot + springDate 的快速开发项目 他专注于服务的后台接口
@@ -20,7 +21,6 @@
 
 #### OutsourcedProject 目录结构树
 ``` xml
-├─outsourced-log
 ├─sql
 └─src
     ├─main
@@ -41,8 +41,10 @@
     │  │          │  │  └─img
     │  │          │  ├─redis
     │  │          │  ├─response
-    │  │          │  └─sort
+    │  │          │  ├─sort
+    │  │          │  └─uuid
     │  │          ├─controller
+    │  │          │  └─user
     │  │          ├─dao
     │  │          │  ├─commodity
     │  │          │  ├─coupon
@@ -82,6 +84,7 @@
         └─java
             └─com
                 └─business
+
 ````
 ### 打包方式
 > 本项目可以用MVN进行打包构建 具体的mvn脚本如下所示
