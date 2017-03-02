@@ -6,10 +6,9 @@ import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
 import com.business.common.response.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.lang3.SystemUtils;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -18,352 +17,61 @@ import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.regex.Pattern;
 
 
 /**
  * @author yuton
- * @since 2016/8/2 12:06
- * @description
  * @version 1.0
+ * @description 公共校验方法
+ * @since 2016/8/2 12:06
  */
 @Slf4j
 public class CommonTools {
     private static final String PATTERN_HAVE_TIME = "yyyy-MM-dd HH:mm:ss";
-    private static final String PATTERN_DAY = "yyyy-MM-dd";
-    private static final String PATTERN_NOT_HAVE_TIME = "yyyy-MM-dd 00:00:00";
-    private static final String LINUX = "Linux";
-    private static final String WINDOWS = "Windows";
-
-    /**
-     * 判断对象是否为空
-     *
-     * @param obj {@link Object}
-     * @return boolean
-     */
-    public static boolean isEmpty(Object obj) {
-        return obj == null;
-    }
-
-    /**
-     * 判断对象数组是否为空
-     *
-     * @param objects {@link Object[]}
-     * @return boolean
-     */
-    public static boolean isEmpty(Object[] objects) {
-        if (null == objects || objects.length == 0) return true;
-        for (Object object : objects) {
-            if (isEmpty(object)) return true;
-        }
-        return false;
-    }
-
-    /**
-     * 判断整形是否为空或0
-     *
-     * @param integer {@link Integer}
-     * @return
-     */
-    public static boolean isEmpty(Integer integer) {
-        return null == integer || 0 == integer;
-    }
-
-    /**
-     * 字符是否为空或"null"
-     *
-     * @param str {@link String}
-     * @return boolean
-     */
-    public static boolean isEmpty(String str) {
-        return StringUtils.isEmpty(str);
-    }
-
-    /**
-     * 字符是否为空或"null"或空白条
-     *
-     * @param str {@link String}
-     * @return boolean
-     */
-    public static boolean isBlank(String str) {
-        return StringUtils.isBlank(str);
-    }
-
-    /**
-     * List是否为空
-     *
-     * @param list {@link List}
-     * @return boolean
-     */
-    public static <T> boolean isEmpty(List<T> list) {
-        return CollectionUtils.isEmpty(list);
-    }
-
-    /**
-     * Map是否为空
-     *
-     * @param map {@link Map}
-     * @return boolean
-     */
-    public static <K, V> boolean isEmpty(Map<K, V> map) {
-        return CollectionUtils.isEmpty(map);
-    }
-
-    /**
-     * @param strings
-     * @return boolean
-     * @Title: isEmpty
-     * @Description: 判断字符串是否为空
-     */
-    public static boolean isEmpty(String... strings) {
-        if (isEmpty(strings) || 0 == strings.length) {
-            return true;
-        }
-        for (String string : strings) {
-            isBlank(string);
-        }
-        return false;
-    }
-
-    /**
-     * @param integers
-     * @return boolean
-     * @Title isEmpty
-     * @Description: 判断intArry是否为空
-     */
-    public static boolean isEmpty(Integer... integers) {
-        if (isEmpty(integers) || 0 == integers.length) {
-            return true;
-        }
-        for (Integer integer : integers) {
-            if (isEmpty(integer)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * 遍历Map并除去空值
      *
-     * @param reqMap {@Link Map}
-     * @return
+     * @param reqMap {@link Map}
+     * @return {@link Map}
      */
     public static <K, V> Map<K, V> checkParamsAndDelEmpty(Map<K, V> reqMap) {
-        reqMap.entrySet().stream().filter(map -> isEmpty(map.getValue())).forEach(map -> reqMap.remove(map.getKey()));
+        reqMap.entrySet().stream().filter(map -> null == map.getValue()).forEach(map -> reqMap.remove(map.getKey()));
         return reqMap;
     }
 
     /***
      * 判断字符串是否只有数字及字母
-     * @param str {@Link String}
-     * @return
-     */
-    public static boolean isNumChar(String str) {
-        int len = str.length();
-        for (int i = 0; i < len; i++) {
-            char c = str.charAt(i);
-            if (((c < 'a') || (c > 'z')) && ((c < 'A') || (c > 'Z'))) {
-                if (!Character.isDigit(c)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /***
-     * 判断是否为整数
-     * @param str {@Link String}
-     * @return
-     */
-    public static boolean isInteger(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /***
-     * 判断是否为浮点数
      * @param str {@link String}
-     * @return
+     * @return {@link boolean}
      */
-    public static boolean isDouble(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+    public static boolean isNumOrChar(String str) {
+        return str.matches("^[a-z0-9A-Z]+$");
     }
 
     /**
-     * 判断是否为正确日期
-     *
-     * @param str，格式为：yyyy-MM-dd HH:mm:ss {@link String}
+     * @param n int
      * @return
+     * @description 生成若干位随机数字字符
      */
-    public static boolean isDate(String str) {
-
-        try {
-            DateFormat f = new SimpleDateFormat(PATTERN_HAVE_TIME);
-            Date d = f.parse(str);
-            String s = f.format(d);
-            return s.equals(str);
-        } catch (Exception ignored) {
-        }
-        return false;
-    }
-
-    /**
-     * 不大于0
-     *
-     * @param number
-     * @return
-     */
-    public static boolean notGreaterZero(BigDecimal number) {
-        return number.compareTo(new BigDecimal(0)) < 1;
-    }
-
-    /**
-     * 是否大0
-     *
-     * @param number
-     * @return
-     */
-    public static boolean isGreaterZero(BigDecimal number) {
-        return number.compareTo(new BigDecimal(0)) > 0;
-    }
-
-    /**
-     * 生成 pwdLength长度的随机码
-     *
-     * @param a
-     * @param pwdLength
-     * @return int
-     */
-    public static int getRandomCode(int a, int pwdLength) {
-        Random random = new Random();
-        int b = random.nextInt(10);
-        a = a * 10 + b;
-        if (a < 100000) {
-            return getRandomCode(a, pwdLength);
-        }
-        return a;
-    }
-
-    /**
-     * @return int
-     * @Title: getCode6
-     * @Description: 获取6位随机数
-     * @date 2014-9-2 下午07:15:07
-     */
-    public static int getRandomCode6() {
-        int intCount = (new Random()).nextInt(999999);// 最大值位9999
-        if (intCount < 100000)
-            intCount += 100000; // 最小值位10000001
-        return intCount;
+    public static String getRandomNum(int n) {
+        return RandomStringUtils.randomNumeric(n);
     }
 
     /***
-     * 随机数
-     * @param n
-     * @return
+     * 随机若干位字符串只含字母
+     * @param n {@link int}
+     * @return {@link String}
      */
-    public static String getRandStr(int n) {
-        Random random = new Random();
-        String sRand = "";
-        for (int i = 0; i < n; i++) {
-            String rand = String.valueOf(random.nextInt(10));
-            sRand = sRand + rand;
-        }
-        return sRand;
-    }
-
-    /***
-     * 字符转数值 int
-     * 判断是否为0
-     * @param str
-     * @return int
-     */
-    public static int parseInt(String str) {
-        return isEmpty(str) ? 0 : Integer.parseInt(str.trim());
-    }
-
-    /***
-     * 字符转数值 Integer
-     * 判断是否为空
-     * @param intstr
-     * @return Integer
-     */
-    public static Integer parseInteger(String intstr) {
-        return isEmpty(intstr) ? null : Integer.parseInt(intstr.trim());
-    }
-
-    /***
-     * 对象转数值  Integer
-     * @param object
-     * @return Integer
-     */
-    public static Integer parseInteger(Object object) {
-        if (isEmpty(object)) return null;
-        return Integer.parseInt(object.toString());
-    }
-
-    /***
-     * 字符转数值float
-     * @param intstr
-     * @return float
-     */
-    public static float parseFloat(String intstr) {
-        return isEmpty(intstr) ? 0.0F : Float.parseFloat(intstr.trim());
-    }
-
-    /***
-     * 对象转数值Float
-     * @param object
-     * @return Float
-     */
-    public static Float parseFloat(Object object) {
-        if (isEmpty(object)) return null;
-        return Float.parseFloat(object.toString());
-    }
-
-    /***
-     * 字符转数值double
-     * @param str
-     * @return double
-     */
-    public static double parseDouble(String str) {
-        return isEmpty(str) ? 0.0D : Double.parseDouble(str.trim());
-    }
-
-    /***
-     * 对象转数值Double
-     * @param object
-     * @return Double
-     */
-    public static Double parseDouble(Object object) {
-        if (isEmpty(object)) return null;
-        return Double.parseDouble(object.toString());
+    public static String getRandomStr(int n) {
+        return RandomStringUtils.randomAlphabetic(n);
     }
 
     /***
      * 检查一个数组中是否包含某个特定的值
-     * @param arr
-     * @param targetValue
+     * @param arr {@link String []}
+     * @param targetValue {@link String}
      * @return boolean
      */
     public static boolean useLoop(String[] arr, String targetValue) {
@@ -375,320 +83,35 @@ public class CommonTools {
         return false;
     }
 
-    /***
-     * 正则校验(入参 params 不能为 null)
-     * @param params      入参
-     * @param macroDefine 宏定义（正则表达式）
-     * @return boolean
-     */
-    public static boolean regExpCheck(String params, String macroDefine) {
-        return params.matches(macroDefine);
-    }
-
-    /***
-     * 判断两个时间是否相同
-     * @param date1 等待比较第一个时间
-     * @param date2 等待比较第二个时间
-     * @return 比较结果
-     */
-    public static boolean isSameDay(Date date1, Date date2) {
-        return DateUtils.isSameDay(date1, date2);
-    }
-
-    /***
-     * 比较两个日历类数据是否相同
-     * @param cal1 比较第一个日历类
-     * @param cal2 比较第二个日历类
-     * @return 比较结果
-     */
-    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
-        return DateUtils.isSameDay(cal1, cal2);
-    }
-
-    /***
-     * 新增年份
-     * @param date 需要新增时间
-     * @param year 增加年份
-     * @return 增加后年份
-     */
-    public static Date addYears(Date date, int year) {
-        return DateUtils.addYears(date, year);
-    }
-
-    /***
-     * 对时间格式进行格式化
-     * @param date 时间类型
-     * @return yyyy-MM-dd {@link String}
-     */
-    public static String format(Date date) {
-        return DateFormatUtils.format(date, DateFormatUtils.ISO_DATE_FORMAT
-                .getPattern());
-    }
-
-    /***
-     * 对时间格式进行格式化
-     * @param date 时间类型
-     * @return yyyy-MM-dd'T'HH:mm:ss {@link String}
-     */
-    public static String formatDate(Date date) {
-        return DateFormatUtils.format(date, DateFormatUtils.ISO_DATETIME_FORMAT
-                .getPattern());
-    }
-
-    /***
-     * 格式化时间
-     * @param date    时间参数
-     * @param pattern 格式化参数类型
-     * @return {@link String}
-     */
-    public static String format(Date date, String pattern) {
-        return DateFormatUtils.format(date, pattern);
-    }
-
-    /***
-     * 格式化时间参数
-     * @param date 时间参数
-     * @return HH:mm:ss {@link String}
-     */
-    public static String formatTime(Date date) {
-        return DateFormatUtils.format(date,
-                DateFormatUtils.ISO_TIME_NO_T_FORMAT.getPattern());
-    }
-
-    /***
-     * 当前时间
-     * @return {@link String}
-     */
-    public static String getCurDatetime() {
-        return format(new Date(), PATTERN_HAVE_TIME);
-    }
-
-    /***
-     * 当前时间
-     * @return {@link String}
-     */
-    public static String getCurDatetime(String pattern) {
-        return format(new Date(), pattern);
-    }
-
-    /***
-     * 格式化时间
-     * @param date yyyy-MM-dd
-     * @return {@link Date}
-     */
-    public static Date getCurDate(String date, String pattern) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        try {
-            return simpleDateFormat.parse(date);
-        } catch (ParseException e) {
-            log.error(e.getMessage());
-            return null;
-        }
-    }
-
-    /***
-     * 增加月份
-     * @param date  传入时间
-     * @param month 需要增加月份
-     * @return 增加月份
-     */
-    public static Date addMonths(Date date, int month) {
-        return DateUtils.addMonths(date, month);
-    }
-
-    /***
-     * 增加周
-     * @param date   当前时间
-     * @param amount 需要增加周
-     * @return 增加后时间
-     */
-    public static Date addWeeks(Date date, int amount) {
-        return DateUtils.addWeeks(date, amount);
-    }
-
-    /***
-     * 增加天
-     * @param date   当前时间
-     * @param amount 需要增加天数
-     * @return 增加后时间
-     */
-    public static Date addDays(Date date, int amount) {
-        return DateUtils.addDays(date, amount);
-    }
-
-    /***
-     * 增加小时
-     * @param date   当前时间
-     * @param amount 增加小时数
-     * @return 增加后时间
-     */
-    public static Date addHours(Date date, int amount) {
-        return DateUtils.addHours(date, amount);
-    }
-
-    /***
-     * 增加分钟
-     * @param date   当前时间
-     * @param amount 增加分钟数
-     * @return 增加后时间
-     */
-    public static Date addMinutes(Date date, int amount) {
-        return DateUtils.addHours(date, amount);
-    }
-
-    /***
-     * 增加秒
-     * @param date   当前时间
-     * @param amount 增加秒数
-     * @return 增加后时间
-     */
-    public static Date addSeconds(Date date, int amount) {
-        return DateUtils.addSeconds(date, amount);
-    }
-
-    /***
-     * 添加毫秒
-     * @param date   当前时间
-     * @param amount 增加毫秒
-     * @return 增加后时间
-     */
-    public static Date addMilliseconds(Date date, int amount) {
-        return DateUtils.addMilliseconds(date, amount);
-    }
-
-
-    /***
-     * 判断是否是周末
-     * @param date
-     * @return
-     */
-    public static boolean isWeekEnd(Date date) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
-            return true;
-        return false;
-    }
-
-    /***
-     * 当前日期前n个交易日
-     * @param date
-     * @return
-     */
-    public Date tradingTomorrowDay(Date date, int n) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, n);
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        return new Date(calendar.getTimeInMillis());
-    }
-
-    /***
-     * 计算两个时间相差的天数
-     * @param date1
-     * @param date2
-     * @return
-     */
-    public static int daysBetween(Date date1, Date date2) {
-        if (date1 == null || date2 == null) {
-            return 0;
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date1);
-        long time1 = cal.getTimeInMillis();
-        cal.setTime(date2);
-        long time2 = cal.getTimeInMillis();
-        Long between_days = (time2 - time1) / (1000 * 3600 * 24);
-        return between_days.intValue();
-    }
-
-    /***
-     * 计算两个时间相差的天数 先格式化时间
-     * @param date1
-     * @param date2
-     * @return {@link Integer}
-     */
-    public static int daysBetween(Date date1, Date date2, String pattern) {
-        if (date1 == null || date2 == null) {
-            return 0;
-        }
-        date1 = getCurDate(format(date1, pattern), pattern);
-        date2 = getCurDate(format(date2, pattern), pattern);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date1);
-        long time1 = cal.getTimeInMillis();
-        cal.setTime(date2);
-        long time2 = cal.getTimeInMillis();
-        long between_days = (time2 - time1) / (1000 * 3600 * 24);
-        return Integer.parseInt(String.valueOf(between_days));
-    }
-
     /**
-     * @param time1
-     * @param time2
-     * @return int
-     * @Title: getTimestamp
-     * @Description: 获取1-2的时间差，单位为ms
-     */
-    public static int getTimestamp(Date time1, Date time2) {
-        if (time1 == null || time2 == null) {
-            return 0;
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(time1);
-        long m1 = cal.getTimeInMillis();
-        cal.setTime(time2);
-        long m2 = cal.getTimeInMillis();
-        long between_sec = (m2 - m1);
-        return Integer.parseInt(String.valueOf(between_sec));
-    }
-
-
-    /**
-     * @return boolean
-     * @Title: isNumeric
+     * @param str {@link String}
+     * @return {@link boolean}
      * @Description: 判断字符串是否为数字
-     * @Param @param str
-     * @Param @return
      */
-    public static boolean isNumeric(String str) {
-        Pattern pattern = Pattern.compile("[0-9]*");
-        return pattern.matcher(str).matches();
+    public static boolean isNumber(String str) {
+        return str.matches("[0-9]*");
     }
 
     /**
-     * 判断手机号是否合法
-     *
-     * @param phone
-     * @return
+     * @param phone {@link String}
+     * @return {@link boolean}
+     * @description 判断手机号是否合法
      */
     public static boolean isPhone(String phone) {
-        if (isBlank(phone)) {
-            return false;
-        }
-        return regExpCheck(phone, "^[1][3,4,5,7,8][0-9]{9}$");
+        return StringUtils.isNotBlank(phone) && phone.matches("^[1][3,4,5,7,8][0-9]{9}$");
     }
 
     /**
-     * 判断邮箱号是否合法
-     *
-     * @param email
-     * @return
+     * @param email {@link String}
+     * @return {@link boolean}
+     * @description 判断邮箱号是否合法
      */
     public static boolean isEmail(String email) {
-        if (isBlank(email)) {
-            return false;
-        }
-        return regExpCheck(email, "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+        return StringUtils.isNotBlank(email) && email.matches("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
     }
 
     /**
-     * @param name
+     * @param name {@link String}
      * @return String
      * @Title: getFileSuffix
      * @Description: 获取文件后缀，返回如：.jpg
@@ -702,28 +125,7 @@ public class CommonTools {
     }
 
     /**
-     * @return String
-     * @Title: getAgeByBirthday
-     * @Description: 计算年龄
-     */
-    public static String getAgeByBirthday(Date birthday) {
-        int days = daysBetween(birthday, new Date());
-        int year = days / 365;
-        int month = (days % 365) / 30;
-        String age = "";
-        if (year > 0) {
-            age = year + "岁";
-            if (month > 0) {
-                age = age + month + "个月";
-            }
-        } else if (month > 0) {
-            age = month + "个月";
-        }
-        return age;
-    }
-
-    /**
-     * @param path
+     * @param path {@link String}
      * @return void
      * @Title: makeDir
      * @Description: 创建目录，如果存在则不创建
@@ -735,8 +137,8 @@ public class CommonTools {
 
     /***
      * 隐藏号码
-     * @param param
-     * @return
+     * @param param {@link String}
+     * @return {@link String}
      */
     public static String putConcealParam(String param) {
 
@@ -747,10 +149,10 @@ public class CommonTools {
 
     /***
      * Map转Bean
-     * @param tClass
-     * @param map
-     * @param <T>
-     * @return
+     * @param tClass {@link Class<T>}
+     * @param map {@link Map}
+     * @param <T> {@link T}
+     * @return {@link T}
      */
     public static <T> T mapToBean(Class<T> tClass, Map<String, Object> map) throws IntrospectionException, IllegalAccessException, InstantiationException, InvocationTargetException {
         BeanInfo beanInfo = Introspector.getBeanInfo(tClass);
@@ -772,12 +174,13 @@ public class CommonTools {
         return null;
     }
 
+
     /***
      * json to bean
-     * @param json
-     * @param tClass
-     * @param <T>
-     * @return
+     * @param json {@link String}
+     * @param tClass {@link Class}
+     * @param <T> {@link T}
+     * @return {@link T}
      * @throws IOException
      */
     public static <T> T getBean(String json, Class<T> tClass) throws IOException {
@@ -790,20 +193,19 @@ public class CommonTools {
      * @return {@link IResult}
      */
     public static IResult successResult(ResultMessage resultMessage) {
-        return new Result(resultMessage);
+        return new Result<>(resultMessage);
     }
 
     /***
      * 成功提示 有返回
      * @param resultMessage {@link ResultMessage}
      * @param result {@link T}
-     * @param <T>
+     * @param <T> {@link T}
      * @return {@link IResult}
      */
     public static <T> IResult<T> successResult(ResultMessage resultMessage, T result) {
         return new Result<>(resultMessage, result);
     }
-
 
     /***
      * 错误提示 无返回
@@ -816,12 +218,12 @@ public class CommonTools {
 
     /***
      * 错误提示
-     * @param code
-     * @param msg
+     * @param code {@link Integer}
+     * @param msg {@link String}
      * @return {@link IResult}
      */
     public static IResult errorResult(int code, String msg) {
-        IResult result = new Result();
+        IResult<String> result = new Result<>();
         result.setCode(code);
         result.setMsg(msg);
         return result;
@@ -833,15 +235,15 @@ public class CommonTools {
      * @return {@link IResult}
      */
     public static IResult errorResult(ResultMessage resultMessage, String specificMsg) {
-        IResult result = new Result();
-        specificMsg = isBlank(specificMsg) ? "" : specificMsg;
+        IResult<String> result = new Result<>();
+        specificMsg = StringUtils.isBlank(specificMsg) ? "" : specificMsg;
         result.setCode(resultMessage.getCode());
         result.setMsg(resultMessage.getMsg().replace("{}", specificMsg));
         return result;
     }
 
     /**
-     * @return
+     * @return {@link String}
      * @description 获取本机公网ip
      */
     public static String getLocalPublicIp() {
@@ -849,22 +251,16 @@ public class CommonTools {
         return html.substring(html.indexOf("[") + 1, html.indexOf("]"));
     }
 
-
     /**
-     * @return
+     * @return {@link String}
      * @description 获取本机操作系统名称
      */
     public static String getLocalOS() {
-        String osName = System.getProperty("os.name");
-        if (osName.startsWith(WINDOWS)) {
-            return WINDOWS;
-        } else {
-            return LINUX;
-        }
+        return SystemUtils.OS_NAME;
     }
 
     /**
-     * @return
+     * @return {@link Long}
      * @description 获取当前系统中 JVM最大可用堆空间
      */
     public static Long getJVMUsableMemory() {

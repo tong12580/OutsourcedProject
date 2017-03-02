@@ -1,10 +1,12 @@
 package com.business.controller.user;
 
+import com.business.common.CommonTools;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
 import com.business.common.response.IResultException;
 import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.users.PersonalCenterService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2017/2/8 13:38
  */
 @RestController
-@RequestMapping("/api")
 public class PersonalCenterController {
 
     @Autowired
@@ -35,8 +36,8 @@ public class PersonalCenterController {
     @RequestMapping("/register")
     public IResult register(UserDTO userDTO, HttpServletRequest request,
                             HttpServletResponse response) throws IResultException {
-        if (null == userDTO) {
-            throw new IResultException(ResultMessage.REQUEST_PARAMETER_IS_EMPTY);
+        if (StringUtils.isEmpty(userDTO.getPhone()) || StringUtils.isEmpty(userDTO.getPassword())) {
+            return CommonTools.errorResult(ResultMessage.REQUEST_PARAMETER_IS_EMPTY);
         }
         return personalCenterService.register(userDTO, request, response);
     }

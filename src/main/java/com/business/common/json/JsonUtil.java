@@ -1,6 +1,8 @@
 package com.business.common.json;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * json tools;
@@ -43,6 +46,11 @@ public class JsonUtil {
             synchronized (JsonUtil.class) {
                 if (null == objectMapper) {
                     objectMapper = new ObjectMapper();
+                    objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+                    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);//空值不序列化
+                    //反序列化时，属性不存在的兼容处理
+                    objectMapper.getDeserializationConfig()
+                            .withoutFeatures(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
                 }
             }
         }
@@ -146,7 +154,7 @@ public class JsonUtil {
      * @return
      */
     public static <T> T jsonToBeanDateSerializer(String jsonStr, Class<T> cl, final String pattern) {
-        T bean = null;
+        T bean;
         gson = new GsonBuilder().registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context) -> {
             SimpleDateFormat format = new SimpleDateFormat(pattern);
             String dateStr = json.getAsString();
@@ -186,8 +194,7 @@ public class JsonUtil {
      * @throws IOException
      */
     public static <T> T jsonToBean(String json, Class<T> tClass, String pattern) throws IOException {
-        DateFormat dateFormat = new SimpleDateFormat(pattern);
-        objectMapper.setDateFormat(dateFormat);
+        objectMapper.setDateFormat(new SimpleDateFormat(pattern));
         return objectMapper.readValue(json, tClass);
     }
 
@@ -195,7 +202,7 @@ public class JsonUtil {
      * object 转化为json jackson2 框架
      * @param object {@link Object}
      * @param pattern {@link DateFormat}
-     * @return
+     * @return String
      * @throws JsonProcessingException
      */
     public static String objectToJson(Object object, String pattern) throws JsonProcessingException {

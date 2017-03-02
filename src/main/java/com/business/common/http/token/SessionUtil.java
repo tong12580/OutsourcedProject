@@ -1,10 +1,10 @@
 package com.business.common.http.token;
 
-import com.business.common.CommonTools;
 import com.business.common.context.SpringContextUtil;
 import com.business.common.other.Files.MD5Util;
 import com.business.common.redis.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,9 +18,10 @@ import java.util.UUID;
  * @date 2012-3-19 上午10:39:04
  */
 @Slf4j
-public class SessionUtil extends CommonTools {
+public class SessionUtil {
 
-    private static final String COOKIE_USER_KEY = "OUTSOURCED_USER_TOKEN";
+    public static final String NICE_NAME = "nickName";
+    private static final String COOKIE_USER_KEY = "access-token";
     private static final Long TIMEOUT = 60 * 60 * 6L; //保存2小时
     @SuppressWarnings("unchecked")
     private static RedisUtil<String, Object> redisUtil = SpringContextUtil.getBean(RedisUtil.class);
@@ -28,62 +29,64 @@ public class SessionUtil extends CommonTools {
     /**
      * @param request
      * @param response
-     * @param name
+     * @param phone
      * @param value
+     * @param nickName
      * @return void
      * @throws Exception
      * @Title: setSessionAttribute
      * @Description: 保存会话变量
      */
-    public static String setSessionAttribute(HttpServletRequest request,
-                                             HttpServletResponse response, String name, Object value) {
+    public static String setSessionAttribute(HttpServletRequest request, HttpServletResponse response,
+                                             String phone, String nickName, Object value) {
         String sessionKey = getSessionKey(request, response);
-        String key = MD5Util.getMD5Encode(sessionKey, name);
+        String key = MD5Util.getMD5Encode(sessionKey, phone);
         redisUtil.set(key, value, TIMEOUT);
+        CookieUtil.setCookieNoAge(request, response, NICE_NAME, nickName);
         return key;
     }
 
     /**
      * @param request
      * @param response
-     * @param name
+     * @param phone
+     * @param nickName
      * @param value
      * @return void
      * @Title: setSessionAttributeString
      * @Description: 保存会话变量
      */
-    public static void setSessionAttributeString(HttpServletRequest request,
-                                                 HttpServletResponse response, String name, String value) {
-        setSessionAttribute(request, response, name, value);
+    public static void setSessionAttributeString(HttpServletRequest request, HttpServletResponse response,
+                                                 String phone, String nickName, String value) {
+        setSessionAttribute(request, response, phone, nickName, value);
     }
 
 
     /**
      * @param request
-     * @param name
+     * @param phone
      * @return String
      * @Title: getSessionAttributeString
      * @Description: 获取会话变量
      */
-    public static String getSessionAttributeString(HttpServletRequest request, String name) {
+    public static String getSessionAttributeString(HttpServletRequest request, String phone) {
         String sessionKey = getSessionKey(request);
-        return (!isEmpty(sessionKey) ? (String) redisUtil.get(MD5Util.getMD5Encode(sessionKey, name)) : null);
+        return (StringUtils.isNotEmpty(sessionKey) ? (String) redisUtil.get(MD5Util.getMD5Encode(sessionKey, phone)) : sessionKey);
     }
 
 
     /**
      * @param <T>
      * @param request
-     * @param name
+     * @param phone
      * @return T
-     * @throws Exception
      * @Title: getSessionAttribute
      * @Description: 获取会话变量值
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getSessionAttribute(HttpServletRequest request, String name) throws Exception {
+    public static <T> T getSessionAttribute(HttpServletRequest request, String phone) {
         String sessionKey = getSessionKey(request);
-        return (!isEmpty(sessionKey) ? (T) redisUtil.get(MD5Util.getMD5Encode(sessionKey, name)) : null);
+        return (StringUtils.isNotEmpty(sessionKey) ? (T) redisUtil.get(MD5Util.getMD5Encode(sessionKey, phone)) : null);
     }
 
     /**
@@ -97,7 +100,7 @@ public class SessionUtil extends CommonTools {
                                               String name) {
         String sessionKey = getSessionKey(request);
         if (sessionKey != null) {
-            redisUtil.delete(MD5Util.getMD5Encode(sessionKey,name) + name);
+            redisUtil.delete(MD5Util.getMD5Encode(sessionKey, name) + name);
         }
     }
 
@@ -110,7 +113,7 @@ public class SessionUtil extends CommonTools {
      */
     public static boolean removeSessionKey(HttpServletRequest request, HttpServletResponse response) {
         String sessionKey = getSessionKey(request);
-        if (!isEmpty(sessionKey)) {
+        if (StringUtils.isNotEmpty(sessionKey)) {
             CookieUtil.removeCookieByName(request, response, COOKIE_USER_KEY);
             return true;
         }
@@ -126,7 +129,7 @@ public class SessionUtil extends CommonTools {
      */
     public static boolean removeSession(HttpServletRequest request, HttpServletResponse response, String name) {
         String sessionKey = getSessionKey(request);
-        if (!isEmpty(sessionKey)) {
+        if (StringUtils.isNotEmpty(sessionKey)) {
             CookieUtil.removeCookieByName(request, response, COOKIE_USER_KEY);
             redisUtil.delete(sessionKey + name);
             return true;

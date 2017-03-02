@@ -7,12 +7,13 @@ import com.business.common.message.ResultMessage;
 import com.business.common.other.Files.MD5Util;
 import com.business.common.response.IResult;
 import com.business.common.uuid.UUIDUtil;
-import com.business.dao.users.UserOauthRepository;
-import com.business.dao.users.UserRepository;
 import com.business.pojo.dto.user.UserDTO;
 import com.business.pojo.dto.user.UserOauthDTO;
 import com.business.pojo.vo.UserVo;
 import com.business.service.interfaces.users.PersonalCenterService;
+import com.business.service.interfaces.users.UserOauthService;
+import com.business.service.interfaces.users.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +31,9 @@ import javax.servlet.http.HttpServletResponse;
 public class PersonalCenterServiceImpl implements PersonalCenterService {
 
     @Resource
-    private UserRepository userRepository;
+    private UserService userService;
     @Resource
-    private UserOauthRepository userOauthRepository;
+    private UserOauthService userOauthService;
     @Resource
     private CopyWriteUI copyWriteUI;
 
@@ -42,28 +43,28 @@ public class PersonalCenterServiceImpl implements PersonalCenterService {
         if (!CommonTools.isPhone(userDTO.getPhone())) {
             return CommonTools.errorResult(ResultMessage.INPUT_PARAMETER_EXCEPTION, copyWriteUI.getPhoneException());
         }
-        if (null != userRepository.findByPhoneAndStatusTrue(userDTO.getPhone())) {
+        if (null != userService.getUserByPhone(userDTO.getPhone())) {
             return CommonTools.errorResult(ResultMessage.ERROR_PROMPT, copyWriteUI.getHavePhone());
         }
-        if (CommonTools.isBlank(userDTO.getPassword())) {
+        if (StringUtils.isBlank(userDTO.getPassword())) {
             return CommonTools.errorResult(ResultMessage.ERROR_PROMPT, copyWriteUI.getPasswordException());
         }
         userDTO.setSalt(UUIDUtil.getShortUUid());
         userDTO.setPassword(MD5Util.getMD5Encode(userDTO.getPassword(), userDTO.getSalt()));
         userDTO.setInviteCode(UUIDUtil.getShortUUid());
-        userDTO.setNickName(userDTO.getPhone());
+        userDTO.setNickName(userDTO.getInviteCode() + userDTO.getPhone().substring(4));
         userDTO.setStatus(true);
         userDTO.setType(1);
-        userRepository.save(userDTO);
+        userDTO = userService.saveUser(userDTO);
         UserVo vo = new UserVo.Builder().builder(userDTO).build();
-        String token = SessionUtil.setSessionAttribute(request, response, userDTO.getPhone(), vo);
+        String token = SessionUtil.setSessionAttribute(request, response, userDTO.getPhone(), userDTO.getNickName(), vo);
         UserOauthDTO userOauthDTO = new UserOauthDTO();
         userOauthDTO.setToken(token);
         userOauthDTO.setValidTime(6);
         userOauthDTO.setType(userDTO.getType());
         userOauthDTO.setUserId(userDTO.getId());
         userOauthDTO.setStatus(true);
-        userOauthRepository.save(userOauthDTO);
+        userOauthService.saveUserOauth(userOauthDTO);
         return CommonTools.successResult(ResultMessage.STATUS_SUCCESS, vo);
     }
 

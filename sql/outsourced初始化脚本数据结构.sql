@@ -185,8 +185,11 @@ CREATE TABLE `user` (
   `openid` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '微信openId',
   `image` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户头像',
   `type` int(11) NOT NULL COMMENT '用户权限',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nick_name` (`nick_name`),
+  UNIQUE KEY `phone` (`phone`),
+  UNIQUE KEY `openid` (`openid`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `user_address` */
 
@@ -200,11 +203,10 @@ CREATE TABLE `user_address` (
   `province` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '省',
   `city` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '市',
   `county` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '区县',
-  `specific_addrss` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '具体地址',
+  `specific_address` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '具体地址',
   `status` tinyint(1) DEFAULT NULL COMMENT '状态 是否默认',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
-  `specific_address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

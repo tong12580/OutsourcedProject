@@ -15,7 +15,6 @@ import javax.annotation.Resource;
  */
 @Service
 public class UserServiceImpl implements UserService {
-
     @Resource
     private UserRepository userRepository;
 
@@ -32,6 +31,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserByOpenid(String openid) {
         return userRepository.findByOpenidAndStatusTrue(openid);
+    }
+
+    @Override
+    public UserDTO getUserByNickName(String nickName) {
+        return userRepository.findByNickNameAndStatusTrue(nickName);
+    }
+
+    @Override
+    public UserDTO saveUser(UserDTO userDTO) {
+        return userRepository.save(userDTO);
     }
 
 }

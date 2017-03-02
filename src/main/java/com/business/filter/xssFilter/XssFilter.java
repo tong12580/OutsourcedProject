@@ -11,11 +11,8 @@ import java.io.IOException;
 @WebFilter(urlPatterns = "/*",filterName = "xssFilter")
 public class XssFilter implements Filter {
 
-    FilterConfig filterConfig = null;
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
     }
 
     @Override
@@ -25,6 +22,5 @@ public class XssFilter implements Filter {
 
     @Override
     public void destroy() {
-        this.filterConfig = null;
     }
 }

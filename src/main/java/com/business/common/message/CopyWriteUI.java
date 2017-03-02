@@ -17,12 +17,12 @@ public class CopyWriteUI {
 
     @Getter
     @Setter
-    private String phoneException;
+    private String phoneException; //手机号错误
     @Getter
     @Setter
-    private String passwordException;
+    private String passwordException; // 密码错误
     @Getter
     @Setter
-    private String havePhone;
+    private String havePhone; //手机号已注册
 
 }

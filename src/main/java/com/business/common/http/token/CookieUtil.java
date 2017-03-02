@@ -1,15 +1,15 @@
 package com.business.common.http.token;
 
-import com.business.common.CommonTools;
 import com.business.common.context.BasePathFactory;
 import com.business.common.message.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class CookieUtil extends CommonTools {
+public class CookieUtil {
 
     private final static int COOKIE_MAX_AGE = 60 * 60 * 6;// 设置cookie有效期6小时
     private final static String HISTORY_PATH = "/";// Cookie中，历史浏览的Cookie的路径
@@ -103,7 +103,7 @@ public class CookieUtil extends CommonTools {
      */
     public static String getCookieByName(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
-        if (isEmpty(cookies)) {
+        if (null != cookies) {
             for (Cookie cookie : cookies) {
                 if (cookieName.equals(cookie.getName())) {
                     return cookie.getValue();
@@ -114,8 +114,8 @@ public class CookieUtil extends CommonTools {
     }
 
     private static boolean checkDomain(HttpServletRequest request) {
-        String basePath = BasePathFactory.getDomainPath(request);
-        return !isEmpty(basePath) && basePath.contains(Constants.DOMAIN.getConstants());
+        String basePath = BasePathFactory.getBasePath(request);
+        return StringUtils.isNotEmpty(basePath) && basePath.contains(Constants.DOMAIN.getConstants());
     }
 
 }
