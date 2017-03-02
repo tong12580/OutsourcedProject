@@ -12,16 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 public class BasePathFactory {
 
     /**
-     * @description 获取根路径
+     * @description 获取网站路径
      * @return
      */
     public static String getBasePath(HttpServletRequest request) {
         return getWebRootPath(request);
-    }
-
-    public static String getDomainPath(HttpServletRequest request){
-        return request.getScheme() + "://" + request.getServerName() + ":"
-                + request.getServerPort() + request.getContextPath() + "/";
     }
 
     /**

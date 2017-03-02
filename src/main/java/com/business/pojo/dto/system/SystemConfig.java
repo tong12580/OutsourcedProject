@@ -34,6 +34,6 @@ public class SystemConfig {
     @Column(name = "sys_value", nullable = false)
     private String sysValue;
 
-    @Column(name = "create_time", nullable = false)
+    @Column(name = "create_time")
     private Timestamp createTime;
 }

@@ -11,24 +11,38 @@ import com.business.pojo.dto.user.UserDTO;
 public interface UserService {
 
     /**
-     * @param userId
-     * @return
+     * @param userId {@link Integer}
+     * @return {@link Integer}
      * @description 根据用户id查询用户
      */
     UserDTO getUserById(Integer userId);
 
     /**
-     * @param phone
-     * @return
+     * @param phone {@link String}
+     * @return {@link UserDTO}
      * @description 根据手机号查询用户
      */
     UserDTO getUserByPhone(String phone);
 
     /**
-     * @param openid
-     * @return
+     * @param openid {@link String}
+     * @return {@link UserDTO}
      * @description 根据openid查询用户
      */
     UserDTO getUserByOpenid(String openid);
+
+    /**
+     * @description 根据用户昵称查询用户
+     * @param nickName {@link String}
+     * @return {@link UserDTO}
+     */
+    UserDTO getUserByNickName(String nickName);
+
+    /**
+     * @description 保存用户
+     * @param userDTO {@link UserDTO}
+     * @return {@link UserDTO}
+     */
+    UserDTO saveUser(UserDTO userDTO);
 
 }

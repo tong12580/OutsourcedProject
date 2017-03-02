@@ -20,7 +20,8 @@ public enum ResultMessage {
     STATUS_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR.value(), "系统异常: {}"),
     INPUT_PARAMETER_IS_EMPTY(HttpStatus.BAD_REQUEST.value(), "参数{}为空"),
     INPUT_PARAMETER_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "参数异常,{}"),
-    ERROR_PROMPT(HttpStatus.BAD_REQUEST.value(),"错误提示: {}"),
+    ERROR_PROMPT(HttpStatus.BAD_REQUEST.value(), "错误提示: {}"),
+    LOGIN_TIME_OUT(HttpStatus.REQUEST_TIMEOUT.value(), "请先登录!"),
     REQUEST_PARAMETER_IS_EMPTY(HttpStatus.BAD_REQUEST.value(), "请求参数为空"),
     DATABASE_ABNORMAL(HttpStatus.INTERNAL_SERVER_ERROR.value(), "数据库异常: {}"),
     JSON_CONVERSION_TO_BEAN_ABNORMAL(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), "json转换异常: {}");

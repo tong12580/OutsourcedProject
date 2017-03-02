@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<UserDTO, Integer> {
     UserDTO findByPhoneAndStatusTrue(String phone);
 
     UserDTO findByOpenidAndStatusTrue(String openid);
+
+    UserDTO findByNickNameAndStatusTrue(String nickName);
 }

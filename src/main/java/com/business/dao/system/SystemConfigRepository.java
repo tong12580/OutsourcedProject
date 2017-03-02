@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 2017/1/23 17:33
  */
 public interface SystemConfigRepository extends JpaRepository<SystemConfig, Integer> {
+    SystemConfig findBySysKey(String key);
 }

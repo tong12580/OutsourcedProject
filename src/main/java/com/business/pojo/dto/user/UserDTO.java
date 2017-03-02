@@ -23,10 +23,10 @@ public class UserDTO extends BaseEntity {
     @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "nick_name", nullable = false)
+    @Column(name = "nick_name", nullable = false, unique = true)
     private String nickName;
 
-    @Column(name = "phone", nullable = false)
+    @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 
     @Column(name = "email")
@@ -59,7 +59,7 @@ public class UserDTO extends BaseEntity {
     @Column(name = "status", nullable = false)
     private Boolean status;
 
-    @Column(name = "openid")
+    @Column(name = "openid", unique = true)
     private String openid;
 
     @Column(name = "image")

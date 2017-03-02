@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 2017/2/8 12:15
  */
 public interface UserOauthRepository extends JpaRepository<UserOauthDTO, Integer> {
+    UserOauthDTO findByUserIdAndStatusTrue(Integer userId);
 }
