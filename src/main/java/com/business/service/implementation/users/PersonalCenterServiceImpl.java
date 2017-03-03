@@ -62,9 +62,9 @@ public class PersonalCenterServiceImpl implements PersonalCenterService {
         UserVo vo = new UserVo.Builder().builder(userDTO).build();
         String token = SessionUtil.setSessionAttribute(request, response, userDTO.getPhone(), userDTO.getNickName(), vo);
         UserOauthDTO userOauthDTO = new UserOauthDTO();
-        userOauthDTO.setToken(token);
-        userOauthDTO.setValidTime(6);
-        userOauthDTO.setType(userDTO.getType());
+        userOauthDTO.setAccessToken(token);
+        userOauthDTO.setExpiresIn(60 * 60 * 6L);
+        userOauthDTO.setScope(userDTO.getType());
         userOauthDTO.setUserId(userDTO.getId());
         userOauthDTO.setStatus(true);
         userOauthService.saveUserOauth(userOauthDTO);
