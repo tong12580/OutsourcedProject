@@ -20,6 +20,7 @@ hs_err_pid*
 .ideaDataSources/
 dataSources/
 outsourcedproject.ids
-application.properties
+src/main/resources/application.properties
 .shelf/
 src/main/java/com/business/service/interfaces/coupon/
+src/main/java/com/business/filter/loginFilter/LoginFilter.java
