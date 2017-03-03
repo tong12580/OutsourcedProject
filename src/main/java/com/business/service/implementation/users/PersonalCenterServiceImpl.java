@@ -49,6 +49,9 @@ public class PersonalCenterServiceImpl implements PersonalCenterService {
         if (StringUtils.isBlank(userDTO.getPassword())) {
             return CommonTools.errorResult(ResultMessage.ERROR_PROMPT, copyWriteUI.getPasswordException());
         }
+        if (StringUtils.isEmpty(userDTO.getSex())) {
+            userDTO.setSex("男");
+        }
         userDTO.setSalt(UUIDUtil.getShortUUid());
         userDTO.setPassword(MD5Util.getMD5Encode(userDTO.getPassword(), userDTO.getSalt()));
         userDTO.setInviteCode(UUIDUtil.getShortUUid());
