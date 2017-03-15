@@ -10,12 +10,14 @@ import com.business.pojo.dto.system.SystemConfig;
  */
 public interface SystemConfigService {
     /**
+     * @description 根据key获取参数设置
      * @param key {@link String}
      * @return {@link SystemConfig}
      */
     SystemConfig getSystemConfigByKey(String key);
 
     /**
+     * @description 保存系统参数设置
      * @param systemConfig {@link SystemConfig}
      * @return {@link SystemConfig}
      */

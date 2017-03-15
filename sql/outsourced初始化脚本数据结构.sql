@@ -38,8 +38,8 @@ CREATE TABLE `commodity` (
   `create_user_id` int(11) NOT NULL COMMENT '商品录入人id',
   `coupon_type_name` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '可用优惠券类型名称',
   `coupon_type_id` int(11) DEFAULT NULL COMMENT '可使用优惠券类型id',
-  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `picture_tree` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -65,9 +65,9 @@ CREATE TABLE `commodity_pay` (
   `pay_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '支付金额',
   `pay_channel` int(11) DEFAULT NULL COMMENT '支付渠道1.微信2.支付宝',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '支付状态0,未支付,1已支付,2已取消',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '支付流水创建时间',
   `pay_time` datetime DEFAULT NULL COMMENT '支付时间',
-  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -87,8 +87,8 @@ CREATE TABLE `commodity_water` (
   `status` int(1) NOT NULL DEFAULT '0' COMMENT '订单状态',
   `user_id` int(11) NOT NULL COMMENT '订单用户',
   `pay_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '支付状态',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '订单生成时间',
-  `update_time` datetime DEFAULT NULL COMMENT '订单修改时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -103,8 +103,8 @@ CREATE TABLE `coupon` (
   `coupon_type` int(11) NOT NULL DEFAULT '0' COMMENT '优惠券类型',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '优惠券状态 可用不可用',
   `user_id` int(11) NOT NULL COMMENT '优惠券绑定用户id',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '优惠券发放时间',
-  `update_time` datetime DEFAULT NULL COMMENT '优惠券使用时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -117,10 +117,10 @@ CREATE TABLE `coupon_config` (
   `coupon_type_name` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '优惠券类型名称',
   `context` varchar(125) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '描述',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '有效性0无效 1有效',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '类型创建时间',
   `status_time` datetime DEFAULT NULL COMMENT '有效期开始时间',
   `end_time` datetime DEFAULT NULL COMMENT '有效期截至时间',
-  `update_time` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -179,8 +179,8 @@ CREATE TABLE `user` (
   `id_number` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '身份号',
   `address` varchar(115) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '居住地址',
   `invite_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '邀请码',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '账户有效性',
   `openid` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '微信openId',
   `image` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户头像',

@@ -24,5 +24,7 @@ public class CopyWriteUI {
     @Getter
     @Setter
     private String havePhone; //手机号已注册
-
+    @Getter
+    @Setter
+    private String loginError; //用户名密码错误
 }

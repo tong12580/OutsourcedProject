@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author yuton
@@ -40,4 +41,7 @@ public class UserOauthDTO extends BaseEntity {
 
     @Column(name = "scope")
     private Integer scope;
+
+    @Transient
+    private String phone;
 }
