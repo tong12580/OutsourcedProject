@@ -6,6 +6,7 @@ import com.business.service.interfaces.users.UserOauthService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @author yutong
@@ -26,5 +27,13 @@ public class UserOauthServiceImpl implements UserOauthService {
     @Override
     public UserOauthDTO findUserOauthByUserId(Integer userId) {
         return userOauthRepository.findByUserIdAndStatusTrue(userId);
+    }
+
+    @Override
+    public boolean updateUserOauth(UserOauthDTO userOauthDTO) {
+        return userOauthRepository.updateByUserId(userOauthDTO.getAccessToken(),
+                userOauthDTO.getUserId(),
+                userOauthDTO.getExpiresIn(),
+                new Date()) > 0;
     }
 }

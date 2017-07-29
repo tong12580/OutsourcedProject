@@ -98,4 +98,9 @@ public class RedisOperation<K, V> implements RedisUtil<K, V> {
             return redisConnection.dbSize() == 0;
         });
     }
+
+    @Override
+    public Long expirationTime(K k) {
+        return redisTemplate.execute((RedisCallback<Long>) redisConnection -> redisConnection.ttl(String.valueOf(k).getBytes()));
+    }
 }

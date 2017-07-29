@@ -1,6 +1,7 @@
 package com.business.service.implementation.users;
 
 import com.business.common.CommonTools;
+import com.business.common.http.token.CookieUtil;
 import com.business.common.http.token.SessionUtil;
 import com.business.common.message.CopyWriteUI;
 import com.business.common.message.ResultMessage;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * @author yuton
@@ -62,9 +64,9 @@ public class PersonalCenterServiceImpl implements PersonalCenterService {
         UserVo vo = new UserVo.Builder().builder(userDTO).build();
         String token = SessionUtil.setSessionAttribute(request, response, userDTO.getPhone(), userDTO.getNickName(), vo);
         UserOauthDTO userOauthDTO = new UserOauthDTO();
-        userOauthDTO.setToken(token);
-        userOauthDTO.setValidTime(6);
-        userOauthDTO.setType(userDTO.getType());
+        userOauthDTO.setAccessToken(token);
+        userOauthDTO.setExpiresIn(SessionUtil.TIMEOUT);
+        userOauthDTO.setScope(userDTO.getType());
         userOauthDTO.setUserId(userDTO.getId());
         userOauthDTO.setStatus(true);
         userOauthService.saveUserOauth(userOauthDTO);
@@ -72,12 +74,32 @@ public class PersonalCenterServiceImpl implements PersonalCenterService {
     }
 
     @Override
-    public IResult login(UserDTO userDTO) {
-        return null;
+    public IResult login(UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
+        if (StringUtils.isBlank(userDTO.getPhone()) || StringUtils.isBlank(userDTO.getPassword())) {
+            return CommonTools.errorResult(ResultMessage.ERROR_PROMPT, copyWriteUI.getLoginError());
+        }
+        UserDTO user = userService.getUserByPhone(userDTO.getPhone());
+        if (null == user) {
+            return CommonTools.errorResult(ResultMessage.ERROR_PROMPT, copyWriteUI.getLoginError());
+        }
+        if (!Objects.equals(MD5Util.getMD5Encode(userDTO.getPassword(), user.getSalt()), user.getPassword())) {
+            return CommonTools.errorResult(ResultMessage.ERROR_PROMPT, copyWriteUI.getLoginError());
+        }
+        UserVo vo = new UserVo.Builder().builder(user).build();
+        String token = SessionUtil.setSessionAttribute(request, response, userDTO.getPhone(), userDTO.getNickName(), vo);
+        UserOauthDTO userOauthDTO = new UserOauthDTO();
+        userOauthDTO.setAccessToken(token);
+        userOauthDTO.setUserId(user.getId());
+        userOauthDTO.setExpiresIn(SessionUtil.TIMEOUT);
+        if (userOauthService.updateUserOauth(userOauthDTO)) {
+            return CommonTools.successResult(ResultMessage.STATUS_SUCCESS, vo);
+        }
+        return CommonTools.errorResult(ResultMessage.ERROR_PROMPT);
     }
 
     @Override
-    public IResult logOut(UserDTO userDTO) {
+    public IResult logOut(HttpServletRequest request, HttpServletResponse response) {
+        String token = CookieUtil.getCookieByName(request, SessionUtil.COOKIE_USER_KEY);
         return null;
     }
 
@@ -95,4 +117,5 @@ public class PersonalCenterServiceImpl implements PersonalCenterService {
     public IResult uploadImg(String img) {
         return null;
     }
+
 }

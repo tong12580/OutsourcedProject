@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author yuton
@@ -23,15 +24,24 @@ public class UserOauthDTO extends BaseEntity {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "token")
-    private String token;
+    @Column(name = "access_token")
+    private String accessToken;
 
-    @Column(name = "type")
-    private Integer type;
+    @Column(name = "refresh_token")
+    private String refreshToken;
 
-    @Column(name = "valid_time")
-    private Integer validTime;
+    @Column(name = "token_type")
+    private String tokenType;
+
+    @Column(name = "expires_in")
+    private Long expiresIn;
 
     @Column(name = "status")
     private Boolean status;
+
+    @Column(name = "scope")
+    private Integer scope;
+
+    @Transient
+    private String phone;
 }

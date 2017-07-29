@@ -23,4 +23,12 @@ public interface UserOauthService {
      * @return {@link UserOauthDTO}
      */
     UserOauthDTO findUserOauthByUserId(Integer userId);
+
+    /**
+     * @description 根据userId更新oauth
+     * @param userOauthDTO {@link UserOauthDTO}
+     * @return boolean
+     */
+    boolean updateUserOauth(UserOauthDTO userOauthDTO);
+
 }

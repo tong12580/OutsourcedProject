@@ -21,8 +21,8 @@ import java.util.UUID;
 public class SessionUtil {
 
     public static final String NICE_NAME = "nickName";
-    private static final String COOKIE_USER_KEY = "access-token";
-    private static final Long TIMEOUT = 60 * 60 * 6L; //保存2小时
+    public static final String COOKIE_USER_KEY = "access-token";
+    public static final Long TIMEOUT = 60 * 60 * 6L; //保存2小时
     @SuppressWarnings("unchecked")
     private static RedisUtil<String, Object> redisUtil = SpringContextUtil.getBean(RedisUtil.class);
 
@@ -91,16 +91,16 @@ public class SessionUtil {
 
     /**
      * @param request
-     * @param name
+     * @param phone
      * @return void
      * @Title: removeSessionAttribute
-     * @Description: 移除会话变量
+     * @Description: 移除会话变量 Redis
      */
     public static void removeSessionAttribute(HttpServletRequest request,
-                                              String name) {
+                                              String phone) {
         String sessionKey = getSessionKey(request);
         if (sessionKey != null) {
-            redisUtil.delete(MD5Util.getMD5Encode(sessionKey, name) + name);
+            redisUtil.delete(MD5Util.getMD5Encode(sessionKey, phone));
         }
     }
 
@@ -109,7 +109,7 @@ public class SessionUtil {
      * @param response
      * @return boolean
      * @Title: removeSessionKey
-     * @Description: 移出会话Key
+     * @Description: 移出会话Key Cookie
      */
     public static boolean removeSessionKey(HttpServletRequest request, HttpServletResponse response) {
         String sessionKey = getSessionKey(request);
@@ -123,15 +123,15 @@ public class SessionUtil {
     /**
      * @param request
      * @param response
-     * @param name
+     * @param phone
      * @return
-     * @Description: 移出Session
+     * @Description: 移出整个Session
      */
-    public static boolean removeSession(HttpServletRequest request, HttpServletResponse response, String name) {
+    public static boolean removeSession(HttpServletRequest request, HttpServletResponse response, String phone) {
         String sessionKey = getSessionKey(request);
         if (StringUtils.isNotEmpty(sessionKey)) {
             CookieUtil.removeCookieByName(request, response, COOKIE_USER_KEY);
-            redisUtil.delete(sessionKey + name);
+            redisUtil.delete(MD5Util.getMD5Encode(sessionKey, phone));
             return true;
         }
         return false;
