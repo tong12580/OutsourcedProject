@@ -61,7 +61,7 @@ public class CommodityPayDTO extends BaseEntity {
     private BigDecimal payAmount;
 
     @Column(name = "pay_channel")
-    private Integer pay_channel;
+    private Integer payChannel;
 
     @Column(name = "status")
     private Boolean status;

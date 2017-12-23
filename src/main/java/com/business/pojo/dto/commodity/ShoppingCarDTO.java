@@ -23,10 +23,10 @@ public class ShoppingCarDTO {
     private Integer id;
 
     @Column(name = "commodity_id")
-    private Integer commodity_id;
+    private Integer commodityId;
 
     @Column(name = "commodity_name")
-    private String commodity_name;
+    private String commodityName;
 
     @Column(name = "price")
     private BigDecimal price;

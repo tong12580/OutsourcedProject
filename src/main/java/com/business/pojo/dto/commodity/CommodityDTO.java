@@ -49,13 +49,13 @@ public class CommodityDTO extends BaseEntity {
     private String longText;
 
     @Column(name = "picture_one")
-    private String picture_one;
+    private String pictureOne;
 
     @Column(name = "picture_two")
-    private String picture_two;
+    private String pictureTwo;
 
     @Column(name = "picture_tree")
-    private String picture_tree;
+    private String pictureTree;
 
     @Column(name = "create_user_id")
     private Integer createUserId;

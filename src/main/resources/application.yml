@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.1.108:3306/outsourced?characterEncoding=UTF-8&useSSL=false
+    password: huangxunlian666
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  jackson:
+      date-format: yyyy-MM-dd HH:mm:ss
+      joda-date-time-format: yyyy-MM-dd HH:mm:ss
+      time-zone: GMT+8
+      default-property-inclusion: non_null
+      serialization:
+        indent-output: true
+  redis:
+    database: 1
+    host: 192.168.1.108
+    port: 6379
+    password: LAgs:xX9|O<
