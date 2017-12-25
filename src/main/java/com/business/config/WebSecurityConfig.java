@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -42,10 +43,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe()
                 .tokenValiditySeconds(60 * 60 * 24 * 7)
-                .key("token")
+                .useSecureCookie(true)
+                .key("remember-me")
+                .rememberMeCookieName("remember-me")
                 .and()
                 .logout()
-                .deleteCookies("token")
+                .deleteCookies("remember-me")
                 .permitAll();
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/static/**");
     }
 }
