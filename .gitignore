@@ -6,21 +6,9 @@
 *.war
 *.ear
 .mvn/
+.iml
 .idea/
 outsourced-log/
 target/
 mvnw
-mvnw.cmd
-OutsourcedProject.iml
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-/outsourcedproject.ipr
-/outsourcedproject.iws
-.ideaDataSources/
-dataSources/
-outsourcedproject.ids
-src/main/resources/application.properties
-.shelf/
-src/main/java/com/business/service/interfaces/coupon/
-src/main/java/com/business/filter/loginFilter/LoginFilter.java
+*.cmd
