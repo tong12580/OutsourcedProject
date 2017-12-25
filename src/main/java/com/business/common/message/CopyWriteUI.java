@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @since 2017/2/7 16:54
  */
 @Component
-@ConfigurationProperties(prefix = "ui", locations = "classpath:copyWriteUI.properties")
+@ConfigurationProperties(prefix = "ui")
 public class CopyWriteUI {
 
     @Getter
