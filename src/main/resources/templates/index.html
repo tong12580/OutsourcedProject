@@ -58,6 +58,7 @@
         var stompClient = Stomp.over(s);
         stompClient.connect({}, function (frame) {
             console.log('notice socket connected!');
+            //从/topic/notice接受消息
             stompClient.subscribe('/topic/notice', function (data) {
                 $('#content').html(data.body);
                 console.log(data.body);
