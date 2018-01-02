@@ -45,6 +45,26 @@
             <input type="submit" class="btn btn-primary" value="注销"/>
         </form>
     </div>
+    <div class="message">
+        <span id="content"></span>
+    </div>
 </div>
+<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+<script src="/static/stomp.min.js"></script>
+<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+    var noticeSocket = function () {
+        var s = new SockJS('/socket');
+        var stompClient = Stomp.over(s);
+        stompClient.connect({}, function (frame) {
+            console.log('notice socket connected!');
+            stompClient.subscribe('/topic/notice', function (data) {
+                $('#content').html(data.body);
+                console.log(data.body);
+            });
+        });
+    };
+    noticeSocket();
+</script>
 </body>
 </html>
