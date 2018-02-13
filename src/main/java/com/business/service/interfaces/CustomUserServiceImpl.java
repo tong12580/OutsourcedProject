@@ -19,11 +19,11 @@ import javax.annotation.Resource;
 public class CustomUserServiceImpl implements UserDetailsService {
 
     @Resource
-    private UserDTORepository sysUserDTORepository;
+    private UserDTORepository userDTORepository;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = sysUserDTORepository.findByUsername(s);
+        User user = userDTORepository.findByUsername(s);
         if (null == user) {
             throw new UsernameNotFoundException("用户名不存在");
         }
