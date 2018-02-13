@@ -1,6 +1,7 @@
 package com.business.config;
 
 import com.business.service.interfaces.CustomUserServiceImpl;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,7 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.csrf().disable()
+                .authorizeRequests()
                 .antMatchers("/xxx/**")
                 .access("hasRole('ROLE_USER')")
                 .anyRequest()
@@ -38,6 +40,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .passwordParameter("password")
+                .usernameParameter("username")
                 .failureUrl("/login?error")
                 .permitAll()
                 .and()
