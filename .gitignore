@@ -6,7 +6,7 @@
 *.war
 *.ear
 .mvn/
-.iml
+*.iml
 .idea/
 outsourced-log/
 target/
