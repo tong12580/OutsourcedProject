@@ -1,14 +1,11 @@
 package com.business.controller;
 
 import com.business.pojo.dto.user.Msg;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.annotation.Resource;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author yuton
@@ -26,9 +23,9 @@ public class TestCtrl {
         return "index";
     }
 
-    @SendTo("/topic/notice")
-    @MessageMapping("/change-notice")
-    public String greeting(String value) {
-        return value;
+    @ResponseBody
+    @RequestMapping("test")
+    public String test(String x) {
+        return x;
     }
 }

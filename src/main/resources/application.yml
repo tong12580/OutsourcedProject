@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.1.108:3306/cvc?characterEncoding=UTF-8&useSSL=false
-    password: huangxunlian666
+    url: jdbc:mysql://127.0.0.1:3306/cvc?characterEncoding=UTF-8&useSSL=false
+    password: 2259661
     username: root
   jpa:
     hibernate:
@@ -19,6 +19,6 @@ spring:
     static-path-pattern: /static/**
   redis:
     database: 1
-    host: 192.168.1.108
+    host: 127.0.0.1
     port: 6379
-    password: LAgs:xX9|O<
+#    password: LAgs:xX9|O<

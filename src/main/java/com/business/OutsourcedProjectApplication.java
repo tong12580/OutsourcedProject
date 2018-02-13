@@ -13,7 +13,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class OutsourcedProjectApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(OutsourcedProjectApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(OutsourcedProjectApplication.class, args);
+    }
 }
