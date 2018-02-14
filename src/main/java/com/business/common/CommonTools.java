@@ -2,10 +2,7 @@ package com.business.common;
 
 import com.business.common.http.HttpUtil;
 import com.business.common.json.JsonUtil;
-import com.business.common.message.ResultMessage;
-import com.business.common.response.IResult;
-import com.business.common.response.Result;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -18,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -52,7 +51,6 @@ public class CommonTools {
 
     /**
      * @param n int
-     * @return
      * @description 生成若干位随机数字字符
      */
     public static String getRandomNum(int n) {
@@ -86,7 +84,7 @@ public class CommonTools {
     /**
      * @param str {@link String}
      * @return {@link boolean}
-     * @Description: 判断字符串是否为数字
+     * 判断字符串是否为数字
      */
     public static boolean isNumber(String str) {
         return str.matches("[0-9]*");
@@ -113,8 +111,8 @@ public class CommonTools {
     /**
      * @param name {@link String}
      * @return String
-     * @Title: getFileSuffix
-     * @Description: 获取文件后缀，返回如：.jpg
+     * getFileSuffix
+     * 获取文件后缀，返回如：.jpg
      */
     public static String getFileSuffix(String name) {
         int loc = name.lastIndexOf('.');
@@ -127,8 +125,8 @@ public class CommonTools {
     /**
      * @param path {@link String}
      * @return void
-     * @Title: makeDir
-     * @Description: 创建目录，如果存在则不创建
+     * makeDir
+     * 创建目录，如果存在则不创建
      */
     public static boolean makeDir(String path) {
         return new File(path).mkdirs();
@@ -180,67 +178,11 @@ public class CommonTools {
      * @param json {@link String}
      * @param tClass {@link Class}
      * @param <T> {@link T}
-     * @return {@link T}
-     * @throws IOException
      */
     public static <T> T getBean(String json, Class<T> tClass) throws IOException {
         return JsonUtil.jsonToBean(json, tClass, PATTERN_HAVE_TIME);
     }
 
-    /***
-     * 成功提示 无返回参数
-     * @param resultMessage {@link ResultMessage}
-     * @return {@link IResult}
-     */
-    public static IResult successResult(ResultMessage resultMessage) {
-        return new Result<>(resultMessage);
-    }
-
-    /***
-     * 成功提示 有返回
-     * @param resultMessage {@link ResultMessage}
-     * @param result {@link T}
-     * @param <T> {@link T}
-     * @return {@link IResult}
-     */
-    public static <T> IResult<T> successResult(ResultMessage resultMessage, T result) {
-        return new Result<>(resultMessage, result);
-    }
-
-    /***
-     * 错误提示 无返回
-     * @param resultMessage {@link ResultMessage}
-     * @return {@link IResult}
-     */
-    public static IResult errorResult(ResultMessage resultMessage) {
-        return new Result<>(resultMessage);
-    }
-
-    /***
-     * 错误提示
-     * @param code {@link Integer}
-     * @param msg {@link String}
-     * @return {@link IResult}
-     */
-    public static IResult errorResult(int code, String msg) {
-        IResult<String> result = new Result<>();
-        result.setCode(code);
-        result.setMsg(msg);
-        return result;
-    }
-
-    /***
-     * 错误提示
-     * @param resultMessage {@link ResultMessage}
-     * @return {@link IResult}
-     */
-    public static IResult errorResult(ResultMessage resultMessage, String specificMsg) {
-        IResult<String> result = new Result<>();
-        specificMsg = StringUtils.isBlank(specificMsg) ? "" : specificMsg;
-        result.setCode(resultMessage.getCode());
-        result.setMsg(resultMessage.getMsg().replace("{}", specificMsg));
-        return result;
-    }
 
     /**
      * @return {@link String}

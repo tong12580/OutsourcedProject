@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @since 下午4:07 2017/12/25
  */
 @Controller
-@RequestMapping("/xxx")
+@RequestMapping("/api")
 public class TestCtrl2 {
     
     @RequestMapping("/xcl")
