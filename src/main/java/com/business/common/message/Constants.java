@@ -4,7 +4,7 @@ import lombok.Getter;
 
 /**
  * @author yutong
- * @description 常量接口
+ * @description 常量枚举
  * @since 2016-3-8 下午06:36:58
  */
 public enum Constants {

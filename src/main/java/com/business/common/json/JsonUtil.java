@@ -1,15 +1,17 @@
 package com.business.common.json;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
@@ -61,9 +63,6 @@ public class JsonUtil {
 
     /**
      * 将对象转换成json格式
-     *
-     * @param ts
-     * @return
      */
     public static String objectToJson(Object ts) {
         String jsonStr = null;
@@ -75,9 +74,6 @@ public class JsonUtil {
 
     /**
      * 将对象转换成json格式(并自定义日期格式)
-     *
-     * @param ts
-     * @return
      */
     public static String objectToJsonDateSerializer(Object ts, final String dateFormat) {
         gson = new GsonBuilder().registerTypeHierarchyAdapter(Date.class, (JsonSerializer<Date>) (src, typeOfSrc, context) -> {
@@ -89,9 +85,6 @@ public class JsonUtil {
 
     /**
      * 将json格式转换成list对象
-     *
-     * @param jsonStr
-     * @return
      */
     public static List jsonToList(String jsonStr) {
         List objList = null;
@@ -104,11 +97,10 @@ public class JsonUtil {
     }
 
     /**
-     * @param jsonStr
-     * @param type
+     * @param jsonStr json字符串
      * @return List<T>
-     * @Title: jsonToList
-     * @Description: 将Json转为对应的List
+     * jsonToList
+     * 将Json转为对应的List
      */
     public static <T> List<T> jsonToList(String jsonStr, Class<T> type) {
         Type listType = new TypeToken<ArrayList<T>>() {
@@ -123,8 +115,7 @@ public class JsonUtil {
     /**
      * 将json格式转换成map对象
      *
-     * @param jsonStr
-     * @return
+     * @param jsonStr json字符串
      */
     public static <K, V> Map<K, V> jsonToMap(String jsonStr) {
         Map<K, V> objMap = null;
@@ -139,8 +130,7 @@ public class JsonUtil {
     /**
      * 将json转换成bean对象
      *
-     * @param jsonStr
-     * @return
+     * @param jsonStr json字符串
      */
     public static <T> T jsonToBean(String jsonStr, Class<T> cl) {
         return gson != null ? gson.fromJson(jsonStr, cl) : null;
@@ -149,9 +139,7 @@ public class JsonUtil {
     /**
      * 将json转换成bean对象
      *
-     * @param jsonStr
-     * @param cl
-     * @return
+     * @param jsonStr json字符串
      */
     public static <T> T jsonToBeanDateSerializer(String jsonStr, Class<T> cl, final String pattern) {
         T bean;
@@ -171,8 +159,8 @@ public class JsonUtil {
 
     /***
      * 获取json键的值
-     * @param jsonStr
-     * @param k
+     * @param jsonStr json字符串
+     * @param k K
      * @return
      */
     public static <K, V> V getJsonValue(String jsonStr, K k) {
@@ -186,12 +174,10 @@ public class JsonUtil {
 
     /***
      * json 转化为Bean jackson2 框架
-     * @param json
+     * @param json 字符串
      * @param tClass {@link Class}
      * @param pattern {@link DateFormat}
-     * @param <T>
      * @return T
-     * @throws IOException
      */
     public static <T> T jsonToBean(String json, Class<T> tClass, String pattern) throws IOException {
         objectMapper.setDateFormat(new SimpleDateFormat(pattern));
@@ -203,7 +189,6 @@ public class JsonUtil {
      * @param object {@link Object}
      * @param pattern {@link DateFormat}
      * @return String
-     * @throws JsonProcessingException
      */
     public static String objectToJson(Object object, String pattern) throws JsonProcessingException {
         DateFormat dateFormat = new SimpleDateFormat(pattern);

@@ -103,14 +103,13 @@ public class SortUtil {
      */
     public static <T> void ShellSort(T[] Arrays) {
 
-        Object[] Array = Arrays;
-        if (Array[0] instanceof String) {
-            sortStr.ShellSort(Array);
+        if (Arrays[0] instanceof String) {
+            sortStr.ShellSort(Arrays);
         } else {
-            sortNum.ShellSort(Array);
+            sortNum.ShellSort(Arrays);
         }
         int i = 0;
-        for (Object object : Array) {
+        for (Object object : Arrays) {
             Arrays[i] = ((T) object);
             i++;
         }
@@ -123,14 +122,13 @@ public class SortUtil {
      */
     public static <T> void bubbleSort(T[] Arrays) {
 
-        Object[] Array = Arrays;
-        if (Array[0] instanceof String) {
-            sortStr.bubbleSort(Array);
+        if (Arrays[0] instanceof String) {
+            sortStr.bubbleSort(Arrays);
         } else {
-            sortNum.bubbleSort(Array);
+            sortNum.bubbleSort(Arrays);
         }
         int i = 0;
-        for (Object object : Array) {
+        for (Object object : Arrays) {
             Arrays[i] = ((T) object);
             i++;
         }
@@ -143,14 +141,13 @@ public class SortUtil {
      */
     public static <T> void mergeSort(T[] Arrays) {
 
-        Object[] Array = Arrays;
-        if (Array[0] instanceof String) {
-            sortStr.mergeSort(Array);
+        if (Arrays[0] instanceof String) {
+            sortStr.mergeSort(Arrays);
         } else {
-            sortNum.mergeSort(Array);
+            sortNum.mergeSort(Arrays);
         }
         int i = 0;
-        for (Object object : Array) {
+        for (Object object : Arrays) {
             Arrays[i] = ((T) object);
             i++;
         }
@@ -163,14 +160,13 @@ public class SortUtil {
      */
     public static <T> void heapSort(T[] Arrays) {
 
-        Object[] Array = Arrays;
-        if (Array[0] instanceof String) {
-            sortStr.heapSort(Array);
+        if (Arrays[0] instanceof String) {
+            sortStr.heapSort(Arrays);
         } else {
-            sortNum.heapSort(Array);
+            sortNum.heapSort(Arrays);
         }
         int i = 0;
-        for (Object object : Array) {
+        for (Object object : Arrays) {
             Arrays[i] = ((T) object);
             i++;
         }

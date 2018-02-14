@@ -114,7 +114,7 @@ public class SortNumImpl implements Sort {
     }
 
     //对data数组从0到lastIndex建大顶堆
-    public static void buildMaxHeap(Object[] data, int lastIndex) {
+    private static void buildMaxHeap(Object[] data, int lastIndex) {
         //从lastIndex处节点（最后一个节点）的父节点开始
         for (int i = (lastIndex - 1) / 2; i >= 0; i--) {
             //k保存正在判断的节点 
