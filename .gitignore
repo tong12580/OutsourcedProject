@@ -12,3 +12,5 @@ outsourced-log/
 target/
 mvnw
 *.cmd
+/logs
+*.DS_Store

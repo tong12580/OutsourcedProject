@@ -21,8 +21,9 @@ public class IResultUtil {
         return new Result<>(ResultMessage.STATUS_SUCCESS);
     }
 
-    /***
+    /**
      * 成功提示 无返回参数
+     *
      * @param resultMessage {@link ResultMessage}
      * @return {@link IResult}
      */
@@ -31,19 +32,32 @@ public class IResultUtil {
     }
 
 
-    /***
+    /**
      * 成功提示 有返回
+     *
      * @param resultMessage {@link ResultMessage}
-     * @param result {@link T}
-     * @param <T> {@link T}
+     * @param result        {@link T}
+     * @param <T>           {@link T}
      * @return {@link IResult}
      */
     public static <T> IResult<T> successResult(ResultMessage resultMessage, T result) {
         return new Result<>(resultMessage, result);
     }
 
-    /***
+    /**
+     * 成功提示 有返回
+     *
+     * @param result {@link T}
+     * @param <T>    {@link T}
+     * @return {@link IResult}
+     */
+    public static <T> IResult<T> successResult(T result) {
+        return new Result<>(ResultMessage.STATUS_SUCCESS, result);
+    }
+
+    /**
      * 错误提示
+     *
      * @return {@link IResult}
      */
     public static IResult<String> errorResult() {
@@ -63,8 +77,9 @@ public class IResultUtil {
         return result;
     }
 
-    /***
+    /**
      * 错误提示 无返回
+     *
      * @param resultMessage {@link ResultMessage}
      * @return {@link IResult}
      */
@@ -72,10 +87,11 @@ public class IResultUtil {
         return new Result<>(resultMessage);
     }
 
-    /***
+    /**
      * 错误提示
+     *
      * @param code {@link Integer}
-     * @param msg {@link String}
+     * @param msg  {@link String}
      * @return {@link IResult}
      */
     public static IResult<String> errorResult(int code, String msg) {
@@ -85,8 +101,9 @@ public class IResultUtil {
         return result;
     }
 
-    /***
+    /**
      * 错误提示
+     *
      * @param resultMessage {@link ResultMessage}
      * @return {@link IResult}
      */

@@ -1,6 +1,5 @@
 package com.business.service;
 
-import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
 import com.business.common.response.IResultUtil;
 import com.business.dao.auth.RoleDTORepository;
@@ -24,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public IResult queryRoles() {
-        return IResultUtil.successResult(ResultMessage.STATUS_SUCCESS, roleDTORepository.findAll());
+        return IResultUtil.successResult(roleDTORepository.findAll());
     }
 
     @Override
@@ -34,15 +33,15 @@ public class AuthServiceImpl implements AuthService {
             return IResultUtil.errorResult();
         }
         role.setName(roleName);
-        role = roleDTORepository.saveAndFlush(role);
-        if (null == role) {
-            return IResultUtil.errorResult();
-        }
-        return IResultUtil.successResult();
+        return null == roleDTORepository.saveAndFlush(role) ?
+                IResultUtil.errorResult() : IResultUtil.successResult();
     }
 
     @Override
     public IResult<String> addRole(String roleName) {
-        return null;
+        Role role = new Role();
+        role.setName(roleName);
+        return null == roleDTORepository.save(role)
+                ? IResultUtil.errorResult() : IResultUtil.successResult();
     }
 }
