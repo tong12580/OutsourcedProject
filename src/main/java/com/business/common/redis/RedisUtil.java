@@ -11,109 +11,137 @@ import java.util.concurrent.TimeUnit;
  * @description redis 公共方法
  * @since 2016/9/13 02:09
  */
-public interface RedisUtil<K,V> {
+public interface RedisUtil<K, V> {
 
     /**
-     * @description 更新数据 长时间有效
-     * @param key {@link K}
+     * @param key   {@link K}
      * @param value {@link V}
+     * @description 更新数据 长时间有效
      */
     void set(K key, V value);
 
     /**
-     * @description 更新数据 默认时间秒
-     * @param key {@link K}
-     * @param value {@link V}
+     * @param key     {@link K}
+     * @param value   {@link V}
      * @param timeOut {@link TimeUnit TimeUnit.SECONDS}
+     * @description 更新数据 默认时间秒
      */
     void set(K key, V value, Long timeOut);
 
     /**
+     * @param key      {@link K}
+     * @param value    {@link V}
+     * @param timeOut  {@link Long}
+     * @param timeUnit {@link TimeUnit}
      * @description 更新数据 自定义时间单位
-     * @param key {@link K}
-     * @param value {@link V}
-     * @param timeOut {@link Long}
-     * @param timeUnit  {@link TimeUnit}
      */
     void set(K key, V value, Long timeOut, TimeUnit timeUnit);
 
     /**
-     * @description 查询数据
      * @param key {@link K}
      * @return V
+     * @description 查询数据
      */
     V get(K key);
 
     /**
-     * @description 插入Map对象数据
-     * @param key {@link K}
+     * @param key   {@link K}
      * @param value {@link V}
+     * @description 插入Map对象数据
      */
     void setMap(K key, Map<K, V> value);
 
     /**
-     * @description 获取Map对象的所以键
      * @param key {@link K}
      * @return Set<K>
+     * @description 获取Map对象的所以键
      */
     Set<K> getMapAllKeys(K key);
 
     /**
-     * @description 获取Map对象的所有值
      * @param key {@link K}
      * @return List<V>
+     * @description 获取Map对象的所有值
      */
     List<V> getMapAllValues(K key);
 
     /**
-     * @description 获取Map键对应的值
-     * @param key {@link K}
+     * @param key    {@link K}
      * @param MapKey {@link Map}
      * @return V
+     * @description 获取Map键对应的值
      */
     V getMapValue(K key, K MapKey);
 
     /**
-     * @description 获取整个Map对象
      * @param key {@link K}
      * @return Map
+     * @description 获取整个Map对象
      */
     Map<K, V> getMap(K key);
 
     /**
-     * @description 删除数据
      * @param key {@link K}
+     * @description 删除数据
      */
     void delete(K key);
 
     /**
-     * @description 批量删除数据
      * @param keys {@link List}
+     * @description 批量删除数据
      */
     void delete(List<K> keys);
 
     /**
-     * @description Redis连接校验
      * @return Boolean
+     * @description Redis连接校验
      */
     Boolean ping();
 
     /**
-     * @description 数据量
      * @return Long
+     * @description 数据量
      */
     Long dbSize();
 
     /**
-     * @description 清空配置对应数据库
      * @return Boolean
+     * @description 清空配置对应数据库
      */
     Boolean flushDB();
 
     /**
-     * @description 获取过期时间
      * @param k {@link K}
      * @return Long
+     * @description 获取过期时间
      */
     Long expirationTime(K k);
+
+    /**
+     * 是否有key
+     * @param k K
+     * @return boolean
+     */
+    boolean hasKey(K k);
+
+    /**
+     * @param k K
+     * @param v V
+     * @description redis 向队列中添加元素
+     */
+    void pushList(K k, V v);
+
+    /**
+     * @param k K
+     * @return V
+     * @description 移除并获取最后一个 (出队)
+     */
+    V popRightList(K k);
+
+    /**
+     * @param k K
+     * @return V
+     * @description 移除并获取第一个元素 (出栈)
+     */
+    V popLeftList(K k);
 }

@@ -5,11 +5,12 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
 
 /**
  * @author yuton
@@ -102,5 +103,25 @@ public class RedisOperation<K, V> implements RedisUtil<K, V> {
     @Override
     public Long expirationTime(K k) {
         return redisTemplate.execute((RedisCallback<Long>) redisConnection -> redisConnection.ttl(String.valueOf(k).getBytes()));
+    }
+
+    @Override
+    public boolean hasKey(K k) {
+        return redisTemplate.hasKey(k);
+    }
+
+    @Override
+    public void pushList(K k, V v) {
+        redisTemplate.opsForList().leftPush(k, v);
+    }
+
+    @Override
+    public V popRightList(K k) {
+        return redisTemplate.opsForList().rightPop(k);
+    }
+
+    @Override
+    public V popLeftList(K k) {
+        return redisTemplate.opsForList().leftPop(k);
     }
 }

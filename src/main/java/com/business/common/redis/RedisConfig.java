@@ -23,7 +23,7 @@ public class RedisConfig {
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
-        template.setEnableTransactionSupport(true);
+//        template.setEnableTransactionSupport(true);
         template.afterPropertiesSet();
         return template;
     }
