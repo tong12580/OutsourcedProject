@@ -115,11 +115,8 @@ public class CommonTools {
      * 获取文件后缀，返回如：.jpg
      */
     public static String getFileSuffix(String name) {
-        int loc = name.lastIndexOf('.');
-        if (loc != -1) {
-            return name.substring(loc);
-        }
-        return null;
+        int loc = name.lastIndexOf(46);
+        return loc != -1 ? name.substring(loc) : null;
     }
 
     /**
@@ -139,10 +136,7 @@ public class CommonTools {
      * @return {@link String}
      */
     public static String putConcealParam(String param) {
-
-        String str = param;
-        str = str.substring(0, 3) + "****" + str.substring(str.length() - 4, str.length());
-        return str;
+        return param.substring(0, 3) + "****" + param.substring(param.length() - 4, param.length());
     }
 
     /***
