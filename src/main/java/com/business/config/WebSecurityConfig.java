@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.annotation.Resource;
 
@@ -48,7 +49,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http
+                .headers()
+                .frameOptions()
+                .sameOrigin()
+                .disable()
+
                 .authorizeRequests()
                 .antMatchers("/api/**")
                 .access("hasRole('ROLE_USER')")
@@ -80,8 +86,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .logout()
-                .deleteCookies("remember-me")
-                .permitAll();
+                .deleteCookies("remember-me", "JSESSIONID")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .permitAll()
+
+                .and()
+                .httpBasic()
+
+                .and()
+                .csrf()
+                .disable()
+                .sessionManagement().maximumSessions(1);
     }
 
     @Override
