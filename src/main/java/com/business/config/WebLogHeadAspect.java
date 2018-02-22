@@ -36,7 +36,8 @@ public class WebLogHeadAspect {
 
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) {
-        if (joinPoint.getArgs()[0] instanceof ExtendedServletRequestDataBinder) {
+        if (null != joinPoint.getArgs() && joinPoint.getArgs().length > 0
+                && joinPoint.getArgs()[0] instanceof ExtendedServletRequestDataBinder) {
             return;
         }
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

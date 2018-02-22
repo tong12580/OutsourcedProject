@@ -27,8 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SpringExceptionHandlerController {
     @ExceptionHandler(Exception.class)
     public String exceptionHandler(Exception e) throws JsonProcessingException {
-        log.error(ResultMessage.STATUS_FAILURE.getMsg(), e.getMessage(), e);
-        return IResultUtil.errorResult(ResultMessage.STATUS_FAILURE, e.getMessage()).toJson();
+        log.error(ResultMessage.INTERNAL_SERVER_ERROR.getMsg(), e.getMessage(), e);
+        return IResultUtil.errorResult(ResultMessage.INTERNAL_SERVER_ERROR, e.getMessage()).toJson();
     }
 
     @InitBinder

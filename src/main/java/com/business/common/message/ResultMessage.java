@@ -1,7 +1,8 @@
 package com.business.common.message;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import lombok.Getter;
 
 /**
  * Created by yuton on 2016/11/6.
@@ -17,7 +18,8 @@ public enum ResultMessage {
     STATUS_ADD_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR.value(), "添加{}异常"),
     STATUS_DEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR.value(), "删除{}异常"),
     STATUS_UPDATE_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR.value(), "拒绝修改: {}"),
-    STATUS_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR.value(), "系统异常: {}"),
+    STATUS_FAILURE(HttpStatus.PRECONDITION_FAILED.value(), "调用失败: {}"),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"服务器异常"),
     INPUT_PARAMETER_IS_EMPTY(HttpStatus.BAD_REQUEST.value(), "参数{}为空"),
     INPUT_PARAMETER_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "参数异常,{}"),
     ERROR_PROMPT(HttpStatus.BAD_REQUEST.value(), "错误提示: {}"),
