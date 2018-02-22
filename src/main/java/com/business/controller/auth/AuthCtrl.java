@@ -33,9 +33,9 @@ public class AuthCtrl {
     @RequestMapping(value = "/role", method = RequestMethod.PUT)
     public IResult<String> addRole(String roleName) {
         if (StringUtils.isEmpty(roleName)) {
-            return IResultUtil.errorResult(ResultMessage.INPUT_PARAMETER_IS_EMPTY);
+            return IResultUtil.errorResult(ResultMessage.INPUT_PARAMETER_IS_EMPTY, "roleName");
         }
-        return IResultUtil.successResult(ResultMessage.STATUS_SUCCESS);
+        return authService.addRole(roleName);
     }
 
     /**
