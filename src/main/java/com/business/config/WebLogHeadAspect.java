@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder;
 
 import java.util.Arrays;
 
@@ -22,10 +23,10 @@ import lombok.extern.slf4j.Slf4j;
  * WebLogHeadAspect
  * Created by yuTong on 2018/2/3.
  */
+@Slf4j
 @Aspect
 @Order(1)
 @Component
-@Slf4j
 public class WebLogHeadAspect {
 
 
@@ -35,6 +36,9 @@ public class WebLogHeadAspect {
 
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) {
+        if (joinPoint.getArgs()[0] instanceof ExtendedServletRequestDataBinder) {
+            return;
+        }
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         log.info("URL: {}, Method: {}, params: {}", request.getRequestURL(),
@@ -43,6 +47,8 @@ public class WebLogHeadAspect {
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     public void doAfterReturning(Object ret) {
-        log.info("Result : {}", JsonUtil.objectToJson(ret));
+        if (null != ret) {
+            log.info("Result : {}", JsonUtil.objectToJson(ret));
+        }
     }
 }
