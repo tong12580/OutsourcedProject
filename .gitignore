@@ -14,3 +14,5 @@ mvnw
 *.cmd
 /logs
 *.DS_Store
+*.ipr
+*.iws
