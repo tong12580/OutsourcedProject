@@ -24,23 +24,6 @@ public class AccessCtrl {
     private AccessService accessService;
 
     /**
-     * 登录成功返回
-     */
-    @PostMapping("/loginSuccessful")
-    public IResult<String> loginSuccessful() {
-        return IResultUtil.successResult();
-    }
-
-    /**
-     * 登录失败返回
-     */
-    @PostMapping("/loginFail")
-    public IResult<String> loginFail() {
-        return IResultUtil.errorResult();
-    }
-
-
-    /**
      * 注册
      *
      * @param username 账号
