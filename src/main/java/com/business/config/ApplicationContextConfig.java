@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author yuton
- * SpringContextUtil
+ * ApplicationContextConfig
  * <p>获取spring容器，以访问容器中定义的其他bean</p>
  * @since May 6, 2011 2:35:22 PM
  */
