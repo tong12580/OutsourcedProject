@@ -16,9 +16,6 @@ public class ApplicationContextConfig implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
-    private ApplicationContextConfig() {
-    }
-
     /**
      * 获取对象
      *
