@@ -3,7 +3,7 @@ package com.business.config;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResultUtil;
 import com.business.dao.users.UserDTORepository;
-import com.business.pojo.dto.user.User;
+import com.business.pojo.dto.user.UserDTO;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -43,11 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             @Override
             public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-                User user = userDTORepository.findByUsername(s);
-                if (null == user) {
+                UserDTO userDTO = userDTORepository.findByUsername(s);
+                if (null == userDTO) {
                     throw new UsernameNotFoundException("用户名不存在");
                 }
-                return user;
+                return userDTO;
             }
         };
     }
@@ -84,6 +86,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
+    @Bean
+    AccessDeniedHandler accessDeniedHandler() {
+        return (httpServletRequest, httpServletResponse, e) -> {
+            httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
+            httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
+        };
+    }
+
+    @Bean
+    AuthenticationEntryPoint authenticationEntryPoint() {
+        return (httpServletRequest, httpServletResponse, e) -> {
+            httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
+            httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
+        };
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
@@ -99,20 +119,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers("/api/**")
-                .access("hasRole('ROLE_USER')")
-                .anyRequest()
-                .authenticated()
+                .access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 
                 .and()
                 .authorizeRequests()
                 .antMatchers("/admin/**")
                 .access("hasRole('ROLE_ADMIN')")
-                .anyRequest()
-                .authenticated()
 
                 .and()
                 .formLogin()
-                .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .passwordParameter("password")
                 .usernameParameter("username")
@@ -134,6 +149,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler(logoutSuccessHandler())
                 .invalidateHttpSession(true)
                 .permitAll()
+
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
+                .authenticationEntryPoint(authenticationEntryPoint())
 
                 .and()
                 .httpBasic()

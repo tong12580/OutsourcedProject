@@ -1,14 +1,12 @@
 package com.business.pojo.dto.user;
 
 import com.business.pojo.dto.BaseEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author yuton
@@ -16,9 +14,11 @@ import javax.persistence.Table;
  * @description com.example.demo.pojo
  * @since 上午10:19 2017/12/25
  */
-@Entity
+
 @Data
+@Entity
+@Table(name = "role")
 @EqualsAndHashCode(callSuper = true)
-public class Role extends BaseEntity {
+public class RoleDTO extends BaseEntity {
     private String name;
 }

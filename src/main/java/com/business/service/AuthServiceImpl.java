@@ -3,7 +3,7 @@ package com.business.service;
 import com.business.common.response.IResult;
 import com.business.common.response.IResultUtil;
 import com.business.dao.auth.RoleDTORepository;
-import com.business.pojo.dto.user.Role;
+import com.business.pojo.dto.user.RoleDTO;
 import com.business.service.interfaces.auth.AuthService;
 
 import org.springframework.stereotype.Service;
@@ -28,20 +28,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public IResult<String> updateRole(Long roleId, String roleName) {
-        Role role = roleDTORepository.findOne(roleId);
-        if (null == role) {
+        RoleDTO roleDTO = roleDTORepository.findOne(roleId);
+        if (null == roleDTO) {
             return IResultUtil.errorResult();
         }
-        role.setName(roleName);
-        return null == roleDTORepository.saveAndFlush(role) ?
+        roleDTO.setName(roleName);
+        return null == roleDTORepository.saveAndFlush(roleDTO) ?
                 IResultUtil.errorResult() : IResultUtil.successResult();
     }
 
     @Override
     public IResult<String> addRole(String roleName) {
-        Role role = new Role();
-        role.setName(roleName);
-        return null == roleDTORepository.save(role)
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setName(roleName);
+        return null == roleDTORepository.save(roleDTO)
                 ? IResultUtil.errorResult() : IResultUtil.successResult();
     }
 }

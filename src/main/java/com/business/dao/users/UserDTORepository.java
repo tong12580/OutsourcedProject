@@ -1,6 +1,7 @@
 package com.business.dao.users;
 
-import com.business.pojo.dto.user.User;
+import com.business.pojo.dto.user.UserDTO;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -9,6 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @description com.example.demo.dao
  * @since 上午10:31 2017/12/25
  */
-public interface UserDTORepository extends JpaRepository<User, Long> {
-    User findByUsername(String userName);
+public interface UserDTORepository extends JpaRepository<UserDTO, Long> {
+    UserDTO findByUsername(String userName);
 }
