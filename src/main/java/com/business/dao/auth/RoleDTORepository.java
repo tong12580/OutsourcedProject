@@ -1,6 +1,6 @@
 package com.business.dao.auth;
 
-import com.business.pojo.dto.user.Role;
+import com.business.pojo.dto.user.RoleDTO;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,5 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @description
  * @since 2018/2/14 18:57
  */
-public interface RoleDTORepository extends JpaRepository<Role, Long> {
+public interface RoleDTORepository extends JpaRepository<RoleDTO, Long> {
+    RoleDTO getByName(String name);
 }

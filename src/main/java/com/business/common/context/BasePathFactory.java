@@ -3,85 +3,58 @@ package com.business.common.context;
 import com.business.listener.ContextParamDictionary;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**
- * @ClassName: BasePathFactory
- * @Description: 路径工厂类
+ * 路径工厂类
+ * BasePathFactory
+ *
  * @since 2011-6-2 下午04:39:46
  */
 public class BasePathFactory {
 
     /**
      * @description 获取网站路径
-     * @return
      */
     public static String getBasePath(HttpServletRequest request) {
         return getWebRootPath(request);
     }
 
     /**
-     * @Description: ProjectRootPath
-     * @return
+     * 获取项目根路径
      */
     public static String getProjectRootPath() {
         return System.getProperty(ContextParamDictionary.PROJECT_PATH.getParamValue());
     }
 
     /**
+     * 获取URL请求路径
+     *
+     * @param request HttpServletRequest
      * @return String
-     * @Title: getBaseFilePath
-     * @author yuTong
-     * @date 2015-8-17 下午02:27:46
-     */
-    public static String getBaseFilePath() {
-        String path = BasePathFactory.class.getProtectionDomain()
-                .getCodeSource().getLocation().getPath();
-        if (path.indexOf("WEB-INF") > 0) {
-            path = path.substring(0, path.indexOf("WEB-INF/classes"));
-        } else {
-            return null;
-        }
-        return path;
-    }
-
-    /**
-     * @return String
-     * @Title: getClassPath
-     * @Description: 获得classpath(........../WebRoot/WEB-INF/classes/)
-     */
-    public static String getClassPath() {
-        return BasePathFactory.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-    }
-
-    /**
-     * @param request
-     * @return String
-     * @Title: getWebRootPath
-     * @Description: 获取URL请求路径
      */
     public static String getWebRootPath(HttpServletRequest request) {
-        return request.getScheme() + "://" + request.getServerName()
-                + ":" + request.getServerPort() + request.getContextPath() + "/";
+        return request.getContextPath();
     }
 
     /**
      * basePath路径
      *
-     * @param request
-     * @return
+     * @param request HttpServletRequest
+     * @return String
      */
     public static String getServerPath(HttpServletRequest request) {
         return request.getSession().getServletContext().getRealPath("/");
     }
 
     /**
-     * @param resourceName
+     * 获取资源文件路径
+     * getResourcePath
+     *
+     * @param resourceName String
      * @return String
-     * @Title: getResourcePath
-     * @Description: 获取资源文件路径
      */
     public static String getResourcePath(String resourceName) {
-//		return BasePathFactory.class.getResource("//" + resourceName).getPath();
-        return BasePathFactory.class.getClassLoader().getResource(resourceName).getPath();
+        return Objects.requireNonNull(BasePathFactory.class.getClassLoader().getResource(resourceName)).getPath();
     }
 }

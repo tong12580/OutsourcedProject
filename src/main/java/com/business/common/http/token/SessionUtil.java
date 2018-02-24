@@ -1,6 +1,6 @@
 package com.business.common.http.token;
 
-import com.business.common.context.SpringContextUtil;
+import com.business.config.ApplicationContextConfig;
 import com.business.common.other.Files.MD5Util;
 import com.business.common.redis.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +12,10 @@ import java.util.UUID;
 
 
 /**
+ * SessionUtil
+ * session 统一管理处理
  * @author yuton
- * @ClassName: SessionUtil
- * @Description: session 统一管理处理
- * @date 2012-3-19 上午10:39:04
+ * @since  2012-3-19 上午10:39:04
  */
 @Slf4j
 public class SessionUtil {
@@ -24,7 +24,7 @@ public class SessionUtil {
     public static final String COOKIE_USER_KEY = "access-token";
     public static final Long TIMEOUT = 60 * 60 * 6L; //保存2小时
     @SuppressWarnings("unchecked")
-    private static RedisUtil<String, Object> redisUtil = SpringContextUtil.getBean(RedisUtil.class);
+    private static RedisUtil<String, Object> redisUtil = ApplicationContextConfig.getBean(RedisUtil.class);
 
     /**
      * @param request
