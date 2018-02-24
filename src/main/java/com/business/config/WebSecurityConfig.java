@@ -1,10 +1,14 @@
 package com.business.config;
 
+import com.business.common.message.ResultMessage;
+import com.business.common.response.IResultUtil;
 import com.business.dao.users.UserDTORepository;
 import com.business.pojo.dto.user.User;
 
+import org.apache.commons.lang3.CharEncoding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -14,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -50,6 +57,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    AuthenticationSuccessHandler loginSuccessful() {
+        return (httpServletRequest, httpServletResponse, authentication) -> {
+            httpServletResponse.setStatus(HttpStatus.OK.value());
+            httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
+            httpServletResponse.getWriter().write(IResultUtil.successResult().toJson());
+        };
+    }
+
+    @Bean
+    AuthenticationFailureHandler failureHandler() {
+        return (httpServletRequest, httpServletResponse, e) -> {
+            httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
+            httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.INTERNAL_SERVER_ERROR).toJson());
+        };
+    }
+
+    @Bean
+    LogoutSuccessHandler logoutSuccessHandler() {
+        return (httpServletRequest, httpServletResponse, authentication) -> {
+            httpServletResponse.setStatus(HttpStatus.OK.value());
+            httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
+            httpServletResponse.getWriter().write(IResultUtil.successResult().toJson());
+        };
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
@@ -82,8 +116,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login")
                 .passwordParameter("password")
                 .usernameParameter("username")
-                .successForwardUrl("/loginSuccessful")
-                .failureUrl("/loginFail")
+                .successHandler(loginSuccessful())
+                .failureHandler(failureHandler())
                 .permitAll()
 
                 .and()
@@ -97,6 +131,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .deleteCookies("remember-me", "JSESSIONID")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", RequestMethod.GET.name()))
+                .logoutSuccessHandler(logoutSuccessHandler())
                 .invalidateHttpSession(true)
                 .permitAll()
 
