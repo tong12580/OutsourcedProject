@@ -1,9 +1,9 @@
-package com.business.common.context;
+package com.business.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author yuton
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
  * <p>获取spring容器，以访问容器中定义的其他bean</p>
  * @since May 6, 2011 2:35:22 PM
  */
-@Component
-public class SpringContextUtil implements ApplicationContextAware {
+@Configuration
+public class ApplicationContextConfig implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
-    private SpringContextUtil() {
+    private ApplicationContextConfig() {
     }
 
     /**
@@ -32,9 +32,11 @@ public class SpringContextUtil implements ApplicationContextAware {
         return applicationContext.getBean(tClass);
     }
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext)
             throws BeansException {
-        SpringContextUtil.applicationContext = applicationContext;
+        if (null == ApplicationContextConfig.applicationContext)
+            ApplicationContextConfig.applicationContext = applicationContext;
     }
 
     public static ApplicationContext getApplicationContext() {
