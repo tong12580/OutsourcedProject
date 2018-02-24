@@ -71,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return (httpServletRequest, httpServletResponse, e) -> {
             httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
-            httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.INTERNAL_SERVER_ERROR).toJson());
+            httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
     }
 
