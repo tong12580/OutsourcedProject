@@ -77,8 +77,8 @@ public class AuthCtrl {
     @ApiOperation(value = "查询所有用户权限信息", notes = "分页查询所有用户权限信息，默认从第0页开始",
             authorizations = {@Authorization(value = "basicAuth")})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "权限名称", dataType = "int"),
-            @ApiImplicitParam(name = "pageSize", value = "权限ID", dataType = "int")
+            @ApiImplicitParam(name = "pageNum", value = "第几页", dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面记录数", dataType = "int")
     })
     public IResult<Page<UserDTO>> queryUsers(Integer pageNum, Integer pageSize) {
         if (null == pageNum) {
