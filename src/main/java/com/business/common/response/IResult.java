@@ -20,5 +20,5 @@ public interface IResult<T> extends Serializable {
 
     String getMsg();
 
-    <T> T getResult();
+    T getResult();
 }
