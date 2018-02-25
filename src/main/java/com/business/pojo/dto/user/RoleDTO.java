@@ -5,6 +5,7 @@ import com.business.pojo.dto.BaseEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,5 +21,6 @@ import lombok.EqualsAndHashCode;
 @Table(name = "role")
 @EqualsAndHashCode(callSuper = true)
 public class RoleDTO extends BaseEntity {
+    @ApiModelProperty("权限名称")
     private String name;
 }

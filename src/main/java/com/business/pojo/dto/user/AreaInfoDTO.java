@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -20,11 +21,14 @@ import lombok.Data;
 public class AreaInfoDTO {
 
     @Id
+    @ApiModelProperty("行政区划ID")
     private Integer id;
 
+    @ApiModelProperty("行政区划名称")
     @Column(name = "name", length = 20)
     private String name;
 
+    @ApiModelProperty("上级行政区划ID")
     @Column(name = "superior_id")
     private Integer superiorId;
 }
