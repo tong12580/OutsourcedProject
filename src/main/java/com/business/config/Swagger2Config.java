@@ -39,10 +39,10 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("外包项目API文档系统")
+                .title("外包项目API文档查询调用系统")
                 .description("接口控制器文档")
                 .license("Apache 2.0")
-                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.html")
                 .termsOfServiceUrl("https://blog.futuredream.top")
                 .contact(new Contact("joker", "https://blog.futuredream.top", "yutong467942250@gmail.com"))
                 .version("1.0")
