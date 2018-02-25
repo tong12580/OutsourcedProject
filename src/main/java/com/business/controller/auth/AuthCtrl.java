@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,20 +27,18 @@ import lombok.extern.slf4j.Slf4j;
  * @description 权限控制器
  * @since 2018/2/14 20:35
  */
+@Slf4j
 @RestController
 @RequestMapping("/admin")
-@Slf4j
+@Api(value = "权限控制器", tags = {"权限管理"}, description = "为系统添加新权限，给用户修改权限")
 public class AuthCtrl {
     @Resource
     private AuthService authService;
 
-    /**
-     * 添加新权限名称
-     *
-     * @param roleName 权限名称
-     * @return IResult
-     */
     @PutMapping("/role")
+    @ApiOperation(value = "添加新权限名称", notes = "添加新权限名称",
+            authorizations = {@Authorization(value = "basicAuth")})
+    @ApiImplicitParam(name = "roleName", value = "权限名称", dataType = "String", required = true)
     public IResult<String> addRole(String roleName) {
         if (StringUtils.isEmpty(roleName)) {
             return IResultUtil.errorResult(ResultMessage.INPUT_PARAMETER_IS_EMPTY, "roleName");
@@ -43,24 +46,21 @@ public class AuthCtrl {
         return authService.addRole(roleName);
     }
 
-    /**
-     * 查询权限表
-     *
-     * @return IResult
-     */
     @GetMapping("/roles")
+    @ApiOperation(value = "查询权限表", notes = "查询权限表",
+            authorizations = {@Authorization(value = "basicAuth")})
     public IResult queryRoles() {
         return authService.queryRoles();
     }
 
-    /**
-     * 修改权限名
-     *
-     * @param roleId   权限ID
-     * @param roleName 权限名称
-     * @return IResult
-     */
+
     @PatchMapping("/role")
+    @ApiOperation(value = "修改权限名", notes = "修改权限名",
+            authorizations = {@Authorization(value = "basicAuth")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleName", value = "权限名称", dataType = "String", required = true),
+            @ApiImplicitParam(name = "roleId", value = "权限ID", dataType = "Long", required = true)
+    })
     public IResult<String> updateRole(Long roleId, String roleName) {
         if (null == roleId) {
             return IResultUtil.errorResult(ResultMessage.INPUT_PARAMETER_IS_EMPTY, "roleId");

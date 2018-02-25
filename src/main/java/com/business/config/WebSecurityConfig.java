@@ -71,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     AuthenticationFailureHandler failureHandler() {
         return (httpServletRequest, httpServletResponse, e) -> {
-            httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            httpServletResponse.setStatus(HttpStatus.OK.value());
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
@@ -89,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     AccessDeniedHandler accessDeniedHandler() {
         return (httpServletRequest, httpServletResponse, e) -> {
-            httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
@@ -98,7 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     AuthenticationEntryPoint authenticationEntryPoint() {
         return (httpServletRequest, httpServletResponse, e) -> {
-            httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
@@ -117,9 +117,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sameOrigin()
                 .disable()
 
+
                 .authorizeRequests()
                 .antMatchers("/api/**")
                 .access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+//                .antMatchers("/v2/api-docs",
+//                        "/configuration/ui",
+//                        "/swagger-resources",
+//                        "/configuration/security",
+//                        "/swagger-ui.html",
+//                        "/webjars/**",
+//                        "/swagger-resources/configuration/ui",
+//                        "/swagge‌​r-ui.html")
+//                .permitAll()
+
 
                 .and()
                 .authorizeRequests()

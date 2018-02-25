@@ -60,7 +60,7 @@ public class IResultUtil {
      *
      * @return {@link IResult}
      */
-    public static IResult<String> errorResult() {
+    public static <T> IResult<T> errorResult() {
         return new Result<>(ResultMessage.STATUS_FAILURE);
     }
 
@@ -70,8 +70,8 @@ public class IResultUtil {
      * @param msg 提示信息
      * @return IResult
      */
-    public static IResult<String> errorResult(String msg) {
-        IResult<String> result = new Result<>();
+    public static <T> IResult<T> errorResult(String msg) {
+        IResult<T> result = new Result<>();
         result.setCode(ResultMessage.ERROR_PROMPT.getCode());
         result.setMsg(ResultMessage.ERROR_PROMPT.getMsg().replace("{}", msg));
         return result;
@@ -107,12 +107,11 @@ public class IResultUtil {
      * @param resultMessage {@link ResultMessage}
      * @return {@link IResult}
      */
-    public static IResult<String> errorResult(ResultMessage resultMessage, String specificMsg) {
-        IResult<String> result = new Result<>();
+    public static <T> IResult<T> errorResult(ResultMessage resultMessage, String specificMsg) {
+        IResult<T> result = new Result<>();
         specificMsg = StringUtils.isBlank(specificMsg) ? "" : specificMsg;
         result.setCode(resultMessage.getCode());
         result.setMsg(resultMessage.getMsg().replace("{}", specificMsg));
         return result;
     }
-
 }
