@@ -34,14 +34,17 @@ public class AccessServiceImpl implements AccessService {
     @Override
     public IResult<String> registered(String username, String password, String role) {
         UserDTO userDTO = new UserDTO();
+        RoleDTO roleDTO;
         if (StringUtils.isBlank(role)) {
-            role = RoleEnum.ROLE_USER.name();
+            roleDTO = new RoleDTO();
+            roleDTO.setId(RoleEnum.ROLE_USER.getId().longValue());
+        } else {
+            roleDTO = roleDTORepository.getByName(role);
+            if (null == roleDTO) {
+                return IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, "不存在该权限名称");
+            }
         }
-        RoleDTO r = roleDTORepository.getByName(role);
-        if (null == r) {
-            return IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, "不存在该权限名称");
-        }
-        userDTO.setRoleDTO(r);
+        userDTO.setRoleDTO(roleDTO);
         userDTO.setPassword(passwordEncoder.encode(password));
         userDTO.setUsername(username);
         if (null == userDTORepository.save(userDTO)) {
