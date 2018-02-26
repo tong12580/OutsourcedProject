@@ -1,6 +1,7 @@
 package com.business.config;
 
-import com.business.common.json.JsonUtil;
+import com.business.common.response.IResult;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -47,9 +48,9 @@ public class WebLogHeadAspect {
     }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
-    public void doAfterReturning(Object ret) {
+    public void doAfterReturning(IResult ret) throws JsonProcessingException {
         if (null != ret) {
-            log.info("Result : {}", JsonUtil.objectToJson(ret));
+            log.info("Result : {}", ret.toJson());
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.business.service.interfaces.auth;
 
 import com.business.common.response.IResult;
+import com.business.pojo.dto.user.UserDTO;
+
+import org.springframework.data.domain.Page;
 
 /**
  * @author yutong
@@ -34,4 +37,21 @@ public interface AuthService {
      */
     IResult<String> addRole(String roleName);
 
+
+    /**
+     * 分页查询所有用户权限
+     *
+     * @param pageNum  第几页
+     * @param pageSize 页面记录数
+     */
+    IResult<Page<UserDTO>> queryUsers(Integer pageNum, Integer pageSize);
+
+    /**
+     * 修改用户权限
+     *
+     * @param userId  用户ID
+     * @param newRole 新权限名称
+     * @return String
+     */
+    IResult<String> updateUserRole(Long userId, String newRole);
 }

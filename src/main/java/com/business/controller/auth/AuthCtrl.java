@@ -3,9 +3,11 @@ package com.business.controller.auth;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
 import com.business.common.response.IResultUtil;
+import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.auth.AuthService;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -69,5 +71,22 @@ public class AuthCtrl {
             return IResultUtil.errorResult(ResultMessage.INPUT_PARAMETER_IS_EMPTY, "roleName");
         }
         return authService.updateRole(roleId, roleName);
+    }
+
+    @GetMapping("/users")
+    @ApiOperation(value = "查询所有用户权限信息", notes = "分页查询所有用户权限信息，默认从第0页开始",
+            authorizations = {@Authorization(value = "basicAuth")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "第几页", dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面记录数", dataType = "int")
+    })
+    public IResult<Page<UserDTO>> queryUsers(Integer pageNum, Integer pageSize) {
+        if (null == pageNum) {
+            pageNum = 1;
+        }
+        if (null == pageSize) {
+            pageSize = 10;
+        }
+        return authService.queryUsers(pageNum, pageSize);
     }
 }

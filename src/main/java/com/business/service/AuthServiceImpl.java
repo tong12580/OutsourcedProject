@@ -3,9 +3,13 @@ package com.business.service;
 import com.business.common.response.IResult;
 import com.business.common.response.IResultUtil;
 import com.business.dao.auth.RoleDTORepository;
+import com.business.dao.users.UserDTORepository;
 import com.business.pojo.dto.user.RoleDTO;
+import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.auth.AuthService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,6 +24,8 @@ import javax.annotation.Resource;
 public class AuthServiceImpl implements AuthService {
     @Resource
     private RoleDTORepository roleDTORepository;
+    @Resource
+    private UserDTORepository userDTORepository;
 
     @Override
     public IResult queryRoles() {
@@ -43,5 +49,15 @@ public class AuthServiceImpl implements AuthService {
         roleDTO.setName(roleName);
         return null == roleDTORepository.save(roleDTO)
                 ? IResultUtil.errorResult() : IResultUtil.successResult();
+    }
+
+    @Override
+    public IResult<Page<UserDTO>> queryUsers(Integer pageNum, Integer pageSize) {
+        return IResultUtil.successResult(userDTORepository.findAll(new PageRequest(pageNum - 1, pageSize)));
+    }
+
+    @Override
+    public IResult<String> updateUserRole(Long userId, String newRole) {
+        return null;
     }
 }

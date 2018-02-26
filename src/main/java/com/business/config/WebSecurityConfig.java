@@ -121,21 +121,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/**")
                 .access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-//                .antMatchers("/v2/api-docs",
-//                        "/configuration/ui",
-//                        "/swagger-resources",
-//                        "/configuration/security",
-//                        "/swagger-ui.html",
-//                        "/webjars/**",
-//                        "/swagger-resources/configuration/ui",
-//                        "/swagge‌​r-ui.html")
-//                .permitAll()
-
 
                 .and()
                 .authorizeRequests()
                 .antMatchers("/admin/**")
-                .access("hasRole('ROLE_ADMIN')")
+                .access("hasAnyRole('ROLE_ADMIN','ROLE_ROOT')")
 
                 .and()
                 .formLogin()
