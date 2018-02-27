@@ -7,77 +7,16 @@
 ----
 
 1. OutsourcedProject是什么?
-* > OutsourcedProject项目是一个基于springBoot + springDate 的快速开发项目 他专注于服务的后台接口
+
+* > OutsourcedProject项目是一个基于springBoot 的快速开发项目 他专注于服务的后台接口
+* > 基于 springData 来处理Dao层开发
+* > 使用 springSecurity 来管理权限校验
+* > 使用 redis来处理缓存 token
+
 2. OutsourcedProject能做什么?
+
 * > outsourceProject项目可以作为一个电商网站的载体
 
-#### OutsourcedProject 目录结构树
-``` xml
-├─sql
-└─src
-    ├─main
-    │  ├─java
-    │  │  └─com
-    │  │      └─business
-    │  │          ├─cache
-    │  │          ├─common
-    │  │          │  ├─context
-    │  │          │  ├─http
-    │  │          │  │  └─token
-    │  │          │  ├─json
-    │  │          │  ├─message
-    │  │          │  ├─other
-    │  │          │  │  ├─excel
-    │  │          │  │  ├─Files
-    │  │          │  │  ├─idCard
-    │  │          │  │  └─img
-    │  │          │  ├─redis
-    │  │          │  ├─response
-    │  │          │  ├─sort
-    │  │          │  └─uuid
-    │  │          ├─controller
-    │  │          │  └─user
-    │  │          ├─dao
-    │  │          │  ├─commodity
-    │  │          │  ├─coupon
-    │  │          │  ├─system
-    │  │          │  ├─users
-    │  │          │  └─util
-    │  │          ├─filter
-    │  │          │  ├─httpEncodingFilter
-    │  │          │  └─xssFilter
-    │  │          ├─listener
-    │  │          ├─pojo
-    │  │          │  ├─dto
-    │  │          │  │  ├─commodity
-    │  │          │  │  ├─coupon
-    │  │          │  │  ├─system
-    │  │          │  │  └─user
-    │  │          │  └─vo
-    │  │          ├─service
-    │  │          │  ├─implementation
-    │  │          │  │  ├─users
-    │  │          │  │  └─util
-    │  │          │  └─interfaces
-    │  │          │      ├─users
-    │  │          │      └─util
-    │  │          └─thread
-    │  │              ├─schedule
-    │  │              └─task
-    │  └─resources
-    │      ├─static
-    │      │  ├─admin
-    │      │  ├─css
-    │      │  ├─images
-    │      │  ├─js
-    │      │  └─vendor
-    │      └─templates
-    └─test
-        └─java
-            └─com
-                └─business
-
-````
 ### 打包方式
 > 本项目可以用MVN进行打包构建 具体的mvn脚本如下所示
 ```
@@ -103,3 +42,60 @@
 4. 新增JDBC连接池升级
 5. 添加日志切面
 6. 新增返回结果集调用方式
+
+
+#### OutsourcedProject 目录结构树
+
+``` xml
+├─logs
+├─sql
+└─src
+   ├─main
+   │  ├─java
+   │  │  └─com
+   │  │      └─business
+   │  │          ├─common
+   │  │          │  ├─context
+   │  │          │  ├─date
+   │  │          │  ├─http
+   │  │          │  │  └─token
+   │  │          │  ├─json
+   │  │          │  ├─message
+   │  │          │  ├─other
+   │  │          │  │  ├─excel
+   │  │          │  │  ├─Files
+   │  │          │  │  ├─idCard
+   │  │          │  │  └─img
+   │  │          │  ├─redis
+   │  │          │  ├─response
+   │  │          │  ├─sort
+   │  │          │  └─uuid
+   │  │          ├─config
+   │  │          ├─controller
+   │  │          │  ├─auth
+   │  │          │  └─user
+   │  │          ├─dao
+   │  │          │  ├─auth
+   │  │          │  └─users
+   │  │          ├─listener
+   │  │          ├─pojo
+   │  │          │  ├─dto
+   │  │          │  │  └─user
+   │  │          │  └─enums
+   │  │          ├─service
+   │  │          │  └─interfaces
+   │  │          │      └─auth
+   │  │          ├─thread
+   │  │          │  ├─schedule
+   │  │          │  └─task
+   │  │          └─webSocket
+   │  └─resources
+   │      ├─static
+   │      └─templates
+   └─test
+       └─java
+           └─com
+               └─business
+
+
+````

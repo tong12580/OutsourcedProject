@@ -63,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     AuthenticationSuccessHandler loginSuccessful() {
         return (httpServletRequest, httpServletResponse, authentication) -> {
             httpServletResponse.setStatus(HttpStatus.OK.value());
+            httpServletResponse.setContentType("application/json;charset=UTF-8");
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.successResult().toJson());
         };
@@ -73,6 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return (httpServletRequest, httpServletResponse, e) -> {
             httpServletResponse.setStatus(HttpStatus.OK.value());
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
+            httpServletResponse.setContentType("application/json;charset=UTF-8");
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
     }
@@ -82,6 +84,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return (httpServletRequest, httpServletResponse, authentication) -> {
             httpServletResponse.setStatus(HttpStatus.OK.value());
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
+            httpServletResponse.setContentType("application/json;charset=UTF-8");
             httpServletResponse.getWriter().write(IResultUtil.successResult().toJson());
         };
     }
@@ -90,6 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     AccessDeniedHandler accessDeniedHandler() {
         return (httpServletRequest, httpServletResponse, e) -> {
             httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+            httpServletResponse.setContentType("application/json;charset=UTF-8");
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
@@ -98,7 +102,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     AuthenticationEntryPoint authenticationEntryPoint() {
         return (httpServletRequest, httpServletResponse, e) -> {
+            httpServletResponse.addHeader("WWW-Authenticate", "Basic realm=" + httpServletRequest.getContextPath() + "");
             httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+            httpServletResponse.setContentType("application/json;charset=UTF-8");
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
@@ -158,6 +164,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .httpBasic()
+                .authenticationEntryPoint(authenticationEntryPoint())
 
                 .and()
                 .csrf()
