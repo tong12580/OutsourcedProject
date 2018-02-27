@@ -13,6 +13,7 @@ import java.util.HashMap;
  * Created by yuTong on .
  */
 public class JwtTokenUtil {
+    String url = "http://www.leftso.com/blog/221.html";
     public static String cretaToken() {
         try {
             Algorithm algorithm = Algorithm.HMAC256("secret");
