@@ -1,9 +1,10 @@
 package com.business.common.message;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author yuton
@@ -35,4 +36,12 @@ public class CopyWriteUI {
     @Getter
     @Setter
     private String secret;//加密密钥
+
+    @Setter
+    @Getter
+    private String tokenHead;
+
+    @Setter
+    @Getter
+    private String tokenHeader;
 }

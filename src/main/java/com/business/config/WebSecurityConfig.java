@@ -1,5 +1,9 @@
 package com.business.config;
 
+import com.google.common.collect.ImmutableMap;
+
+import com.business.common.http.token.JwtTokenUtil;
+import com.business.common.message.CopyWriteUI;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResultUtil;
 import com.business.dao.users.UserDTORepository;
@@ -13,7 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,19 +27,18 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
 
 /**
  * @author yuton
@@ -45,21 +48,19 @@ import java.util.Date;
  */
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Resource
+    private CopyWriteUI copyWriteUI;
+    @Resource
+    private UserDTORepository userDTORepository;
 
     @Bean
     UserDetailsService customUserService() {
-        return new UserDetailsService() {
-            @Resource
-            private UserDTORepository userDTORepository;
-
-            @Override
-            public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-                UserDTO userDTO = userDTORepository.findByUsername(s);
-                if (null == userDTO) {
-                    throw new UsernameNotFoundException("用户名不存在");
-                }
-                return userDTO;
+        return s -> {
+            UserDTO userDTO = userDTORepository.findByUsername(s);
+            if (null == userDTO) {
+                throw new UsernameNotFoundException("用户名不存在");
             }
+            return userDTO;
         };
     }
 
@@ -71,10 +72,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     AuthenticationSuccessHandler loginSuccessful() {
         return (httpServletRequest, httpServletResponse, authentication) -> {
+            UserDTO userDTO = userDTORepository.findByUsername(authentication.getName());
             httpServletResponse.setStatus(HttpStatus.OK.value());
             httpServletResponse.setContentType("application/json;charset=UTF-8");
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
-            httpServletResponse.getWriter().write(IResultUtil.successResult().toJson());
+            httpServletResponse.getWriter().write(IResultUtil.successResult(
+                    ImmutableMap.of("token",
+                            Objects.requireNonNull(JwtTokenUtil.createToken(
+                                    userDTO, copyWriteUI.getSecret(), copyWriteUI.getIssuer()))))
+                    .toJson());
         };
     }
 
@@ -119,11 +125,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-    OncePerRequestFilter jwtAuthenticationTokenFilter (){
+    @Bean
+    OncePerRequestFilter jwtAuthenticationTokenFilter() {
         return new OncePerRequestFilter() {
+
             @Override
             protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-
+                String token = httpServletRequest.getHeader(copyWriteUI.getTokenHeader());
+                if (null == token || !token.startsWith(copyWriteUI.getTokenHead())) {
+                    return;
+                }
+                token = token.substring(copyWriteUI.getTokenHead().length());
+                if (JwtTokenUtil.validateToken(token, copyWriteUI.getSecret())) {
+                    filterChain.doFilter(httpServletRequest, httpServletResponse);
+                }
             }
         };
     }
@@ -192,7 +207,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf()
                 .disable()
-                .sessionManagement().maximumSessions(1);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//
+//                .and()
+//                .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+        ;
     }
 
     @Override
