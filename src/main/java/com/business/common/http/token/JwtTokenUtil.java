@@ -51,6 +51,21 @@ public class JwtTokenUtil {
         return true;
     }
 
+    /**
+     * 从token中解析中用户信息
+     */
+    public static UserDTO getAuthentication(String token) {
+
+        DecodedJWT decodedJWT = JWT.decode(token);
+        String authorityString = decodedJWT.getClaim("role").asString();
+        UserDTO user = new UserDTO();
+        user.setUsername(decodedJWT.getSubject());
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setName(authorityString);
+        user.setRoleDTO(roleDTO);
+        return user;
+    }
+
     public static void main(String[] args) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("yt");

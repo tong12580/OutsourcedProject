@@ -31,13 +31,13 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-//@RequestMapping("/admin")
+@RequestMapping("/admin")
 @Api(value = "权限控制器", tags = {"权限管理"}, description = "为系统添加新权限，给用户修改权限")
 public class AuthCtrl {
     @Resource
     private AuthService authService;
 
-    @PutMapping("${role}")
+    @PutMapping("/role")
     @ApiOperation(value = "添加新权限名称", notes = "添加新权限名称",
             authorizations = {@Authorization(value = "basicAuth")})
     @ApiImplicitParam(name = "roleName", value = "权限名称", dataType = "String", required = true)
