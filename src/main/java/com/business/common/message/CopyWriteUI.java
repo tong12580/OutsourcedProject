@@ -27,4 +27,12 @@ public class CopyWriteUI {
     @Getter
     @Setter
     private String loginError; //用户名密码错误
+
+    @Getter
+    @Setter
+    private String issuer;//颁发者
+
+    @Getter
+    @Setter
+    private String secret;//加密密钥
 }

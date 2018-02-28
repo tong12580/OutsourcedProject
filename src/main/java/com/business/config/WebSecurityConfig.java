@@ -23,10 +23,19 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * @author yuton
@@ -110,6 +119,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
+    OncePerRequestFilter jwtAuthenticationTokenFilter (){
+        return new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+
+            }
+        };
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
@@ -119,10 +137,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .headers()
+                .cacheControl()
+                .disable()
+
                 .frameOptions()
                 .sameOrigin()
                 .disable()
-
 
                 .authorizeRequests()
                 .antMatchers("/api/**")
@@ -132,6 +152,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin/**")
                 .access("hasAnyRole('ROLE_ADMIN','ROLE_ROOT')")
+
+//                .and()
+//                .addFilterBefore()
 
                 .and()
                 .formLogin()

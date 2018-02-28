@@ -10,6 +10,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.BasicAuth;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
@@ -29,7 +30,9 @@ public class Swagger2Config {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .securitySchemes(Stream.of(new BasicAuth("basicAuth")).collect(Collectors.toList()))
+                .securitySchemes(Stream.of(new BasicAuth("basicAuth"),
+                        new ApiKey("token", "Authorization", "header"))
+                        .collect(Collectors.toList()))
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.business.controller"))
