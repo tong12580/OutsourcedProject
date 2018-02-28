@@ -1,0 +1,4 @@
+api:
+  provinces: /api/provinces
+admin:
+  role: /admin/role

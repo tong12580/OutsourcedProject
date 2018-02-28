@@ -13,7 +13,7 @@ import org.springframework.context.annotation.PropertySources;
 @ServletComponentScan
 @SpringBootApplication
 @EnableCaching
-@PropertySources({@PropertySource("classpath:/copyWriteUI.properties"),@PropertySource("classpath:/api.yml")})
+@PropertySource(value = {"classpath:copyWriteUI.properties", "classpath:api.yml"})
 public class OutsourcedProjectApplication {
 
     public static void main(String[] args) {

@@ -26,13 +26,13 @@ import io.swagger.annotations.Authorization;
  * @since 2018/2/25 00:27
  */
 @RestController
-@RequestMapping("/api")
+//@RequestMapping("/api")
 @Api(value = "行政区域查询控制器", tags = {"行政区域查询控制器"}, description = "查询省市县三级城市区划")
 public class AreaInfoCtrl {
     @Resource
     private AreaInfoDTORepository areaInfoDTORepository;
 
-    @GetMapping("/provinces")
+    @GetMapping("${provinces}")
     @ApiOperation(value = "省级行政区域查询", notes = "省级行政区域查询",
             authorizations = {@Authorization(value = "basicAuth")})
     public IResult<List<AreaInfoDTO>> queryProvinces() {
