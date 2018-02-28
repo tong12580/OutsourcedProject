@@ -1,6 +1,7 @@
 package com.business.pojo.dto.user;
 
 import com.business.pojo.dto.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,19 +30,24 @@ public class UserDTO extends BaseEntity implements UserDetails {
     private String username;
     private String password;
 
+    @JsonIgnore
     @Column(name = "account_non_expired")
     private Boolean accountNonExpired = true;
 
+    @JsonIgnore
     @Column(name = "credentials_non_expired")
     private Boolean credentialsNonExpired = true;
 
+    @JsonIgnore
     private Boolean enabled = true;
 
+    @JsonIgnore
     @Column(name = "account_non_locked")
     private Boolean accountNonLocked = true;
 
     private String token;
 
+    @JsonIgnore
     @Column(name = "expired_time")
     private Long expiredTime;
 

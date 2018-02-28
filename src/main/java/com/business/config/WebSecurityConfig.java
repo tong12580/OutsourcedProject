@@ -1,5 +1,9 @@
 package com.business.config;
 
+import com.google.common.collect.ImmutableMap;
+
+import com.business.common.http.token.JwtTokenUtil;
+import com.business.common.message.CopyWriteUI;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResultUtil;
 import com.business.dao.users.UserDTORepository;
@@ -13,6 +17,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +32,13 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.io.IOException;
+import java.util.Objects;
+
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author yuton
@@ -36,16 +48,19 @@ import javax.annotation.Resource;
  */
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Resource
+    private UserDTORepository userDTORepository;
+    @Resource
+    private CopyWriteUI copyWriteUI;
 
     @Bean
     UserDetailsService customUserService() {
+
         return new UserDetailsService() {
-            @Resource
-            private UserDTORepository userDTORepository;
 
             @Override
-            public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-                UserDTO userDTO = userDTORepository.findByUsername(s);
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                UserDTO userDTO = userDTORepository.findByUsername(username);
                 if (null == userDTO) {
                     throw new UsernameNotFoundException("用户名不存在");
                 }
@@ -61,11 +76,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     AuthenticationSuccessHandler loginSuccessful() {
-        return (httpServletRequest, httpServletResponse, authentication) -> {
-            httpServletResponse.setStatus(HttpStatus.OK.value());
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
-            httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
-            httpServletResponse.getWriter().write(IResultUtil.successResult().toJson());
+        return new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+                UserDTO userDTO = userDTORepository.findByUsername(authentication.getName());
+                httpServletResponse.setStatus(HttpStatus.OK.value());
+                httpServletResponse.setContentType("application/json;charset=UTF-8");
+                httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
+                httpServletResponse.getWriter().write(IResultUtil.successResult(
+                        ImmutableMap.of("token",
+                                Objects.requireNonNull(JwtTokenUtil.createToken(
+                                        userDTO, copyWriteUI.getSecret(), copyWriteUI.getIssuer()))))
+                        .toJson());
+            }
         };
     }
 
@@ -110,6 +133,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
+//    @Bean
+//    OncePerRequestFilter jwtAuthenticationTokenFilter() {
+//        return new OncePerRequestFilter() {
+//
+//            @Override
+//            protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+//                String token = httpServletRequest.getHeader(copyWriteUI.getTokenHeader());
+//                if (null == token || !token.startsWith(copyWriteUI.getTokenHead())) {
+//                    return;
+//                }
+//                token = token.substring(copyWriteUI.getTokenHead().length());
+//                if (JwtTokenUtil.validateToken(token, copyWriteUI.getSecret())) {
+//                    UserDTO user = JwtTokenUtil.getAuthentication(token);
+//                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
+//                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(
+//                            httpServletRequest));
+//                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+//
+//                }
+//                filterChain.doFilter(httpServletRequest, httpServletResponse);
+//            }
+//        };
+//    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
@@ -119,10 +166,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .headers()
+                .cacheControl()
+
+                .and()
                 .frameOptions()
                 .sameOrigin()
                 .disable()
-
 
                 .authorizeRequests()
                 .antMatchers("/api/**")
@@ -132,6 +181,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin/**")
                 .access("hasAnyRole('ROLE_ADMIN','ROLE_ROOT')")
+
+//                .and()
+//                .addFilterBefore()
 
                 .and()
                 .formLogin()
@@ -169,7 +221,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf()
                 .disable()
-                .sessionManagement().maximumSessions(1);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
