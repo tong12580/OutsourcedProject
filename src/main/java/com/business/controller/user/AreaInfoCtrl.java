@@ -34,14 +34,14 @@ public class AreaInfoCtrl {
 
     @GetMapping("/provinces")
     @ApiOperation(value = "省级行政区域查询", notes = "省级行政区域查询",
-            authorizations = {@Authorization(value = "basicAuth")})
+            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
     public IResult<List<AreaInfoDTO>> queryProvinces() {
         return IResultUtil.successResult(ResultMessage.STATUS_SUCCESS, areaInfoDTORepository.findBySuperiorIdIsNull());
     }
 
     @GetMapping("/subordinateAdministrativeUnits")
     @ApiOperation(value = "次级行政区域查询", notes = "查询市、现行政区划",
-            authorizations = {@Authorization(value = "basicAuth")})
+            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
     @ApiImplicitParam(name = "id", value = "上级行政区划ID", dataType = "Int", required = true)
     public IResult<List<AreaInfoDTO>> querySubordinateAdministrativeUnits(Integer id) {
         return IResultUtil.successResult(ResultMessage.STATUS_SUCCESS, areaInfoDTORepository.findBySuperiorId(id));

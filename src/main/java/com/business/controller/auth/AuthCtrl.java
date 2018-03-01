@@ -39,7 +39,7 @@ public class AuthCtrl {
 
     @PutMapping("/role")
     @ApiOperation(value = "添加新权限名称", notes = "添加新权限名称",
-            authorizations = {@Authorization(value = "basicAuth")})
+            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
     @ApiImplicitParam(name = "roleName", value = "权限名称", dataType = "String", required = true)
     public IResult<String> addRole(String roleName) {
         if (StringUtils.isEmpty(roleName)) {
@@ -50,7 +50,7 @@ public class AuthCtrl {
 
     @GetMapping("/roles")
     @ApiOperation(value = "查询权限表", notes = "查询权限表",
-            authorizations = {@Authorization(value = "basicAuth")})
+            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
     public IResult queryRoles() {
         return authService.queryRoles();
     }
@@ -58,7 +58,7 @@ public class AuthCtrl {
 
     @PatchMapping("/role")
     @ApiOperation(value = "修改权限名", notes = "修改权限名",
-            authorizations = {@Authorization(value = "basicAuth")})
+            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleName", value = "权限名称", dataType = "String", required = true),
             @ApiImplicitParam(name = "roleId", value = "权限ID", dataType = "Long", required = true)
@@ -75,7 +75,7 @@ public class AuthCtrl {
 
     @GetMapping("/users")
     @ApiOperation(value = "查询所有用户权限信息", notes = "分页查询所有用户权限信息，默认从第0页开始",
-            authorizations = {@Authorization(value = "basicAuth")})
+            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "第几页", dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面记录数", dataType = "int")
