@@ -1,15 +1,23 @@
 package com.business.controller.auth;
 
+import com.google.common.collect.ImmutableMap;
+
+import com.business.common.http.token.JwtTokenUtil;
+import com.business.common.message.CopyWriteUI;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
 import com.business.common.response.IResultUtil;
+import com.business.dao.users.UserDTORepository;
+import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.auth.AccessService;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -28,14 +36,11 @@ public class AccessCtrl {
 
     @Resource
     private AccessService accessService;
+    @Resource
+    private CopyWriteUI copyWriteUI;
+    @Resource
+    private UserDTORepository userDTORepository;
 
-    /**
-     * 注册
-     *
-     * @param username 账号
-     * @param password 密码
-     * @return IResult
-     */
     @ApiOperation(value = "注册", notes = "使用用户名、密码以及权限名称注册用户信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "账号", dataType = "String", required = true),
@@ -48,5 +53,23 @@ public class AccessCtrl {
             return IResultUtil.errorResult(ResultMessage.INPUT_PARAMETER_IS_EMPTY, "username or password");
         }
         return accessService.registered(username, password, role);
+    }
+
+    @ApiOperation(value = "刷新token", notes = "在token未过期前刷新token")
+    @GetMapping("/refreshToken")
+    public IResult refreshToken(HttpServletRequest request) {
+        String newToken = null;
+        String authHeader = request.getHeader(copyWriteUI.getTokenHeader());
+        if (authHeader != null && authHeader.startsWith(copyWriteUI.getTokenHead())) {
+            final String authToken = authHeader.substring(copyWriteUI.getTokenHead().length());
+            newToken = JwtTokenUtil.refreshToken(authToken, copyWriteUI.getSecret(), copyWriteUI.getIssuer());
+        }
+        if (StringUtils.isEmpty(newToken)) {
+            return IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, "token已过期，请重新登录！");
+        }
+        UserDTO userDTO = userDTORepository.findByUsername(JwtTokenUtil.getUsername(newToken));
+        userDTO.setToken(newToken);
+        userDTORepository.saveAndFlush(userDTO);
+        return IResultUtil.successResult(ImmutableMap.of("token", newToken));
     }
 }

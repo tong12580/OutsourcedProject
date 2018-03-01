@@ -19,7 +19,6 @@ import java.util.Date;
  * Created by yuTong on .
  */
 public class JwtTokenUtil {
-    static String url = "http://www.leftso.com/blog/221.html";
 
     public static String createToken(UserDTO userDTO, String secret, String issuer) {
         try {
@@ -33,8 +32,7 @@ public class JwtTokenUtil {
                     .withIssuedAt(new Date())
                     .withJWTId(UUIDUtil.getShortUUid())
                     .sign(algorithm);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (UnsupportedEncodingException ignore) {
         }
         return null;
     }
@@ -64,6 +62,43 @@ public class JwtTokenUtil {
         roleDTO.setName(authorityString);
         user.setRoleDTO(roleDTO);
         return user;
+    }
+
+    /**
+     * 从token中获取用户名
+     *
+     * @param token String
+     */
+    public static String getUsername(String token) {
+        DecodedJWT decodedJWT = JWT.decode(token);
+        return decodedJWT.getSubject();
+    }
+
+    /**
+     * 刷新token
+     *
+     * @param oldToken 旧token
+     */
+    public static String refreshToken(String oldToken, String secret, String issuer) {
+
+        try {
+            if (validateToken(oldToken, secret)) {
+                DecodedJWT jwt = JWT.decode(oldToken);
+                if (StringUtils.isNotBlank(jwt.getSubject())) {
+                    return JWT.create()
+                            .withIssuer(issuer)
+                            .withClaim("userId", jwt.getClaim("userId").asString())
+                            .withClaim("role", jwt.getClaim("role").asString())
+                            .withExpiresAt(DateUtil.addWeeks(new Date(), 1))
+                            .withSubject(jwt.getSubject())
+                            .withIssuedAt(new Date())
+                            .withJWTId(UUIDUtil.getShortUUid())
+                            .sign(Algorithm.HMAC256(secret));
+                }
+            }
+        } catch (UnsupportedEncodingException ignore) {
+        }
+        return null;
     }
 
     public static void main(String[] args) {
