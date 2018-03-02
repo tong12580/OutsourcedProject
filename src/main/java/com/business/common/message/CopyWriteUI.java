@@ -44,4 +44,8 @@ public class CopyWriteUI {
     @Setter
     @Getter
     private String tokenHeader;
+
+    @Getter
+    @Setter
+    private String basicHead;
 }
