@@ -100,19 +100,4 @@ public class JwtTokenUtil {
         }
         return null;
     }
-
-    public static void main(String[] args) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername("yt");
-        userDTO.setId(1L);
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName("124");
-        userDTO.setRoleDTO(roleDTO);
-        String s = JwtTokenUtil.createToken(userDTO, "secret", "joker");
-        System.out.println(s);
-        DecodedJWT jwt = JWT.decode(s);
-        System.out.println(JsonUtil.objectToJson(jwt));
-        System.out.println(jwt.getAlgorithm());
-        System.out.println(validateToken(s, "secret"));
-    }
 }
