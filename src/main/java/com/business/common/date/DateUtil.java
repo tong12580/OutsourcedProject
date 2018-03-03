@@ -36,6 +36,21 @@ public class DateUtil {
     }
 
     /**
+     * @param pattern 日期格式
+     * @param date    日期
+     * @return boolean
+     * @description 判断是否为正确日期
+     */
+    public static boolean isDate(String date, String pattern) {
+        FastDateFormat fastDateFormat = FastDateFormat.getInstance(pattern);
+        try {
+            return fastDateFormat.format(fastDateFormat.parse(date)).equals(date);
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    /**
      * @param date 时间类型
      * @return yyyy-MM-dd {@link String}
      * @description 对时间格式进行格式化
@@ -91,7 +106,7 @@ public class DateUtil {
         try {
             return format.parse(date);
         } catch (ParseException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -235,24 +250,6 @@ public class DateUtil {
     }
 
     /***
-     * 当前日期前n个交易日
-     * @param date {@link Date}
-     * @param n int
-     * @return
-     */
-    public Date tradingTomorrowDay(Date date, int n) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, n);
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        return new Date(calendar.getTimeInMillis());
-    }
-
-    /***
      * 计算两个时间相差的天数
      * @param date1 {@link Date}
      * @param date2 {@link Date}
@@ -272,11 +269,11 @@ public class DateUtil {
     }
 
     /**
+     * 获取时间差 (time1-time2 单位为ms)
+     *
      * @param time1 {@link Date}
      * @param time2 {@link Date}
      * @return int
-     * @Title: getTimestamp
-     * @Description: 获取1-2的时间差，单位为ms
      */
     public static int getTimestamp(Date time1, Date time2) {
         if (time1 == null || time2 == null) {
@@ -292,23 +289,14 @@ public class DateUtil {
     }
 
     /**
+     * 计算年龄
+     *
      * @return String
-     * @Title: getAgeByBirthday
-     * @Description: 计算年龄
      */
     public static String getAgeByBirthday(Date birthday) {
         int days = daysBetween(birthday, new Date());
-        int year = days / 365;
-        int month = (days % 365) / 30;
-        String age = "";
-        if (year > 0) {
-            age = year + "岁";
-            if (month > 0) {
-                age = age + month + "个月";
-            }
-        } else if (month > 0) {
-            age = month + "个月";
-        }
-        return age;
+        String ageByBirthday = "{age}岁{month}个月";
+        return ageByBirthday.replace("{age}", String.valueOf(days / 365))
+                .replace("{month}", String.valueOf((days % 365) / 30));
     }
 }
