@@ -60,6 +60,10 @@
         "Policies": {
           "SizeBasedTriggeringPolicy": {
             "size": "10 MB"
+          },
+          "TimeBasedTriggeringPolicy": {
+            "modulate": "true",
+            "interval": "1"
           }
         }
       }
