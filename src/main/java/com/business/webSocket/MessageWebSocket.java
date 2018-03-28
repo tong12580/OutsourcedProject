@@ -2,7 +2,10 @@ package com.business.webSocket;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import javax.annotation.Resource;
 
 /**
  * @author yutong
@@ -12,6 +15,9 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class MessageWebSocket {
+
+    @Resource
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @SendTo("/topic/notice")
     @MessageMapping("/change-notice")
