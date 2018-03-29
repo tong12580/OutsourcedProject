@@ -6,7 +6,6 @@ import com.business.pojo.dto.message.BaseMessageEntity;
 import com.business.pojo.dto.message.ChatMessageEntity;
 import com.business.pojo.dto.user.UserDTO;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,10 +29,9 @@ public class MessageWebSocket {
     @Resource
     private UserDTORepository userDTORepository;
 
-    @SendTo("/topic/notice")
     @MessageMapping("/change-notice")
-    public String greeting(String value) {
-        return value;
+    public void greeting(String value) {
+        simpMessagingTemplate.convertAndSend("/topic/notice", value);
     }
 
     @MessageMapping("/chat")
