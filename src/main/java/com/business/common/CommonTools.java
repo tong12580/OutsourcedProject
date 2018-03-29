@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class CommonTools {
-    private static final String PATTERN_HAVE_TIME = "yyyy-MM-dd HH:mm:ss";
+
 
     /**
      * 遍历Map并除去空值
@@ -165,18 +165,6 @@ public class CommonTools {
 
         return null;
     }
-
-
-    /***
-     * json to bean
-     * @param json {@link String}
-     * @param tClass {@link Class}
-     * @param <T> {@link T}
-     */
-    public static <T> T getBean(String json, Class<T> tClass) throws IOException {
-        return JsonUtil.jsonToBean(json, tClass, PATTERN_HAVE_TIME);
-    }
-
 
     /**
      * @return {@link String}
