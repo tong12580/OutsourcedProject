@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 
 public class Result<T> implements IResult<T> {
-    private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     private Integer code = 0;
     private String msg;
@@ -33,7 +32,7 @@ public class Result<T> implements IResult<T> {
 
     @Override
     public String toJson() throws JsonProcessingException {
-        return JsonUtil.objectToJson(this, PATTERN);
+        return JsonUtil.toJson(this);
     }
 
     @Override

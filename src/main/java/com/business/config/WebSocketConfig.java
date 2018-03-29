@@ -1,10 +1,17 @@
 package com.business.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
+import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 
 /**
  * @author yuton
@@ -12,6 +19,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
  * @description com.example.demo.config
  * @since 上午9:26 2018/1/2
  */
+@Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
@@ -34,8 +42,33 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry messageBrokerRegistry) {
         //表示客户端订阅地址的前缀信息，也就是客户端接收服务端消息的地址的前缀信息
-        messageBrokerRegistry.enableSimpleBroker("/topic");
+        messageBrokerRegistry.enableSimpleBroker("/topic", "/queue");
         //指服务端接收地址的前缀，意思就是说客户端给服务端发消息的地址的前缀
         messageBrokerRegistry.setApplicationDestinationPrefixes("/app");
+    }
+
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+        registration.addDecoratorFactory(new WebSocketHandlerDecoratorFactory() {
+            @Override
+            public WebSocketHandler decorate(WebSocketHandler webSocketHandler) {
+                return new WebSocketHandlerDecorator(webSocketHandler) {
+                    @Override
+                    public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
+                        String username = session.getPrincipal().getName();
+                        log.info("online: " + username);
+                        super.afterConnectionEstablished(session);
+                    }
+
+                    @Override
+                    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus)
+                            throws Exception {
+                        String username = session.getPrincipal().getName();
+                        log.info("offline: " + username);
+                        super.afterConnectionClosed(session, closeStatus);
+                    }
+                };
+            }
+        });
     }
 }

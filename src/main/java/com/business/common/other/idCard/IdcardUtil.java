@@ -144,7 +144,7 @@ public class IdcardUtil {
      * @param idCard 15位身份编码
      * @return 18位身份编码
      */
-    private static String conver15CardTo18(String idCard) {
+    private static String colver15CardTo18(String idCard) {
         String idCard18;
         if (idCard.length() != CHINA_ID_MIN_LENGTH) {
             return null;
@@ -166,7 +166,7 @@ public class IdcardUtil {
             idCard18 = idCard.substring(0, 6) + sYear + idCard.substring(8);
             // 转换字符数组
             char[] cArr = idCard18.toCharArray();
-            int[] iCard = converCharToInt(cArr);
+            int[] iCard = colverCharToInt(cArr);
             int iSum17 = getPowerSum(iCard);
             // 获取校验位
             String sVal = getCheckCode18(iSum17);
@@ -194,9 +194,7 @@ public class IdcardUtil {
         }
         String[] cardval = validateIdCard10(card);
         if (cardval != null) {
-            if (cardval[2].equals("true")) {
-                return true;
-            }
+            return cardval[2].equals("true");
         }
         return false;
     }
@@ -216,7 +214,7 @@ public class IdcardUtil {
             String code18 = idCard.substring(17, CHINA_ID_MAX_LENGTH);
             if (isNum(code17)) {
                 char[] cArr = code17.toCharArray();
-                int[] iCard = converCharToInt(cArr);
+                int[] iCard = colverCharToInt(cArr);
                 int iSum17 = getPowerSum(iCard);
                 // 获取校验位
                 String val = getCheckCode18(iSum17);
@@ -275,7 +273,7 @@ public class IdcardUtil {
      */
     private static String[] validateIdCard10(String idCard) {
         String[] info = new String[3];
-        String card = idCard.replaceAll("[\\(|\\)]", "");
+        String card = idCard.replaceAll("[(|)]", "");
         if (card.length() != 8 && card.length() != 9 && idCard.length() != 10) {
             return null;
         }
@@ -299,10 +297,10 @@ public class IdcardUtil {
                     return info;
             }
             info[2] = validateTWCard(idCard) ? TRUE : FALSE;
-        } else if (idCard.matches("^[1|5|7][0-9]{6}\\(?[0-9A-Z]\\)?$")) { // 澳门
+        } else if ("^[1|5|7][0-9]{6}\\(?[0-9A-Z]\\)?$".matches(idCard)) { // 澳门
             info[0] = "澳门";
             info[1] = "N";
-        } else if (idCard.matches("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$")) { // 香港
+        } else if ("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$".matches(idCard)) { // 香港
             info[0] = "香港";
             info[1] = "N";
             info[2] = validateHKCard(idCard) ? TRUE : FALSE;
@@ -325,10 +323,10 @@ public class IdcardUtil {
         Integer iStart = twFirstCode.get(start);
         Integer sum = iStart / 10 + (iStart % 10) * 9;
         char[] chars = mid.toCharArray();
-        Integer iflag = 8;
+        Integer flag = 8;
         for (char c : chars) {
-            sum = sum + Integer.valueOf(c + "") * iflag;
-            iflag--;
+            sum = sum + Integer.valueOf(c + "") * flag;
+            flag--;
         }
         return (sum % 10 == 0 ? 0 : (10 - sum % 10)) == Integer.valueOf(end);
     }
@@ -347,8 +345,8 @@ public class IdcardUtil {
      * @return 验证码是否符合
      */
     private static boolean validateHKCard(String idCard) {
-        String card = idCard.replaceAll("[\\(|\\)]", "");
-        Integer sum = 0;
+        String card = idCard.replaceAll("[(|)]", "");
+        Integer sum;
         if (card.length() == 9) {
             sum = ((int) card.substring(0, 1).toUpperCase().toCharArray()[0] - 55) * 9
                     + ((int) card.substring(1, 2).toUpperCase().toCharArray()[0] - 55) * 8;
@@ -378,7 +376,7 @@ public class IdcardUtil {
      * @param ca 字符数组
      * @return 数字数组
      */
-    private static int[] converCharToInt(char[] ca) {
+    private static int[] colverCharToInt(char[] ca) {
         int len = ca.length;
         int[] iArr = new int[len];
         try {
@@ -468,7 +466,7 @@ public class IdcardUtil {
     public static int getAgeByIdCard(String idCard) {
         int iAge;
         if (idCard.length() == CHINA_ID_MIN_LENGTH) {
-            idCard = conver15CardTo18(idCard);
+            idCard = colver15CardTo18(idCard);
         }
         assert idCard != null;
         String year = idCard.substring(6, 10);
@@ -489,7 +487,7 @@ public class IdcardUtil {
         if (len < CHINA_ID_MIN_LENGTH) {
             return null;
         } else if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = conver15CardTo18(idCard);
+            idCard = colver15CardTo18(idCard);
         }
         assert idCard != null;
         return idCard.substring(6, 14);
@@ -506,7 +504,7 @@ public class IdcardUtil {
         if (len < CHINA_ID_MIN_LENGTH) {
             return null;
         } else if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = conver15CardTo18(idCard);
+            idCard = colver15CardTo18(idCard);
         }
         assert idCard != null;
         return Short.valueOf(idCard.substring(6, 10));
@@ -523,7 +521,7 @@ public class IdcardUtil {
         if (len < CHINA_ID_MIN_LENGTH) {
             return null;
         } else if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = conver15CardTo18(idCard);
+            idCard = colver15CardTo18(idCard);
         }
         assert idCard != null;
         return Short.valueOf(idCard.substring(10, 12));
@@ -540,7 +538,7 @@ public class IdcardUtil {
         if (len < CHINA_ID_MIN_LENGTH) {
             return null;
         } else if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = conver15CardTo18(idCard);
+            idCard = colver15CardTo18(idCard);
         }
         assert idCard != null;
         return Short.valueOf(idCard.substring(12, 14));
@@ -553,9 +551,9 @@ public class IdcardUtil {
      * @return 性别(M-男，F-女，N-未知)
      */
     public static String getGenderByIdCard(String idCard) {
-        String sGender = "N";
+        String sGender;
         if (idCard.length() == CHINA_ID_MIN_LENGTH) {
-            idCard = conver15CardTo18(idCard);
+            idCard = colver15CardTo18(idCard);
         }
         assert idCard != null;
         String sCardNum = idCard.substring(16, 17);
