@@ -28,4 +28,9 @@ public class TestCtrl {
     public String test(String x) {
         return x;
     }
+
+    @RequestMapping("/api/xcl")
+    public String xcl() {
+        return "xcl";
+    }
 }
