@@ -1,5 +1,8 @@
 package com.business.config;
 
+import com.business.common.other.cache.CachePool;
+import com.business.dao.users.UserInfoDTORepository;
+import com.business.pojo.dto.user.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -13,6 +16,8 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 
+import javax.annotation.Resource;
+
 /**
  * @author yuton
  * @version 1.0
@@ -23,6 +28,7 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+    
     /**
      * 这个方法的作用是添加一个服务端点，来接收客户端的连接。
      *
