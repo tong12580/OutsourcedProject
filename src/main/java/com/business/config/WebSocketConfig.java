@@ -1,9 +1,5 @@
 package com.business.config;
 
-import com.business.common.other.cache.CachePool;
-import com.business.dao.users.UserInfoDTORepository;
-import com.business.pojo.dto.user.UserDTO;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.CloseStatus;
@@ -16,7 +12,7 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 
-import javax.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author yuton

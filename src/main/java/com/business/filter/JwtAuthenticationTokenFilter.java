@@ -1,9 +1,12 @@
 package com.business.filter;
 
-import com.business.common.http.token.JwtTokenUtil;
 import com.business.common.message.CopyWriteUI;
+import com.business.pojo.dto.user.RoleDTO;
 import com.business.pojo.dto.user.UserDTO;
+import com.jokers.common.http.token.JwtTokenUtil;
+import com.jokers.pojo.bo.JwtBo;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -28,16 +31,27 @@ import javax.servlet.http.HttpServletResponse;
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Resource
     private CopyWriteUI copyWriteUI;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
         String authHeader = request.getHeader(copyWriteUI.getTokenHeader());
+        String url = request.getRequestURI();
+        if (StringUtils.isBlank(url) && !url.contains("/api") && !url.contains("/admin")) {
+            chain.doFilter(request, response);
+        }
+        logger.debug(url);
         if (authHeader != null && authHeader.startsWith(copyWriteUI.getTokenHead())) {
             // The part after "Bearer "
             final String authToken = authHeader.substring(copyWriteUI.getTokenHead().length());
-            UserDTO userDTO = JwtTokenUtil.getAuthentication(authToken);
-            String username = userDTO.getUsername();
-
+            JwtBo jwtBo = JwtTokenUtil.getAuthentication(authToken);
+            String username = jwtBo.getUsername();
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(username);
+            userDTO.setId(jwtBo.getUserId());
+            RoleDTO roleDTO = new RoleDTO();
+            roleDTO.setName(jwtBo.getRoleName());
+            userDTO.setRoleDTO(roleDTO);
             logger.info("checking authentication " + username);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

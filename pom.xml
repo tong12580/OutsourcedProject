@@ -125,6 +125,13 @@
             <artifactId>java-jwt</artifactId>
             <version>3.3.0</version>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/io.github.tong12580/common-lib -->
+		<dependency>
+			<groupId>io.github.tong12580</groupId>
+			<artifactId>common-lib</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

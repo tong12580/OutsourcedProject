@@ -1,4 +1,4 @@
-package com.business.common.other;
+package com.business.common;
 
 /**
  * @author yutong

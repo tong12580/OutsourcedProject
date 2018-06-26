@@ -2,16 +2,17 @@ package com.business.config;
 
 import com.google.common.collect.ImmutableMap;
 
-import com.business.common.http.token.JwtTokenUtil;
 import com.business.common.message.CopyWriteUI;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResultUtil;
 import com.business.dao.users.UserDTORepository;
 import com.business.filter.JwtAuthenticationTokenFilter;
 import com.business.pojo.dto.user.UserDTO;
+import com.jokers.common.http.token.JwtTokenUtil;
+import com.jokers.pojo.bo.JwtBo;
 
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
+import java.util.Date;
 import java.util.Objects;
 
 import javax.annotation.Resource;
@@ -74,9 +76,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return (httpServletRequest, httpServletResponse, authentication) -> {
             UserDTO userDTO = (UserDTO) authentication.getPrincipal();
             String token = userDTO.getToken();
-            if (StringUtils.isEmpty(token)) {
-                token = JwtTokenUtil.createToken(
-                        userDTO, copyWriteUI.getSecret(), copyWriteUI.getIssuer());
+            if (!JwtTokenUtil.validateToken(token, copyWriteUI.getSecret())) {
+                Date date = new Date();
+                JwtBo jwtBo = new JwtBo();
+                jwtBo.setIssuer(copyWriteUI.getIssuer());
+                jwtBo.setSecret(copyWriteUI.getSecret());
+                jwtBo.setUsername(userDTO.getUsername());
+                jwtBo.setUserId(userDTO.getId());
+                jwtBo.setIssuedAt(date);
+                jwtBo.setExpiresAt(DateUtils.addWeeks(date, 1));
+                token = JwtTokenUtil.createToken(jwtBo);
                 userDTO = userDTORepository.findByUsername(authentication.getName());
                 userDTO.setToken(token);
                 userDTORepository.saveAndFlush(userDTO);
