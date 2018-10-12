@@ -1,6 +1,6 @@
 package com.business.common.other.excel;
 
-import com.business.common.http.HttpUtil;
+import com.jokers.common.http.HttpUtil;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
