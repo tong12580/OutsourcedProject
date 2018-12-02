@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author yutong
  * @version 1.0
- * @description
  * @since 2018/3/1 21:59
  */
 @Component

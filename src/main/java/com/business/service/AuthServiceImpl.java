@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 /**
  * @author yutong
  * @version 1.0
- * @description
  * @since 2018/2/14 21:17
  */
 @Service
@@ -34,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public IResult<String> updateRole(Long roleId, String roleName) {
-        RoleDTO roleDTO = roleDTORepository.findOne(roleId);
+        RoleDTO roleDTO = roleDTORepository.getOne(roleId);
         if (null == roleDTO) {
             return IResultUtil.errorResult();
         }
@@ -53,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public IResult<Page<UserDTO>> queryUsers(Integer pageNum, Integer pageSize) {
-        return IResultUtil.successResult(userDTORepository.findAll(new PageRequest(pageNum - 1, pageSize)));
+        return IResultUtil.successResult(userDTORepository.findAll(PageRequest.of(pageNum - 1, pageSize)));
     }
 
     @Override

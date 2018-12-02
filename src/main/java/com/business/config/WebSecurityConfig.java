@@ -42,11 +42,11 @@ import javax.annotation.Resource;
 /**
  * @author yuton
  * @version 1.0
- * @description com.example.demo.config
+ * com.example.demo.config
  * @since 上午10:34 2017/12/25
  */
 @Configuration
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Order(SecurityProperties.BASIC_AUTH_ORDER - 2)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private UserDTORepository userDTORepository;

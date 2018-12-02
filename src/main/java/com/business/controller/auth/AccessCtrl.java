@@ -2,7 +2,6 @@ package com.business.controller.auth;
 
 import com.google.common.collect.ImmutableMap;
 
-import com.business.common.JwtTokenUtil;
 import com.business.common.message.CopyWriteUI;
 import com.business.common.message.ResultMessage;
 import com.business.common.response.IResult;
@@ -10,6 +9,7 @@ import com.business.common.response.IResultUtil;
 import com.business.dao.users.UserDTORepository;
 import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.auth.AccessService;
+import com.jokers.common.http.token.JwtTokenUtil;
 import com.jokers.pojo.bo.JwtBo;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,9 +29,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
+ * 访问控制器
+ *
  * @author yutong
  * @version 1.0
- * @description 访问控制器
  * @since 2018/2/22 23:35
  */
 @RestController

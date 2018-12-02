@@ -8,6 +8,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    open-in-view: false
   jackson:
       date-format: yyyy-MM-dd HH:mm:ss
       joda-date-time-format: yyyy-MM-dd HH:mm:ss
