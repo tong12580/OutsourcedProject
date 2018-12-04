@@ -2,25 +2,25 @@ package com.business.pojo.dto.user;
 
 import com.business.pojo.dto.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
+ * com.example.demo
+ * 用户权限
+ *
  * @author yuton
  * @version 1.0
- * @description com.example.demo
  * @since 上午10:11 2017/12/25
  */
 @Entity

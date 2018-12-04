@@ -1,16 +1,14 @@
 package com.business.config;
 
-import com.google.common.collect.ImmutableMap;
-
 import com.business.common.message.CopyWriteUI;
-import com.business.common.message.ResultMessage;
-import com.business.common.response.IResultUtil;
 import com.business.dao.users.UserDTORepository;
 import com.business.filter.JwtAuthenticationTokenFilter;
 import com.business.pojo.dto.user.UserDTO;
+import com.google.common.collect.ImmutableMap;
 import com.jokers.common.http.token.JwtTokenUtil;
+import com.jokers.common.message.ResultMessage;
+import com.jokers.common.response.IResultUtil;
 import com.jokers.pojo.bo.JwtBo;
-
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -34,10 +32,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Objects;
-
-import javax.annotation.Resource;
 
 /**
  * @author yuton

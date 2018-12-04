@@ -1,17 +1,15 @@
 package com.business.service.interfaces.user;
 
-import com.business.common.response.IResult;
 import com.business.pojo.dto.user.AreaInfoDTO;
 import com.business.pojo.dto.user.UserInfoDTO;
-
-import java.util.List;
+import com.jokers.common.response.IResult;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author yutong
  * @version 1.0
- * @description
  * @since 2018/3/2 20:43
  */
 public interface CompanyInfoService {

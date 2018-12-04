@@ -1,8 +1,9 @@
 package com.business.config;
 
-import com.business.common.response.IResult;
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
+import com.jokers.common.response.IResult;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,13 +13,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder;
 
-import java.util.Arrays;
-
 import javax.servlet.http.HttpServletRequest;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * WebLogHeadAspect
@@ -41,10 +39,16 @@ public class WebLogHeadAspect {
                 && joinPoint.getArgs()[0] instanceof ExtendedServletRequestDataBinder) {
             return;
         }
+        if (null != joinPoint.getArgs() && joinPoint.getArgs().length > 0 && joinPoint.getArgs()[0] instanceof MultipartFile) {
+            return;
+        }
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (null == attributes) {
+            return;
+        }
         HttpServletRequest request = attributes.getRequest();
         log.info("URL: {}, Method: {}, params: {}", request.getRequestURL(),
-                request.getMethod(), Arrays.toString(joinPoint.getArgs()));
+                request.getMethod(), JSON.toJSON(joinPoint.getArgs()));
     }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")

@@ -1,18 +1,19 @@
 package com.business.pojo.dto.user;
 
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
 /**
+ * 行政区划实体
+ *
  * @author yutong
  * @version 1.0
- * @description
  * @since 2018/2/25 00:15
  */
 @Data
