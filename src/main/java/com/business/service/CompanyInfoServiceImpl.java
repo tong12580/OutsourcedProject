@@ -1,6 +1,5 @@
 package com.business.service;
 
-import com.business.common.http.token.JwtTokenUtil;
 import com.business.common.message.CopyWriteUI;
 import com.business.common.response.IResult;
 import com.business.common.response.IResultUtil;
@@ -11,6 +10,8 @@ import com.business.pojo.dto.user.AreaInfoDTO;
 import com.business.pojo.dto.user.UserDTO;
 import com.business.pojo.dto.user.UserInfoDTO;
 import com.business.service.interfaces.user.CompanyInfoService;
+import com.jokers.common.http.token.JwtTokenUtil;
+import com.jokers.pojo.bo.JwtBo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
@@ -55,15 +56,16 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 
     @Override
     public IResult<UserInfoDTO> queryUserInfo(HttpServletRequest request) {
-        UserDTO userDTO;
+        UserDTO userDTO = null;
         UserInfoDTO userInfoDTO;
+        JwtBo jwtBo = null;
         //查报头
         String authHeader = request.getHeader(copyWriteUI.getTokenHeader());
         if (authHeader.startsWith(copyWriteUI.getTokenHead())) {
             //token
             String authToken = authHeader.substring(copyWriteUI.getTokenHead().length());
-            userDTO = JwtTokenUtil.getAuthentication(authToken);
-            userInfoDTO = userInfoDTORepository.findByUserId(userDTO.getId());
+            jwtBo = JwtTokenUtil.getAuthentication(authToken);
+            userInfoDTO = userInfoDTORepository.findByUserId(jwtBo.getUserId());
         } else {
             //basic
             String authToken = authHeader.substring(copyWriteUI.getBasicHead().length());
@@ -74,7 +76,13 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         }
         if (null == userInfoDTO) {
             userInfoDTO = new UserInfoDTO();
-            userInfoDTO.setUserId(userDTO.getId());
+            if (null != jwtBo) {
+                userInfoDTO.setUserId(jwtBo.getUserId());
+            }
+            if (null != userDTO) {
+                userInfoDTO.setUserId(userDTO.getId());
+            }
+
         }
         return IResultUtil.successResult(userInfoDTO);
     }

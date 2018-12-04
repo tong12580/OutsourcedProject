@@ -1,33 +1,30 @@
 package com.business.config;
 
-import com.business.common.other.cache.CachePool;
-import com.business.dao.users.UserInfoDTORepository;
-import com.business.pojo.dto.user.UserDTO;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 
-import javax.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * com.example.demo.config
+ *
  * @author yuton
  * @version 1.0
- * @description com.example.demo.config
  * @since 上午9:26 2018/1/2
  */
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     
     /**
      * 这个方法的作用是添加一个服务端点，来接收客户端的连接。
@@ -61,7 +58,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                 return new WebSocketHandlerDecorator(webSocketHandler) {
                     @Override
                     public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
-                        String username = session.getPrincipal().getName();
+                        String username = null == session.getPrincipal() ? null : session.getPrincipal().getName();
                         log.info("online: " + username);
                         super.afterConnectionEstablished(session);
                     }
@@ -69,7 +66,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                     @Override
                     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus)
                             throws Exception {
-                        String username = session.getPrincipal().getName();
+                        String username = null == session.getPrincipal() ? null : session.getPrincipal().getName();
                         log.info("offline: " + username);
                         super.afterConnectionClosed(session, closeStatus);
                     }

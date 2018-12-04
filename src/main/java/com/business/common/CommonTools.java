@@ -1,7 +1,6 @@
 package com.business.common;
 
-import com.business.common.http.HttpUtil;
-import com.business.common.json.JsonUtil;
+import com.jokers.common.http.HttpUtil;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +11,6 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 

@@ -1,8 +1,9 @@
 package com.business.common.response;
 
-import com.business.common.json.JsonUtil;
 import com.business.common.message.ResultMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jokers.common.json.JsonUtil;
+
 import org.springframework.http.HttpStatus;
 
 public class Result<T> implements IResult<T> {

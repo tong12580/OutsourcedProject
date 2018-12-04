@@ -1,19 +1,21 @@
 package com.business.webSocket;
 
-import com.business.common.json.JsonUtil;
 import com.business.dao.users.UserDTORepository;
 import com.business.pojo.dto.message.BaseMessageEntity;
 import com.business.pojo.dto.message.ChatMessageEntity;
 import com.business.pojo.dto.user.UserDTO;
+import com.jokers.common.json.JsonUtil;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Date;
+
+import javax.annotation.Resource;
 
 /**
  * @author yutong
