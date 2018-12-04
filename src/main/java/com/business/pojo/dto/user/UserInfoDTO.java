@@ -1,20 +1,20 @@
 package com.business.pojo.dto.user;
 
 import com.business.pojo.dto.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 /**
+ * 用户信息
+ *
  * @author yutong
  * @version 1.0
- * @description 用户信息表
  * @since 2018/2/14 18:10
  */
 @Entity

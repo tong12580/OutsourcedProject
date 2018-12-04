@@ -1,5 +1,6 @@
 package com.business.pojo.dto;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -12,9 +13,10 @@ import javax.persistence.PreUpdate;
 import java.sql.Timestamp;
 
 /**
+ * 实体公共属性
+ *
  * @author yutong
  * @version 1.0
- * @description 实体公共属性
  * @since 2017/1/30 19:29
  */
 @MappedSuperclass
@@ -54,5 +56,10 @@ public class BaseEntity {
     @PreUpdate
     void onUpdate() {
         this.updateTime = new Timestamp(System.currentTimeMillis());
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

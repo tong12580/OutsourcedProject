@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
+ * 推送信息
+ *
  * MessageDTO
  * Created by yuTong on 2018/03/28.
  */
