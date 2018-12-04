@@ -1,8 +1,6 @@
 package com.business.service;
 
 import com.business.common.message.CopyWriteUI;
-import com.business.common.response.IResult;
-import com.business.common.response.IResultUtil;
 import com.business.dao.users.AreaInfoDTORepository;
 import com.business.dao.users.UserDTORepository;
 import com.business.dao.users.UserInfoDTORepository;
@@ -11,20 +9,19 @@ import com.business.pojo.dto.user.UserDTO;
 import com.business.pojo.dto.user.UserInfoDTO;
 import com.business.service.interfaces.user.CompanyInfoService;
 import com.jokers.common.http.token.JwtTokenUtil;
+import com.jokers.common.response.IResult;
+import com.jokers.common.response.IResultUtil;
 import com.jokers.pojo.bo.JwtBo;
-
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author yutong
  * @version 1.0
- * @description
  * @since 2018/3/2 20:46
  */
 @Service

@@ -1,6 +1,7 @@
 package com.business.service.interfaces.auth;
 
-import com.business.common.response.IResult;
+
+import com.jokers.common.response.IResult;
 
 /**
  * 访问服务

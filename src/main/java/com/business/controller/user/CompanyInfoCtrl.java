@@ -1,9 +1,11 @@
 package com.business.controller.user;
 
-import com.business.common.response.IResult;
 import com.business.pojo.dto.user.UserInfoDTO;
 import com.business.service.interfaces.user.CompanyInfoService;
-
+import com.jokers.common.response.IResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,14 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
-
 /**
  * @author yutong
  * @version 1.0
- * @description
  * @since 2018/3/2 20:41
  */
 @RestController

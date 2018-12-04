@@ -1,32 +1,22 @@
 package com.business.controller.auth;
 
-import com.business.common.message.ResultMessage;
-import com.business.common.response.IResult;
-import com.business.common.response.IResultUtil;
 import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.auth.AuthService;
-
+import com.jokers.common.message.ResultMessage;
+import com.jokers.common.response.IResult;
+import com.jokers.common.response.IResultUtil;
+import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author yutong
  * @version 1.0
- * @description 权限控制器
+ * 权限控制器
  * @since 2018/2/14 20:35
  */
 @Slf4j

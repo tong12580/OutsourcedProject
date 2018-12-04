@@ -1,14 +1,15 @@
 package com.business.service.interfaces.auth;
 
-import com.business.common.response.IResult;
 import com.business.pojo.dto.user.UserDTO;
 
+import com.jokers.common.response.IResult;
 import org.springframework.data.domain.Page;
 
 /**
+ * 权限服务
+ *
  * @author yutong
  * @version 1.0
- * @description 权限服务
  * @since 2018/2/14 20:59
  */
 public interface AuthService {

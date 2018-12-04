@@ -1,32 +1,28 @@
 package com.business.controller.auth;
 
-import com.google.common.collect.ImmutableMap;
-
 import com.business.common.message.CopyWriteUI;
-import com.business.common.message.ResultMessage;
-import com.business.common.response.IResult;
-import com.business.common.response.IResultUtil;
 import com.business.dao.users.UserDTORepository;
 import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.auth.AccessService;
+import com.google.common.collect.ImmutableMap;
 import com.jokers.common.http.token.JwtTokenUtil;
+import com.jokers.common.message.ResultMessage;
+import com.jokers.common.response.IResult;
+import com.jokers.common.response.IResultUtil;
 import com.jokers.pojo.bo.JwtBo;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import java.util.Date;
 
 /**
  * 访问控制器
