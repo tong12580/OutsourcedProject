@@ -1,5 +1,6 @@
 package com.business.filter;
 
+import com.business.common.URI;
 import com.business.common.message.CopyWriteUI;
 import com.business.pojo.dto.user.RoleDTO;
 import com.business.pojo.dto.user.UserDTO;
@@ -36,7 +37,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws IOException, ServletException {
         String authHeader = request.getHeader(copyWriteUI.getTokenHeader());
         String url = request.getRequestURI();
-        if (StringUtils.isBlank(url) && !url.contains("/api") && !url.contains("/admin")) {
+        if (StringUtils.isBlank(url)
+                && !url.contains(URI.INTERFACE_TYPE_API)
+                && !url.contains(URI.INTERFACE_TYPE_ADMIN)) {
             chain.doFilter(request, response);
         }
         if (logger.isDebugEnabled()) {
