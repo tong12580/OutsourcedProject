@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -88,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 userDTORepository.saveAndFlush(userDTO);
             }
             httpServletResponse.setStatus(HttpStatus.OK.value());
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
+            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.successResult(
                     ImmutableMap.of("token", Objects.requireNonNull(token)))
@@ -101,7 +102,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return (httpServletRequest, httpServletResponse, e) -> {
             httpServletResponse.setStatus(HttpStatus.OK.value());
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
+            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
     }
@@ -111,7 +112,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return (httpServletRequest, httpServletResponse, authentication) -> {
             httpServletResponse.setStatus(HttpStatus.OK.value());
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
+            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             httpServletResponse.getWriter().write(IResultUtil.successResult().toJson());
         };
     }
@@ -120,7 +121,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     AccessDeniedHandler accessDeniedHandler() {
         return (httpServletRequest, httpServletResponse, e) -> {
             httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
+            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };
@@ -132,7 +133,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             httpServletResponse.addHeader("WWW-Authenticate", "Basic ?");
             httpServletResponse.addHeader("WWW-Authenticate", "Bearer ?");
             httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
+            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             httpServletResponse.setCharacterEncoding(CharEncoding.UTF_8);
             httpServletResponse.getWriter().write(IResultUtil.errorResult(ResultMessage.ERROR_PROMPT, e.getMessage()).toJson());
         };

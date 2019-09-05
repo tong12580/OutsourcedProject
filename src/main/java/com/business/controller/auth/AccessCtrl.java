@@ -4,6 +4,7 @@ import com.business.common.URI;
 import com.business.common.message.CopyWriteUI;
 import com.business.dao.users.UserDTORepository;
 import com.business.pojo.dto.user.UserDTO;
+import com.business.pojo.vo.RegisteredReqVo;
 import com.business.service.interfaces.auth.AccessService;
 import com.google.common.collect.ImmutableMap;
 import com.jokers.common.http.token.JwtTokenUtil;
@@ -17,13 +18,12 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Date;
 
 /**
@@ -35,7 +35,7 @@ import java.util.Date;
  */
 @RestController
 @Api(value = "访问控制器", tags = {"访问控制器"})
-@RequestMapping(URI.VERSION_NUMBER_1)
+@RequestMapping(value = URI.VERSION_NUMBER_1, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class AccessCtrl {
 
     @Resource
@@ -52,11 +52,8 @@ public class AccessCtrl {
             @ApiImplicitParam(name = "role", value = "权限名称", dataType = "String")
     })
     @PostMapping(URI.REGISTERED)
-    public IResult<String> registered(String username, String password, String role) {
-        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-            return IResultUtil.errorResult(ResultMessage.INPUT_PARAMETER_IS_EMPTY, "username or password");
-        }
-        return accessService.registered(username, password, role);
+    public IResult<String> registered(@Valid @RequestBody RegisteredReqVo vo) {
+        return accessService.registered(vo.getUsername(), vo.getPassword(), vo.getRole());
     }
 
     @ApiOperation(value = "刷新token", notes = "在token未过期前刷新token")
