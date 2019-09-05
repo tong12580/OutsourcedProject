@@ -39,7 +39,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (StringUtils.isBlank(url) && !url.contains("/api") && !url.contains("/admin")) {
             chain.doFilter(request, response);
         }
-        logger.debug(url);
+        if (logger.isDebugEnabled()) {
+            logger.debug(url);
+        }
         if (authHeader != null && authHeader.startsWith(copyWriteUI.getTokenHead())) {
             // The part after "Bearer "
             final String authToken = authHeader.substring(copyWriteUI.getTokenHead().length());
@@ -51,15 +53,18 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             RoleDTO roleDTO = new RoleDTO();
             roleDTO.setName(jwtBo.getRoleName());
             userDTO.setRoleDTO(roleDTO);
-            logger.info("checking authentication " + username);
-
+            if (logger.isInfoEnabled()) {
+                logger.info("checking authentication " + username);
+            }
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (JwtTokenUtil.validateToken(authToken, copyWriteUI.getSecret())) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDTO, null, userDTO.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
                             request));
-                    logger.info("authenticated user " + username + ", setting security context");
+                    if (logger.isInfoEnabled()) {
+                        logger.info("authenticated user " + username + ", setting security context");
+                    }
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }

@@ -1,5 +1,7 @@
 package com.business.controller.auth;
 
+import com.business.common.Constants;
+import com.business.common.URI;
 import com.business.pojo.dto.user.UserDTO;
 import com.business.service.interfaces.auth.AuthService;
 import com.jokers.common.message.ResultMessage;
@@ -21,14 +23,14 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @RestController
-@RequestMapping("/admin")
+@RequestMapping(URI.VERSION_NUMBER_1 + URI.INTERFACE_TYPE_ADMIN)
 @Api(value = "权限控制器", tags = {"权限管理"},
         authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
 public class AuthCtrl {
     @Resource
     private AuthService authService;
 
-    @PutMapping("/role")
+    @PutMapping(URI.ROLE)
     @ApiOperation(value = "添加新权限名称", notes = "添加新权限名称")
     @ApiImplicitParam(name = "roleName", value = "权限名称", dataType = "String", required = true)
     public IResult<String> addRole(String roleName) {
@@ -38,14 +40,14 @@ public class AuthCtrl {
         return authService.addRole(roleName);
     }
 
-    @GetMapping("/roles")
+    @GetMapping(URI.ROLES)
     @ApiOperation(value = "查询权限表", notes = "查询权限表")
     public IResult queryRoles() {
         return authService.queryRoles();
     }
 
 
-    @PatchMapping("/role")
+    @PatchMapping(URI.ROLE)
     @ApiOperation(value = "修改权限名", notes = "修改权限名")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleName", value = "权限名称", dataType = "String", required = true),
@@ -61,7 +63,7 @@ public class AuthCtrl {
         return authService.updateRole(roleId, roleName);
     }
 
-    @GetMapping("/users")
+    @GetMapping(URI.USERS)
     @ApiOperation(value = "查询所有用户权限信息", notes = "分页查询所有用户权限信息，默认从第0页开始")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "第几页", dataType = "int"),
@@ -69,10 +71,10 @@ public class AuthCtrl {
     })
     public IResult<Page<UserDTO>> queryUsers(Integer pageNum, Integer pageSize) {
         if (null == pageNum) {
-            pageNum = 1;
+            pageNum = Constants.PAGE_NUM;
         }
         if (null == pageSize) {
-            pageSize = 10;
+            pageSize = Constants.PAGE_SIZE;
         }
         return authService.queryUsers(pageNum, pageSize);
     }

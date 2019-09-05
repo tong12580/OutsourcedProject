@@ -1,5 +1,6 @@
 package com.business.controller.user;
 
+import com.business.common.URI;
 import com.business.pojo.dto.user.UserInfoDTO;
 import com.business.service.interfaces.user.CompanyInfoService;
 import com.jokers.common.response.IResult;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2018/3/2 20:41
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping(URI.VERSION_NUMBER_1 + URI.INTERFACE_TYPE_API)
 @Api(value = "公司信息", tags = {"公司信息"},
         authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
 public class CompanyInfoCtrl {

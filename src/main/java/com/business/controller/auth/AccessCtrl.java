@@ -1,5 +1,6 @@
 package com.business.controller.auth;
 
+import com.business.common.URI;
 import com.business.common.message.CopyWriteUI;
 import com.business.dao.users.UserDTORepository;
 import com.business.pojo.dto.user.UserDTO;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -33,6 +35,7 @@ import java.util.Date;
  */
 @RestController
 @Api(value = "访问控制器", tags = {"访问控制器"})
+@RequestMapping(URI.VERSION_NUMBER_1)
 public class AccessCtrl {
 
     @Resource
@@ -48,7 +51,7 @@ public class AccessCtrl {
             @ApiImplicitParam(name = "password", value = "密码", dataType = "String", required = true),
             @ApiImplicitParam(name = "role", value = "权限名称", dataType = "String")
     })
-    @PostMapping("/registered")
+    @PostMapping(URI.REGISTERED)
     public IResult<String> registered(String username, String password, String role) {
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             return IResultUtil.errorResult(ResultMessage.INPUT_PARAMETER_IS_EMPTY, "username or password");
@@ -57,7 +60,7 @@ public class AccessCtrl {
     }
 
     @ApiOperation(value = "刷新token", notes = "在token未过期前刷新token")
-    @GetMapping("/refreshToken")
+    @GetMapping(URI.REFRESH_TOKEN)
     public IResult refreshToken(HttpServletRequest request) {
         String newToken = null;
         String authHeader = request.getHeader(copyWriteUI.getTokenHeader());
