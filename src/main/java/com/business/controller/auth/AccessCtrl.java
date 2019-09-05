@@ -32,7 +32,7 @@ import java.util.Date;
  * @since 2018/2/22 23:35
  */
 @RestController
-@Api(value = "访问控制器", tags = {"访问控制器"}, description = "注册")
+@Api(value = "访问控制器", tags = {"访问控制器"})
 public class AccessCtrl {
 
     @Resource

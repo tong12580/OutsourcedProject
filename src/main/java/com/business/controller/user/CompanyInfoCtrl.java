@@ -20,15 +20,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "公司信息", tags = {"公司信息"}, description = "公司信息CURD操作")
+@Api(value = "公司信息", tags = {"公司信息"},
+        authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
 public class CompanyInfoCtrl {
 
     @Resource
     private CompanyInfoService companyInfoService;
 
     @GetMapping("/user")
-    @ApiOperation(value = "查询公司信息", notes = "查询公司信息",
-            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
+    @ApiOperation(value = "查询公司信息", notes = "查询公司信息")
     public IResult<UserInfoDTO> queryUserInfo(HttpServletRequest request) {
         return companyInfoService.queryUserInfo(request);
     }

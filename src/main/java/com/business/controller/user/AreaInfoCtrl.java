@@ -24,21 +24,20 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "行政区域查询控制器", tags = {"行政区域查询控制器"}, description = "查询省市县三级城市区划")
+@Api(value = "行政区域查询控制器", tags = {"行政区域查询控制器"},
+        authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
 public class AreaInfoCtrl {
     @Resource
     private CompanyInfoService companyInfoService;
 
     @GetMapping("/provinces")
-    @ApiOperation(value = "省级行政区域查询", notes = "省级行政区域查询",
-            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
+    @ApiOperation(value = "省级行政区域查询", notes = "省级行政区域查询")
     public IResult<List<AreaInfoDTO>> queryProvinces() {
         return IResultUtil.successResult(ResultMessage.STATUS_SUCCESS, companyInfoService.findBySuperiorIdIsNull());
     }
 
     @GetMapping("/subordinateAdministrativeUnits")
-    @ApiOperation(value = "次级行政区域查询", notes = "查询市、现行政区划",
-            authorizations = {@Authorization(value = "basicAuth"), @Authorization(value = "token")})
+    @ApiOperation(value = "次级行政区域查询", notes = "查询市、现行政区划")
     @ApiImplicitParam(name = "id", value = "上级行政区划ID", dataType = "Int", required = true)
     public IResult<List<AreaInfoDTO>> querySubordinateAdministrativeUnits(Integer id) {
         if (null == id) {
