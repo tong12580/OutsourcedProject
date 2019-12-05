@@ -5,21 +5,19 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Resource;
-
 /**
  * @author yuton
  * @version 1.0
- * @description
  * @since 2017/1/5 15:51
  */
 @Repository
-public class RedisOperation<K, V> implements RedisUtil<K, V> {
+public class RedisOperation<K, V> implements RedisUtil<K, V>, RedisLockUtil<K, V> {
     @Resource
     private RedisTemplate<K, V> redisTemplate;
 
@@ -37,6 +35,23 @@ public class RedisOperation<K, V> implements RedisUtil<K, V> {
     public void set(K key, V value, Long timeOut, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value, timeOut, timeUnit);
     }
+
+
+    @Override
+    public Boolean setIfAbsent(K key, V value, Long timeOut, TimeUnit timeUnit) {
+        return redisTemplate.opsForValue().setIfAbsent(key, value, timeOut, timeUnit);
+    }
+
+    @Override
+    public Boolean setIfAbsent(K key, V value) {
+        return redisTemplate.opsForValue().setIfAbsent(key, value);
+    }
+
+    @Override
+    public Boolean setIfAbsent(K key, V value, Long timeOut) {
+        return this.setIfAbsent(key, value, timeOut, TimeUnit.SECONDS);
+    }
+
 
     @Override
     public V get(K key) {
@@ -84,7 +99,7 @@ public class RedisOperation<K, V> implements RedisUtil<K, V> {
 
     @Override
     public Boolean ping() {
-        return redisTemplate.execute((RedisCallback<Boolean>) redisConnection -> redisConnection.ping().equals("PONG"));
+        return redisTemplate.execute((RedisCallback<Boolean>) redisConnection -> "PONG".equals(redisConnection.ping()));
     }
 
     @Override
@@ -96,7 +111,8 @@ public class RedisOperation<K, V> implements RedisUtil<K, V> {
     public Boolean flushDB() {
         return redisTemplate.execute((RedisCallback<Boolean>) redisConnection -> {
             redisConnection.flushDb();
-            return redisConnection.dbSize() == 0;
+            Long dbSize = redisConnection.dbSize();
+            return null == dbSize || 0 == dbSize;
         });
     }
 
@@ -106,7 +122,7 @@ public class RedisOperation<K, V> implements RedisUtil<K, V> {
     }
 
     @Override
-    public boolean hasKey(K k) {
+    public Boolean hasKey(K k) {
         return redisTemplate.hasKey(k);
     }
 
