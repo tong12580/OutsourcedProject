@@ -41,7 +41,7 @@ public class InitConfig {
         List<RoleDTO> roleDTOS = new ArrayList<>(roleEnums.length);
         for (RoleEnum roleEnum : roleEnums) {
             RoleDTO roleDTO = new RoleDTO();
-            roleDTO.setName(roleEnum.getRoleName());
+            roleDTO.setName(roleEnum.name());
             roleDTOS.add(roleDTO);
         }
         roleDTORepository.saveAll(roleDTOS);
