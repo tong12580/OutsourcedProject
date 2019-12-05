@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * @author yutong
  * @version 1.0
- * @description
  * @since 2018/2/25 00:22
  */
 public interface AreaInfoDTORepository extends JpaRepository<AreaInfoDTO, Integer> {

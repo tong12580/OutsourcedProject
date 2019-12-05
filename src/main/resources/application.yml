@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/cvc?characterEncoding=UTF-8&useSSL=false
-    password: 2259661
-    username: root
+    url: jdbc:mysql://rm-bp1oe727k0ogr2419.mysql.rds.aliyuncs.com:3306/activity
+    password: ChIjdAH88xE2dpUzbGOQ
+    username: smartuatadmin
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,7 +20,12 @@ spring:
   mvc:
     static-path-pattern: /static/**
   redis:
-    database: 1
-    host: 127.0.0.1
+    database: 2
+    host: 39.105.130.3
     port: 6379
-#    password: LAgs:xX9|O<
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: 5000
+        min-idle: 0
+    password: L1i3K1e4U
