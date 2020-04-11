@@ -3,9 +3,9 @@ spring:
     include: copyWriteUI
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://rm-bp1oe727k0ogr2419.mysql.rds.aliyuncs.com:3306/activity
-    password: ChIjdAH88xE2dpUzbGOQ
-    username: smartuatadmin
+    url: <null>
+    password: <null>
+    username: <null>
   jpa:
     hibernate:
       ddl-auto: validate
@@ -30,4 +30,4 @@ spring:
         max-active: 8
         max-wait: 5000
         min-idle: 0
-    password: L1i3K1e4U
+    password: <null>
