@@ -1,5 +1,6 @@
 package com.business;
 
+import com.business.common.message.CopyWriteUI;
 import com.business.common.redis.RedisUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +16,17 @@ public class OutsourcedProjectApplicationTests {
     @Resource
     private RedisUtil<String, String> redisUtil;
 
+    @Resource
+    private CopyWriteUI copyWriteUI;
+
     @Test
     public void contextLoads() {
     }
 
     @Test
     public void testRedis() {
-        System.out.println(redisUtil.ping());
+//        System.out.println(redisUtil.ping());
+        System.out.println(copyWriteUI.getBasicHead());
+        System.out.println(copyWriteUI.getSecret());
     }
 }

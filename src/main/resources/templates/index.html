@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<!--https://github.com/ChinaSilence/any-chat-->
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title sec:authentication="name"></title>
-    <link rel="stylesheet" type="text/css" href="/static/bootstrap.css"/>
+    <title>WebSocket栗子</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         body {
             padding-top: 50px;
@@ -18,55 +16,152 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Spring Security演示</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a th:href="@{/}">首页</a></li>
-                <li><a th:href="@{http://www.baidu.com}">百度</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
 <div class="container">
-    <div class="starter-template">
-        <!--/*@thymesVar id="msg" type="com.business.pojo.dto.user.Msg"*/-->
-        <h1 th:text="${msg.title}"></h1>
-        <p class="bg-primary" th:text="${msg.content}"></p>
-        <div sec:authorize="hasRole('ROLE_ADMIN')">
-            <p class="bg-info" th:text="${msg.extraInfo}"></p>
-        </div>
-        <div sec:authorize="hasRole('ROLE_USER')">
-            <p class="bg-info">无更多显示信息</p>
-        </div>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" class="btn btn-primary" value="注销"/>
-        </form>
+    <div>
+        <button id="connect" onclick="connect();">Connect</button>
+        <button disabled="disabled" id="disconnect" onclick="disconnect();">Disconnect</button>
+        <button id="heartCheckX" onclick="heartCheckX();">心跳</button>
     </div>
+    <div id="conversationDiv">
+        <p>
+            <label>notice contents?</label>
+        </p>
+        <p>
+            <label for="name"></label><textarea id="name" rows="5"></textarea>
+        </p>
+        <button id="sendName" onclick="sendName();">Send</button>
+        <p id="response"></p>
+    </div>
+</div>
+<div class="container">
     <div class="message">
         <span id="content"></span>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
-<script src="/static/stomp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
 <script>
-    var noticeSocket = function () {
-        var s = new SockJS('/socket');
-        var stompClient = Stomp.over(s);
+    let stompClient = null;
+    const apis = {
+        send: '/service/send',
+        ping: '/service/websocket-ping/',
+        link: '/client/websocket-link',
+        pong: '/websocket-pong'
+    };
+    const headers = {
+        name: Math.ceil(Math.random() * 100)
+    };
+
+    let ping = {
+        name: headers.name,
+        msg: 'ping',
+    };
+
+    function setConnected(connected) {
+        document.getElementById('connect').disabled = connected;
+        document.getElementById('disconnect').disabled = !connected;
+        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+        document.getElementById('response').innerHTML = '';
+    }
+
+    // 开启socket连接
+    function connect() {
+        var socket = new SockJS('http://127.0.0.1:9091/socket');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+        });
+    }
+
+    connect();
+
+    // 断开socket连接
+    function disconnect() {
+        if (stompClient != null) {
+            stompClient.disconnect();
+        }
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    // 向服务器端发送消息‘/service/send’
+    function sendName() {
+        let value = document.getElementById('name').value;
+        stompClient.send(apis.send, {}, value);
+    }
+
+    //订阅正常数据的例子
+    const noticeSocket = function () {
         stompClient.connect({}, function (frame) {
             console.log('notice socket connected!');
-            //从/topic/notice接受消息
-            stompClient.subscribe('/topic/notice', function (data) {
+            //接受正常数据
+            stompClient.subscribe(apis.link, function (data) {
                 $('#content').html(data.body);
-                console.log(data.body);
+                console.log('2a------' + data.body);
             });
         });
     };
+
+
     noticeSocket();
+
+    function heartCheckX() {
+        //订阅(该路由专门用于心跳检测）/user/*/websocket-pong 这里占位符指的是前端唯一id, 这里用一个随机数代替,与下文呼应
+        stompClient.subscribe('/user/' + headers.name + apis.pong, function (result) {
+            console.log("s1----" + result.body);
+            heartCheck.reset().start(); //心跳检测重置
+
+        });
+        heartCheck.reset().start(); //开始心跳检测
+        tryTimes = 0;//重置重连次数
+
+    }
+
+    //心跳检测与重连
+    let heartCheck = {
+        timeout: 5000, //5s发一次心跳
+        timeoutObj: null,
+        serverTimeoutObj: null,
+        reset: function () {
+            clearTimeout(this.timeoutObj);//清除定时任务
+            clearTimeout(this.serverTimeoutObj);
+            return this;
+        },
+        start: function () {
+            const self = this;
+            this.timeoutObj = setTimeout(function () {
+                //这里发送一个心跳到后端指定路由，后端该路径收到将再发一条消息到前端指定路由，
+                // 这里占位符指的是前端唯一id, 这里用一个随机数代替,与上文呼应 /service/websocket-ping/*
+                stompClient.send(apis.ping + headers.name, {}, JSON.stringify(ping));
+                //如果超过一定时间还没重置才会执行到这，说明后端主动断开了
+                // self.serverTimeoutObj = setTimeout(function(){
+                //     disconnect2();
+                //     connect();
+                // }, self.timeout)
+            }, this.timeout)
+        }
+    };
+
+    // heartCheckX();
+    function reconnect() {
+        if (tryTimes > 10) {
+            alert("重连次数以达上限 连接失败");
+            return;
+        }
+        setTimeout(function () { //没连接上会一直重连，设置延迟避免请求过多
+            connect();
+        }, 3000);
+    }
+
+    //手动关闭连接
+    function disconnect2() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
+        //断开连接成功之后的操作... 
+    }
+
 </script>
 </body>
 </html>

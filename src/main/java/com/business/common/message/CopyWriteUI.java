@@ -1,15 +1,15 @@
 package com.business.common.message;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
+ * 页面显示错误信息
+ *
  * @author yuton
  * @version 1.0
- * @description 页面显示错误信息
  * @since 2017/2/7 16:54
  */
 @Component

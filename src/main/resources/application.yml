@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: copyWriteUI
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://rm-bp1oe727k0ogr2419.mysql.rds.aliyuncs.com:3306/activity
@@ -6,7 +8,7 @@ spring:
     username: smartuatadmin
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL57Dialect
